@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block start %}
+
+<div class="container">
+
+    <h3 class="text-center">Turn your coins into Cash in simple steps</h3>
+
+   
+
+
+    <div class="shadow p-3 text-center">
+        <img src="/static/images/googlepay.jpg" class="img-responsive img-fluid" style="height: 150px;">
+        <img src="/static/images/phonepe.jpg" class="img-responsive img-fluid" style="height: 120px;">
+
+        <img src="/static/images/paytm.png" class="img-responsive img-fluid" style="height: 150px;">
+
+    </div>
+
+
+
+    <div class="card py-2 mt-4">
+        <form class="card-body needs-validation" novalidate="" method="post">
+            {% csrf_token %} 
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-dark">
+              {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            <div class="form-group">
+                
+                <label for="recover-email">Enter whatsapp number</label>
+                <input class="form-control" type="text" name="number" placeholder="Your whatsapp number"
+                    id="recover-email" required="">
+                <div class="invalid-feedback">Please provide valid number.</div>
+            </div>
+
+            <div class="form-group">
+                <label for="recover-email">Selet payment mode </label>
+                <select class="form-control" name="payment_method">
+                    <option value="Paytm">Paytm</option>
+                    <option value="Google Pay">Google Pay</option>
+                    <option value="Phonepe">Phonepe</option>
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+                <label for="recover-email">Enter amount</label>
+                <input class="form-control" name="amount" required type="text" placeholder="Enter amount">
+                <div class="invalid-feedback">Enter amount.</div>
+
+            </div>
+
+            <button type="submit" class="btn btn-accent">Create request</button>
+        </form>
+
+    </div>
+    <div>
+        {% if pending_requests %}
+        <h3 class="text-center h4 mt-4">Your pending request</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Payment Mode</th>
+                    <th scope="col">Number</th>
+                    <th scope="col">Requested Date</th>
+                    <th scope="col">Status</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for pending_request in pending_requests %}
+                <tr>
+                    <th scope="row"> {{ forloop.counter }}</th>
+                    <td>{{pending_request.amount}}</td>
+                    <td>{{pending_request.payment_mode}}</td>
+                    <td>{{pending_request.number}}</td>
+                    <td>{{pending_request.created_at}}</td>
+                    <td><span class="badge badge-pill badge-danger badge-shadow">Pending</span></td>
+
+                </tr>
+                {% endfor %}
+               
+            </tbody>
+
+        </table>
+
+        {% endif %}
+
+
+
+
+
+    </div>
+    <div class="card border-0 box-shadow-lg mt-5">
+        <div class="card-body pb-2">
+            <ul class="nav nav-tabs media-tabs nav-justified">
+                <li class="nav-item">
+                    <div class="nav-link completed">
+                        <div class="media align-items-center">
+                            <div class="media-tab-media mr-3"><i class="czi-bag"></i></div>
+                            <div class="media-body">
+                                <div class="media-tab-subtitle text-muted font-size-xs mb-1">Create Sell request</div>
+                                <h6 class="media-tab-title text-nowrap mb-0">Order placed</h6>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <div class="nav-link active">
+                        <div class="media align-items-center">
+                            <div class="media-tab-media mr-3"><i class="czi-settings"></i></div>
+                            <div class="media-body">
+                                <div class="media-tab-subtitle text-muted font-size-xs mb-1">Second step</div>
+                                <h6 class="media-tab-title text-nowrap mb-0">Processing coins</h6>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <div class="nav-link completed">
+                        <div class="media align-items-center">
+                            <div class="media-tab-media mr-3 completed"><i class="czi-package"></i></div>
+                            <div class="media-body">
+                                <div class="media-tab-subtitle text-muted font-size-xs mb-1">Finally</div>
+                                <h6 class="media-tab-title text-nowrap mb-0">Cash in your wallet</h6>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+</div>
+
+{% endblock %}

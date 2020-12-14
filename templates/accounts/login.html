@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block start %}
+<div class="container pt-5">
+  <div class="row justify-content-center pt-4">
+    <div class="col-lg-6 col-md-10">
+      <h2 class="h3 mb-4">Login to your account</h2>
+
+      <div class="card py-2 mt-4">
+        <form class="card-body needs-validation" novalidate="" method="post">
+          {% csrf_token %}
+
+          {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-danger">
+            {{ message }}
+          </div>
+          {% endfor %}
+          {% endif %}
+          <div class="form-group">
+            <label for="recover-email">Enter whatsapp number</label>
+            <input class="form-control" type="text" name="whatsapp" placeholder="Your whatsapp number"
+              id="recover-email" required="">
+            <div class="invalid-feedback">Please provide valid whatsapp number.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="recover-email">Enter your password </label>
+            <input class="form-control" type="password" name="password" placeholder="Your secret password"
+              id="recover-email" required="">
+            <div class="invalid-feedback">Please provide valid password.</div>
+          </div>
+          <div class="d-flex flex-wrap justify-content-between">
+
+            <p>Dont'have account <a href="{% url 'register' %}">Register</a></p>
+
+
+            <a class="nav-link-inline font-size-sm" href="{% url 'login' %}">
+              <p>Forget Password</p>
+            </a>
+          </div>
+
+          <button class="btn btn-accent btn-block" type="submit">Login <i class="czi-security-check"></i></button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

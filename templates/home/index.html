@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block start %}
+
+<div class="container mt-5 pt-4 mb-5 pb-5">
+
+    <div class="text-center">
+        <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="czi-dollar"></i>
+              </span>
+            </div>
+            <input type="text" class="form-control" placeholder="Amount">
+            <div class="input-group-append">
+              <button type="button" class="btn btn-danger">Set</button>
+            </div>
+          </div>
+    </div>
+
+    <!-- List group with icons and badges -->
+<ul class="list-group mt-5 mb-5 pb-5">
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <span>
+        <i class="czi-message text-muted mr-2"></i>
+        Messages
+      </span>
+      <span class="badge badge-pill badge-info">14</span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <span>
+        <i class="czi-bag mt-n1 text-muted mr-2"></i>
+        Orders
+      </span>
+      <span class="badge badge-pill badge-warning">2</span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <span>
+        <i class="czi-heart text-muted mr-2"></i>
+        Favourites
+      </span>
+      <span class="badge badge-pill badge-danger">6</span>
+    </li>
+  </ul>
+</div>
+
+{% endblock %}
