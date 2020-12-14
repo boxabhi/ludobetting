@@ -48,7 +48,7 @@
             {% endif  %}
             {% if request.user.is_authenticated %}
             <a class="navbar-tool ml-3 " href="#">
-               <span class="navbar-tool-label">4</span>
+               <span class="navbar-tool-label">{{ request.session.coins }}</span>
                <span class="badge badge-success badge-shadow">Coins</span> <i
                     class="navbar-tool-icon czi-coin"></i>
             </a>

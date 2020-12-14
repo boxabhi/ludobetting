@@ -5,11 +5,15 @@ from .models import *
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from datetime import datetime, timedelta
+from home.helpers import set_coins
 # Create your views here.
 
 
 @login_required(login_url='/accounts/login/')
 def buy_coins(request):
+    if request.user.is_authenticated:
+        set_coins(request)
+        
     if request.method == "POST":
         amount = request.POST.get("amount")
         if amount is None:
@@ -29,6 +33,8 @@ def buy_coins(request):
 
 @login_required(login_url='/accounts/login/')
 def sell_coins(request):
+    if request.user.is_authenticated:
+        set_coins(request)
     user = request.user
     if request.method == "POST":
         profile = Profile.objects.filter(user=user).first()
