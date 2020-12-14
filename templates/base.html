@@ -73,6 +73,19 @@
                 <li class="nav-item"><a class="nav-link" href="#">Help</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Terms and conditions</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'top_winners' %}">Top winners</a></li>
+                {% if request.user.is_authenticated %}
+
+                <li class="nav-item dropdown text-right float-right ">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <b> Profile</b> 
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a>
+                      <a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a>
+                     
+                    </div>
+                  </li>
+                {% endif %}
 
 
             </ul>

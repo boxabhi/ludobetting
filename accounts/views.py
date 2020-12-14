@@ -90,6 +90,13 @@ def otp_attempt(request , user_id):
 
 
 
+def edit_profile(request):
+    pass
+
+def change_password(request):
+    pass 
+
+
 def forget_password_attempt(request):
     return render(request, 'account/forget_password.html')
 
