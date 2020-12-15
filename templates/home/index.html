@@ -1,30 +1,49 @@
 {% extends "base.html" %}
 {% block start %}
 
+
 <div class="container mt-5 pt-4 mb-5 pb-5">
-
-    <div class="text-center">
-        <div class="input-group">
-            <div class="input-group-prepend ">
-              <span class="input-group-text bg-accent text-white">
-                <i class="czi-dollar"></i>
-              </span>
-            </div>
-            <input type="text" class="form-control" placeholder="Amount">
-            <div class="input-group-append">
-              <button type="button" class="btn btn-danger">Set</button>
-            </div>
-          </div>
+  <div class="alert alert-dark alert-with-icon" role="alert" id="alert" style="display:none">
+    <div class="alert-icon-box">
+      <i class="alert-icon czi-bell"></i>
     </div>
+    <span id="message">A simple dark alert with </span>
+  </div>  
 
-    <!-- List group with icons and badges -->
-<ul class="list-group mt-5 mb-5 pb-5">
+  <div class="text-center">
+    <div class="input-group">
+      <div class="input-group-prepend ">
+        <span class="input-group-text bg-accent text-white">
+          <i class="czi-dollar"></i>
+        </span>
+      </div>
+      <input type="text" id="coins" class="form-control" placeholder="Enter Coins">
+      <div class="input-group-append">
+        <button type="button" class="btn btn-danger" onclick="create_game()">Set</button>
+      </div>
+    </div>
+  </div>
+
+  <li id="user_game" class="shadow list-group-item d-flex justify-content-between align-items-center"  style="visibility:hidden">
+    <span>
+      <i class="czi-play-circle text-muted mr-2"></i>
+     <b id="game_here"></b>
+    </span>
+
+    <button class="btn btn-outline-primary">Play</button>
+
+    <a href="#" class="btn btn-warning"><i class="czi-pot"></i></a>
+  </li>
+
+  <ul class="list-group mt-5 mb-5 pb-5">
     <li class="list-group-item d-flex justify-content-between align-items-center">
       <span>
         <i class="czi-play-circle text-muted mr-2"></i>
         Messages
       </span>
-      <span class="badge badge-pill badge-info">14</span>
+
+      <button class="btn btn-outline-primary">Play</button>
+
     </li>
     <li class="list-group-item d-flex justify-content-between align-items-center">
       <span>
@@ -42,5 +61,90 @@
     </li>
   </ul>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"
+  integrity="sha512-DZqqY3PiOvTP9HkjIWgjO6ouCbq+dxqWoJZ/Q+zPYNHmlnI2dQnbJ5bxAHpAMw+LXRm4D72EIRXzvcHQtE8/VQ=="
+  crossorigin="anonymous"></script>
+<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+<script>
+  // Enable pusher logging - don't include this in production
+  // Pusher.logToConsole = true;
+
+  // var pusher = new Pusher('c8c9c5c7311851c8d82d', {
+  //   cluster: 'ap2'
+  // });
+
+  // var channel = pusher.subscribe('my-channel');
+  // channel.bind('my-event', function (data) {
+  //   //alert(JSON.stringify(data));
+  // });
+
+  // fetch('game').then(res => res.json())
+  //   .then(result => {
+  //     console.log(result)
+  //   })
+
+
+  function setUserGame(coins=null , room_id = null) {
+    var user_game = document.getElementById('user_game')
+    var game_here = document.getElementById('game_here')
+
+    
+    if(coins){
+      user_game.style.visibility  = 'visible'
+       game_here.innerHTML = '{{request.user.username}}' + `  created a game ${coins}`
+    }
+
+  }
+
+  function create_game() {
+    var coins = document.getElementById('coins')
+    var message = document.getElementById('message')
+    var alert = document.getElementById('alert')
+
+    var url = '/game/api/create_game'
+    $('.toast').toast('show')
+    if (coins.value.length) {
+
+      axios.post(url, {
+          'coins': coins.value
+        })
+        .then(res => {
+          if(res.data.status == false) {
+            alert.style.display = 'block'
+            message.innerHTML = res.data.message
+           
+            setTimeout(() =>{
+              alert.style.display = 'none'
+            }, 2000)
+
+          }else{
+            message.innerHTML = res.data.message
+
+            setUserGame(res.data.payload.coins , res.data.payload.room_id)
+          }
+
+        })
+
+    }
+  }
+
+  let socket = new WebSocket('ws://localhost:8000/ws/tableData/');
+    socket.onopen = function(e){
+        alert('Connection established');
+    };
+
+    socket.onmessage = function(e){
+        console.log(e['data']);
+      
+
+    };
+
+    socket.onclose= function(e){
+        alert('Connection closed');
+    };
+
+
+</script>
 
 {% endblock %}
