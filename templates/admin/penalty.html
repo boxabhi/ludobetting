@@ -1,5 +1,63 @@
 {% extends "admin/base.html" %}
 {% block start %}
 
+ <section class="col-lg-8" style="margin-bottom:50px;">
+          
+          <!-- Profile edit-->
+          <form>
+           
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="account-fn">user id</label>
+                  <input class="form-control" type="text" id="account-fn" value="123" disabled>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="account-ln">User name</label>
+                  <input class="form-control" type="text" id="account-ln" value="username" disabled>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="account-ln">User mobile Number</label>
+                  <input class="form-control" type="text" id="account-ln" value="7786853588" disabled>
+                </div>
+              </div>
+              
+              
+              
+
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="account-phone">Panelty  Amount</label>
+                  <input class="form-control" type="text" id="panelty-amount" name="paneltyamount" >
+                </div>
+              </div>
+             
+              
+              
+                <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="account-phone">Panelty  Reason</label>
+                  <input class="form-control" type="text" id="reject reason" name="paneltyreason" >
+                </div>
+              </div>
+              </div>
+              
+              <div class="col-mb-12">
+                <hr class="mt-2 mb-3">
+                <div class="d-flex flex-wrap justify-content-between align-items-center">
+                  
+                  <a href="">
+
+                  <button class="btn btn-primary mt-3 mt-sm-0" type="button">Submit</button>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </form>
+        </section>
 
 {% endblock %}
