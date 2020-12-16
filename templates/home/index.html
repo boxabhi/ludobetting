@@ -35,15 +35,13 @@
     <a href="#" class="btn btn-warning"><i class="czi-pot"></i></a>
   </li>
 
-  <ul class="list-group mt-5 mb-5 pb-5">
-    <li class="list-group-item d-flex justify-content-between align-items-center">
+  <ul class="list-group mt-5 mb-5 pb-5" id="live_games">
+    <!-- <li class="list-group-item d-flex justify-content-between align-items-center">
       <span>
         <i class="czi-play-circle text-muted mr-2"></i>
         Messages
       </span>
-
       <button class="btn btn-outline-primary">Play</button>
-
     </li>
     <li class="list-group-item d-flex justify-content-between align-items-center">
       <span>
@@ -58,7 +56,7 @@
         Favourites
       </span>
       <span class="badge badge-pill badge-danger">6</span>
-    </li>
+    </li> -->
   </ul>
 </div>
 
@@ -84,6 +82,36 @@
   //     console.log(result)
   //   })
 
+  
+  let socket = new WebSocket('ws://localhost:8000/ws/tableData/');
+    socket.onopen = function(e){
+        console.log('Connection established');
+    };
+
+    socket.onmessage = function(e){
+      var data = JSON.parse(e.data)
+      console.log(data)
+      addToList(data);
+    };
+    socket.onclose= function(e){
+      console.log('Connection closed');
+    };
+
+    function addToList(data){
+      var username = '{{request.user.username}}';
+      if(username != data.game_creater){
+      var live_games = document.getElementById('live_games')
+      var node = document.createElement('LI')
+      var html = ` <li class="list-group-item d-flex justify-content-between align-items-center"><span><i class="czi-play-circle text-muted mr-2"></i>
+        Create a game worth ${data.coins}
+        </span>
+        <button class="btn btn-outline-primary" onclick="play(${data.id})">Play</button>
+        </li>`
+      live_games.insertAdjacentHTML('beforeend' , html)
+      }
+    }
+
+
 
   function setUserGame(coins=null , room_id = null) {
     var user_game = document.getElementById('user_game')
@@ -97,6 +125,11 @@
 
   }
 
+  function play(id){
+    socket.send(JSON.stringify({'id'  :id , 'type':'play_request'}))
+
+  }
+
   function create_game() {
     var coins = document.getElementById('coins')
     var message = document.getElementById('message')
@@ -104,8 +137,12 @@
 
     var url = '/game/api/create_game'
     $('.toast').toast('show')
-    if (coins.value.length) {
 
+    var payload = { 'user_id' : '{{request.user.id}}' , 'coins' : coins.value }
+
+    socket.send(JSON.stringify(payload));
+
+    if (coins.value.length) {
       axios.post(url, {
           'coins': coins.value
         })
@@ -120,7 +157,13 @@
 
           }else{
             message.innerHTML = res.data.message
-
+            alert.style.display = 'block'
+            message.innerHTML = res.data.message
+           
+            setTimeout(() =>{
+              alert.style.display = 'none'
+            }, 2000)
+            console.log(res.data)
             setUserGame(res.data.payload.coins , res.data.payload.room_id)
           }
 
@@ -128,21 +171,6 @@
 
     }
   }
-
-  let socket = new WebSocket('ws://localhost:8000/ws/tableData/');
-    socket.onopen = function(e){
-        alert('Connection established');
-    };
-
-    socket.onmessage = function(e){
-        console.log(e['data']);
-      
-
-    };
-
-    socket.onclose= function(e){
-        alert('Connection closed');
-    };
 
 
 </script>

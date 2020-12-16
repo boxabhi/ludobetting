@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block start %}
+
+
+<div class="container mt-5 pt-5 pb-5 mb-5">
+    {% if request.user.id != game.game_creater.id %}
+    <div class="text-center">
+        <h3>Waiting for room Code</h3>
+        <div class="spinner-grow" id="spinner" role="status">
+           
+            <span class="sr-only">Loading...</span>
+        </div>
+        <div class="form-group" style="display:none" id="room_code_div">
+            <label>Room Code</label>
+            <input class="form-control" value="" id="show_room_code">
+        </div>
+
+    </div>
+    {% else %}
+
+    <div class="form-group">
+        <label for="pass-visibility">Enter Room Code</label>
+        <div class="password-toggle">
+            <input type="text" id="room_code" class="form-control" placeholder="Enter room code">
+        </div>
+        <button class="btn btn-accent mt-2" onclick="sendRoomCode()">Send room code</button>
+        <button class="btn btn-danger mt-2" onclick="changeRoomCode()">Change Room code</button>
+
+    </div>
+    {% endif %}
+
+
+    <form method="post" class="mt-5" enctype="multipart/form-data">
+        <h4 class="text-center">Update Game results</h4>
+        {% csrf_token %}
+        <div class="form-group">
+            <select class="form-control" id="result" name="result" onchange="showOption()">
+                <option>Choose</option>
+                <option value="WON">Won</option>
+                <option value="LOST">Lost</option>
+                <option value="CANCEL">Game Canceled</option>
+            </select>
+        </div>
+        <div class="form-group" id="won" style="display: none;">
+            <div class="cz-file-drop-area">
+                <div class="cz-file-drop-icon czi-cloud-upload"></div>
+                <span class="cz-file-drop-message">Drag and drop here to upload</span>
+                <input type="file" name="upload_file" multiple class="cz-file-drop-input">
+                <button type="button" class="cz-file-drop-btn btn btn-primary btn-sm">Or select file</button>
+              </div>
+        </div>
+
+
+        <div class="form-group" id="cancel" style="display: none;">
+            <label for="cancel">Game cancel reason</label>
+            <textarea class="form-control" name="reason_of_cancel" ></textarea>
+
+        </div>
+
+
+
+
+        <button class="btn btn-accent" type="submit">Submit Result <i class="czi-loudspeaker ml-3"></i></button>
+
+    </form>
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+<script>
+    var url = 'ws://localhost:8000' + window.location.pathname
+    var room_id = '{{room_id}}'
+    let socket = new WebSocket('ws://localhost:8000/ws/game/room/' + room_id);
+    socket.onopen = function (e) {
+        console.log('Connection established');
+    };
+
+    socket.onmessage = function (e) {
+        var data = JSON.parse(e.data)
+        console.log(data)
+        var spinner = document.getElementById('spinner')
+        var show_room_code = document.getElementById('show_room_code')
+        var room_code_div = document.getElementById('room_code_div')
+        if ('room_code' in data.message) {
+            spinner.style.display = 'none'
+            room_code_div.style.display = 'block'
+            show_room_code.value = data.message.room_code
+        }
+    };
+    socket.onclose = function (e) {
+        console.log('Connection closed');
+    };
+
+    function sendRoomCode() {
+        var room_code = document.getElementById('room_code')
+        console.log(room_code)
+        if (room_code.value.length) {
+            socket.send(JSON.stringify({
+                'room_code': room_code.value
+            }))
+            room_code.disabled = true
+        }
+    }
+
+    function changeRoomCode(){
+        var room_code = document.getElementById('room_code')
+        room_code.disabled = false
+    }
+
+    function showOption(){
+        var won = document.getElementById('won')
+        var cancel = document.getElementById('cancel')
+        var result = document.getElementById('result')
+
+        if(result.value == 'WON'){
+            won.style.display = 'block'
+            cancel.style.display = 'none'
+
+        }else if(result.value == 'CANCEL'){
+            cancel.style.display = 'block'
+            won.style.display = 'none'
+        }else{
+            won.style.display = 'none'
+            cancel.style.display = 'none'
+
+
+        }
+
+    }
+
+
+</script>
+
+
+
+
+{% endblock %}

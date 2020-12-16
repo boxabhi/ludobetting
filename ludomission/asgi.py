@@ -13,12 +13,16 @@ from channels.routing import ProtocolTypeRouter,URLRouter
 from channels.auth import AuthMiddlewareStack
 from django.urls import path
 from game import consumers
+from django.urls import re_path
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ludomission.settings')
 
 
 
 ws_pattern= [
-    path('ws/tableData/',consumers.TableData.as_asgi()),
+    path('ws/tableData/',consumers.TableData),
+    path('ws/room/' , consumers.Room),
+    path('ws/game/room/<room_name>' , consumers.ChatConsumer)
 ]
 
 application= ProtocolTypeRouter(

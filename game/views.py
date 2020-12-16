@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import *
@@ -20,6 +20,28 @@ pusher_client = pusher.Pusher(
 
 def game_playing(request):
     return render(request, 'game/game_playing.html')
+
+def waiting_room(request , room_id):
+    game = Game.objects.filter(room_id=room_id).first()
+    user = request.user
+    if game is None:
+        return redirect('/error')
+    
+    if request.method == 'POST':
+        result = request.POST.get('result')
+        images = request.FILES.getlist('upload_file')
+        reason_of_cancel = request.POST.get('reason_of_cancel')
+        print(reason_of_cancel)
+        game_result = GameResult(game = game , user = user , result = result , reason_of_cancel=reason_of_cancel)
+        game_result.save()
+        for image in images:
+            image_obj = Image(user = user,game_result =game_result,uploaded_image=image)
+            image_obj.save()
+        
+        return redirect('/')
+    
+    context = {'room_id': room_id , 'game' : game}
+    return render(request, 'game/waiting_room.html' , context)
 
 @csrf_exempt
 def games(request):
