@@ -5,6 +5,7 @@ import channels.layers
 from django.dispatch import receiver
 from asgiref.sync import async_to_sync
 import json
+from django.core import serializers
 # Create your models here.
 
 
@@ -25,7 +26,28 @@ class Game(models.Model):
     state = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     
+    
+    @staticmethod
+    def get_games(user_id):
+        user = User.objects.get(id=user_id)
+        games = Game.objects.all()
+        payload = []
+        for game in games:
+            result = {}
+            if not game.is_over:
+                result['id'] = game.id
+                result['game_creater'] = game.game_creater.username
+                result['coins']  = game.coins
+                result['room_id'] = game.room_id
+                result['state'] = game.state
+                payload.append(result)
+            
+        return payload
 
+    # @static
+    # def get_user_game(id):
+    #     user
+    
 
     
 class GameResult(models.Model):
