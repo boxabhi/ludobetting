@@ -1,0 +1,102 @@
+{% extends "admin/base.html" %}
+{% block start %}
+
+ 
+ 
+ 
+ 
+ 
+ <section class="col-lg-8 pt-lg-4 pb-4 mb-3">
+
+            <form>
+           
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="account-fn">Search user</label>
+                  <input class="form-control" type="text" id="account-fn" placeholder="mobie number or email or username ">
+                  
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label  for="order-sort">Sort Users:</label>
+              <select class="form-control custom-select" id="order-sort">
+                <option>All</option>
+                <option></option>
+                
+              </select>
+                </div>
+              </div>
+              <div class="col-12">
+                <hr class="mt-2 mb-3">
+                <div class="d-flex flex-wrap justify-content-between " style="float:right">
+                  <button class="btn btn-primary mt-3 mt-sm-0" type="button">Search</button>
+                  </div>
+                  
+                </div>
+              </div>
+             
+          </form>
+            <div class="pt-2 px-4 pl-lg-0 pr-xl-5">
+              <h2 class="h3 py-2 text-center text-sm-left">User List</h2>
+              
+              
+              <div class="table-responsive">
+                <table class="table table-fixed font-size-sm mb-0">
+                  <thead>
+                    <tr>
+                      <th>User Id</th>
+                      <th>User name</th>
+                      <th>Whatsapp Number</th>
+                      <th>email</th>
+                      <th>more</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>123</td>
+                      <td>username</td>
+                      <td>7786853588</td>
+                      <td>abc@abc.com</td>
+                      <td class="py-3 align-middle"><a class="nav-link-style mr-2" href="#" data-toggle="tooltip" title="View details"><i class="btn btn-primary btn-sm">View details</i></td>
+                    </tr>
+                    <tr>
+                      <td>1234</td>
+                      <td>2nduser</td>
+                      <td>1234567890</td>
+                      <td>abc@abc.com</td>
+                      <td class="py-3 align-middle"><a class="nav-link-style mr-2" href="#" data-toggle="tooltip" title="View details"><i class="btn btn-primary btn-sm">View details</i></td>
+                    </tr>
+                   
+                  </tbody>
+                </table>
+              </div>
+              <hr class="mb-grid-gutter">
+              <!-- Pagination-->
+                 <nav class="d-flex justify-content-between pt-2" aria-label="Page navigation">
+            <ul class="pagination">
+              <li class="page-item"><a class="page-link" href="#"><i class="czi-arrow-left mr-2"></i>Prev</a></li>
+            </ul>
+            <ul class="pagination">
+              <li class="page-item d-sm-none"><span class="page-link page-link-static">1 / 5</span></li>
+              <li class="page-item active d-none d-sm-block" aria-current="page"><span class="page-link">1<span class="sr-only">(current)</span></span></li>
+              <li class="page-item d-none d-sm-block"><a class="page-link" href="#">2</a></li>
+              <li class="page-item d-none d-sm-block"><a class="page-link" href="#">3</a></li>
+              <li class="page-item d-none d-sm-block"><a class="page-link" href="#">4</a></li>
+              <li class="page-item d-none d-sm-block"><a class="page-link" href="#">5</a></li>
+            </ul>
+            <ul class="pagination">
+              <li class="page-item"><a class="page-link" href="#" aria-label="Next">Next<i class="czi-arrow-right ml-2"></i></a></li>
+            </ul>
+          </nav>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    {% endblock %}
