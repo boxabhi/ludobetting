@@ -91,10 +91,29 @@ def otp_attempt(request , user_id):
 
 
 def edit_profile(request):
-    pass
+    if request.method == "POST":
+        username = request.POST.get('username')
+        
+        check_user_name = User.objects.filter(username=username).first()
+        if check_user_name:
+            messages.success(request, 'Oops! Username already taken 😁')
+            return redirect('/accounts/edit_profile/')
+        try:
+            user = User.objects.get(id= request.user.id)
+            user.username = username
+            user.save()
+            messages.success(request, 'Your username changed! Nice username !  😁')
+            return redirect('/accounts/edit_profile')
+        except User.DoesNotExist:
+            return redirect('/error')
+    return render(request , 'accounts/edit_profile.html')
+
 
 def change_password(request):
-    pass 
+    if request.method == "POST":
+        pass
+    return render(request , 'accounts/change_password.html')
+ 
 
 
 def forget_password_attempt(request):

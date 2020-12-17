@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
     
     
 
-def home(request):
+def home(request , username=None):
     if request.user.is_authenticated:
         set_coins(request)
         

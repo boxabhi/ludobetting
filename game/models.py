@@ -29,8 +29,7 @@ class Game(models.Model):
     
     @staticmethod
     def get_games(user_id):
-        user = User.objects.get(id=user_id)
-        games = Game.objects.all()
+        games = Game.objects.filter(is_over = False)
         payload = []
         for game in games:
             result = {}
@@ -44,9 +43,18 @@ class Game(models.Model):
             
         return payload
 
-    # @static
-    # def get_user_game(id):
-    #     user
+    @staticmethod
+    def get_user_game(username):
+        user = User.objects.filter(username=username).first()
+        game = Game.objects.filter(game_creater =user , is_over=False).first()
+        payload = {}
+        payload['id'] = game.id
+        payload['game_creater'] = game.game_creater.username
+        payload['coins']  = game.coins
+        payload['room_id'] = game.room_id
+        payload['state'] = game.state
+        return payload
+            
     
 
     

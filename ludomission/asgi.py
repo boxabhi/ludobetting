@@ -14,19 +14,24 @@ from channels.auth import AuthMiddlewareStack
 from django.urls import path
 from game import consumers
 from django.urls import re_path
+from django.core.asgi import get_asgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ludomission.settings')
-
+django_asgi_app = get_asgi_application()
 
 
 ws_pattern= [
-    path('ws/tableData/',consumers.TableData),
+    path('ws/tableData/<username>',consumers.TableData),
+    path('ws/allgames/' , consumers.AllGames),
     path('ws/room/' , consumers.Room),
-    path('ws/game/room/<room_name>' , consumers.ChatConsumer)
+    path('ws/game/room/<room_name>' , consumers.ChatConsumer),
+    path('ws/join/' , consumers.JoinRequest)
 ]
 
 application= ProtocolTypeRouter(
+   
     {
+         #"http": django_asgi_app,
         'websocket':AuthMiddlewareStack(URLRouter(ws_pattern))
     }
 )

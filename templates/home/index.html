@@ -25,11 +25,11 @@
       </div>
     </div>
 
-    <li id="user_game" class="shadow list-group-item d-flex justify-content-between align-items-center"
-      style="visibility:hidden">
+    <li v-if="Object.keys(user_game)" class="shadow list-group-item d-flex justify-content-between align-items-center">
       <span>
+          [[user_game.game_creater]]
         <i class="czi-play-circle text-muted mr-2"></i>
-        <b id="game_here"></b>
+        <b id="game_here">  You created a game worth [[user_game.coins]]</b>
       </span>
 
       <button class="btn btn-outline-primary">Play</button>
@@ -59,7 +59,9 @@
     el: '#app',
     data: {
       message: 'Hello Vue!',
-      games: []
+      games: [],
+      username : '{{request.user.username}}',
+      user_game : {}
     },
     methods: {
       greet: function (name) {
@@ -70,20 +72,36 @@
     },
     mounted() {
       var _this = this;
-      let socket = new WebSocket('ws://localhost:8000/ws/tableData/');
+      let socket = new WebSocket('ws://localhost:8000/ws/tableData/'+this.username);
+      let allGames = new WebSocket('ws://localhost:8000/ws/allgames/')
+
+
+
       socket.onopen = function (e) {
+        var id = '{{request.user.id}}'
+        socket.send(JSON.stringify({'id' : id}))
         console.log('Connection established');
       };
-
       socket.onmessage = function (e) {
         var data = JSON.parse(e.data)
-        _this.games = data.payload
-        
+        _this.user_game = (data.payload)
+        console.log(_this.user_game)
       };
-
       socket.onclose = function (e) {
         console.log('Connection closed');
       };
+
+      allGames.onopen = function(e) {
+        console.log('Allgames connected')
+      }
+      allGames.onmessage = function(e){
+        console.log(e)
+      }
+
+      allGames.onclose = function(e){
+        console.log('Allgames closed')
+      }
+
 
     }
   });
