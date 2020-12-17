@@ -25,6 +25,7 @@ def buy_coins(request):
         result = make_payment(order_id , amount , request.user.username  , str(profile.whatsapp) ,   "s")
         checkout = {'signature': result , 'orderAmount' : amount , 'orderId' : order_id ,'customerName' :request.user.username , 'customerPhone' :str(profile.whatsapp) }
         context = {'checkout': checkout}
+        
         order_coins = OrderCoins(order_id= order_id , user = request.user , amount=amount)
         order_coins.save()
         return render(request,'transaction/buy_coins.html' , context)
@@ -54,6 +55,9 @@ def sell_coins(request):
             messages.success(request, "Only two requests per day 😳")
             return redirect('/transaction/sell-coins/')
         
+        profile = Profile.objects.filter(user = user).first()
+        profile.coins = profile.coins - int(amount)
+        profile.save()
         sell_coins_obj = SellCoins(user = user , amount=amount , payment_mode=payment_mode,number=number)
         sell_coins_obj.save()
         messages.success(request, "Your request has been received 🤑")

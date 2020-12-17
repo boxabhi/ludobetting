@@ -18,7 +18,6 @@ class AllGames(WebsocketConsumer):
         )
         self.accept()
         data = Game.get_games(1)
-        print(data)
         self.send(text_data=json.dumps({
             'payload': data
         }))
@@ -28,8 +27,7 @@ class AllGames(WebsocketConsumer):
     
     
     def receive(self,text_data):
-        user_id = json.loads(text_data)
-        user = User.objects.get(id=user_id.get('id'))
+    
         self.channel_layer.group_send(
             self.group_name,
             {
@@ -37,6 +35,10 @@ class AllGames(WebsocketConsumer):
                 'value':text_data,
             }
         )
+    
+    def request_game(self , text):
+        print("heelo")
+        
 
 class TableData(WebsocketConsumer):
     def connect(self):
@@ -48,6 +50,9 @@ class TableData(WebsocketConsumer):
         )
         self.accept()
         data = Game.get_user_game(self.room_name)
+        if data is None:
+            data = {}
+        data['type'] = 'game_created'
         self.send(text_data=json.dumps({
             'payload': data
         }))
@@ -58,20 +63,81 @@ class TableData(WebsocketConsumer):
         pass
 
     def receive(self,text_data):
-        user_id = json.loads(text_data)
-        user = User.objects.get(id=user_id.get('id'))
-        self.channel_layer.group_send(
-            self.group_name,
-            {
-                'type':'randomFunction',
-                'value':text_data,
-            }
-        )
+        data = json.loads(text_data)
+        if data.get('type') == 'request_game':
+            async_to_sync(self.channel_layer.group_send)(
+                'user_%s' % data.get('requested_user'),{
+                    'type':'sendrequest',
+                    'value': json.dumps(data),
+                        }
+                )
+        elif data.get('type') == 'accept':
+            async_to_sync(self.channel_layer.group_send)(
+                'user_%s' % data.get('requested_user'),{
+                    'type':'accept_request',
+                    'value': json.dumps(data),
+                        }
+                )
+        elif data.get('type') == 'declined':
+            async_to_sync(self.channel_layer.group_send)(
+                'user_%s' % data.get('requested_user'),{
+                    'type':'decline_request',
+                    'value': json.dumps(data),
+                        }
+                )
+    
+    
+    def accept_request(self , text_data):
+        data = json.loads(text_data['value'])
+        data['type'] = 'request_accepted'
+        data['message'] = 'Your request has been accepted'
+        user = User.objects.filter(username=data.get('requesting_user')).first()
+        game = Game.objects.filter(game_creater = user,is_over=False).first()
+        user_two = User.objects.filter(username=data.get('requested_user')).first()
+        game.player_two = user_two.id
+        data['room_id'] = game.room_id
+        self.send(text_data = json.dumps({
+            'payload': data
+        }))
+        
+            
+    def decline_request(self, text_data):
+        data = json.loads(text_data['value'])
+        
+        game = Game.decline_game_for_user(data.get('requesting_user') , data.get('requested_user'))
+        print(game)
+        if game:
+            data['message'] = 'You cannot request a game more than 2 times'
+        else:   
+            data['message'] = 'Your request has been declined'
+            
+        data['type'] = 'request_declined'
+        self.send(text_data = json.dumps({
+            'payload': data
+        }))
+    
 
+    def sendrequest(self, text_data):
+        data = json.loads(text_data['value'])
+        print("dd")
+        data['type'] = 'user_game'
+        self.send(text_data=json.dumps({
+            'payload': data
+        }))
+        
+    
+    def created_game(self , text_data):
+        data = json.loads(text_data['value'])
+        data['type'] = 'game_created'
+        self.send(text_data = json.dumps({
+            'payload': data
+        }))      
+    
+    
     def randomFunction(self,event):
-        print(event)
+        pass
         value =  json.loads(event['value'])
-        print(value)
+        
         if value.get('type') == 'play_request':
             self.change_game_state(value.get('id'))
         self.send(event['value'])
@@ -80,9 +146,7 @@ class TableData(WebsocketConsumer):
     @sync_to_async
     def change_game_state(id):
         game = Game.objects.get(id=id)
-        print("############")
-        print(game)
-        print("############")
+        
         game.state = 1
         game.save()
 
@@ -116,7 +180,6 @@ class JoinRequest(AsyncWebsocketConsumer):
         )
 
     async def randomFunction(self,event):
-        print (event['value'])
         await self.send(event['value'])
         
 class Room(SyncConsumer):
@@ -183,7 +246,7 @@ class ChatConsumer(WebsocketConsumer):
     # Receive message from room group
     def chat_message(self, event):
         message = json.loads(event['message'])
-        print(message)
+       
 
         # Send message to WebSocket
         self.send(text_data=json.dumps({

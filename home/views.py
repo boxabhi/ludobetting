@@ -9,6 +9,12 @@ from django.contrib.auth.decorators import login_required
 
     
     
+def landing(request):
+    return render(request, 'home/landing.html')    
+
+
+def error(request):
+    return render(request, 'error.html')
 
 def home(request , username=None):
     if request.user.is_authenticated:

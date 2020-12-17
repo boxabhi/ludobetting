@@ -43,6 +43,23 @@ def waiting_room(request , room_id):
     context = {'room_id': room_id , 'game' : game}
     return render(request, 'game/waiting_room.html' , context)
 
+
+
+def delete_game(request , id):
+    user = request.user
+    try:
+        game = Game.objects.get(id=id)
+        if game.game_creater.id != user.id:
+            return redirect('/')
+        else:
+            game.delete()
+            return redirect('/user/'+user.username +'/')
+    except Game.DoesNotExist:
+        return redirect('/')
+
+
+
+
 @csrf_exempt
 def games(request):
     pusher_client.trigger('my-channel', 'my-event', {'message': 'hello world'})
