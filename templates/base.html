@@ -6,18 +6,9 @@
     <title>Ludomission | A powerful ludo betting online platform</title>
     </title>
     <!-- SEO Meta Tags-->
-    <meta name="description" content="Cartzilla - Bootstrap E-commerce Template">
-    <meta name="keywords"
-        content="bootstrap, shop, e-commerce, market, modern, responsive,  business, mobile, bootstrap 4, html5, css3, jquery, js, gallery, slider, touch, creative, clean">
-    <meta name="author" content="Createx Studio">
-    <!-- Viewport-->
+    
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Favicon and Touch Icons-->
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-
-    <link rel="mask-icon" color="#fe6a6a" href="safari-pinned-tab.svg">
+   
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="theme-color" content="#ffffff">
     <!-- Vendor Styles including: Font Icons, Plugins, etc.-->
@@ -47,11 +38,10 @@
         </a>
             {% endif  %}
             {% if request.user.is_authenticated %}
-            <a class="navbar-tool ml-3 " href="#">
-               <span class="navbar-tool-label">{{ request.session.coins }}</span>
-               <span class="badge badge-success badge-shadow">Coins</span> <i
-                    class="navbar-tool-icon czi-coin"></i>
-            </a>
+            <a class=" btn btn-info btn-sm ml-4" href="#">
+                <i class="czi-currency-exchange mr-2"></i>Coins {{ request.session.coins }}
+        </a>
+            
             <a class=" btn btn-primary btn-sm ml-4" href="{% url 'logout' %}">
                     <i class="czi-user mr-3"></i>Logout
             </a>
