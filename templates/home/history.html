@@ -17,8 +17,20 @@
       {% for h in history %}
         <tr>
           <td class="py-3"><a class="nav-link-style font-weight-medium font-size-sm" href="#order-details" data-toggle="modal">{{h.message}}</a></td>
-          <td class="py-3">{{h.created_at |truncatechars:12}}</td>
-          <td class="py-3"><span class="badge badge-info m-0">{{h.status}}</span></td>
+          <td class="py-3">{{h.created_at}}</td>
+          <td class="py-3">
+            {% if h.status == 'Won' %}
+            <span class="badge badge-success m-0">{{h.status}}</span>
+            {% elif h.status == 'Lost' %}
+            <span class="badge badge-danger m-0">{{h.status}}</span>
+            {% elif h.status == 'Cancelled' %}
+            <span class="badge badge-warning m-0">{{h.status}}</span>
+            {%  else %}
+            <span class="badge badge-dark m-0">{{h.status}}</span>
+            {% endif %}
+
+          
+          </td>
           <td class="py-3">{{h.amount}}</td>
         </tr>
         {% endfor %}

@@ -6,6 +6,7 @@ import json
 from game.models import *
 from channels.auth import login
 from django.contrib.auth.models import User
+from accounts.models import *
 
 
 class AllGames(WebsocketConsumer):
@@ -94,7 +95,23 @@ class TableData(WebsocketConsumer):
         user = User.objects.filter(username=data.get('requesting_user')).first()
         game = Game.objects.filter(game_creater = user,is_over=False).first()
         user_two = User.objects.filter(username=data.get('requested_user')).first()
+        print(game.id)
+        
         game.player_two = user_two.id
+        game.save()
+        profile_one = Profile.objects.filter(user = user).first()
+        profile_two = Profile.objects.filter(user = user_two).first()
+        
+        profile_one.coins = int(profile_one.coins) - int(game.coins)
+        profile_one.save()
+        
+        profile_two.coins = int(profile_two.coins) - int(game.coins)
+        profile_two.save()
+        
+        game_result_one = GameResult.create_game_result( game.id , user.id)
+        game_result_two = GameResult.create_game_result( game.id , user_two.id )
+        
+        
         data['room_id'] = game.room_id
         self.send(text_data = json.dumps({
             'payload': data

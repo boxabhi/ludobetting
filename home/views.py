@@ -40,7 +40,7 @@ def history(request):
     order_coins = OrderCoins.objects.filter(user = request.user)
     sell_coins = SellCoins.objects.filter(user = request.user)
     game_results = GameResult.objects.filter(user = request.user , game__is_over=True)
-    
+    print(game_results)
     results = []
     for order_coins in order_coins:
         result = {}
@@ -50,7 +50,7 @@ def history(request):
         else:
             result['status'] = 'Cancelled'
         result['message'] = 'You ordered coins'
-        result['created_at'] = str(order_coins.created_at)        
+        result['created_at'] = str(order_coins.created_at)[0:10]       
         results.append(result)
         
     for sell_coin in sell_coins:
@@ -62,9 +62,11 @@ def history(request):
             result['status'] = 'Pending'
         result['message'] = 'You Sell coins'
         
-        result['created_at'] = str(sell_coin.created_at)
+        result['created_at'] = str(sell_coin.created_at)[0:11]
         results.append(result)
+    count = 0
     for game_result in game_results:
+        count+=1
         result['amount'] = game_result.game.coins
         if game_result.result == 'WON':
             result['status'] = 'Won'
@@ -77,23 +79,29 @@ def history(request):
         try:
             player_one = User.objects.get(id = game_result.game.player_one)
             vs += player_one.username
+            #print(player_one)
+            
+            
         except User.DoesNotExist:
             pass
-        vs += 'V/S'
+        vs += ' V/S '
+        print(game_result.game.player_two)
         try:
             player_two = User.objects.get(id = game_result.game.player_two)
             vs += player_two.username
+            print(player_two)
+            
         except User.DoesNotExist:
             pass
         result['message'] = 'Match between ' +vs
-        result['created_at'] = str(game_result.created_at)
+        result['created_at'] = str(game_result.created_at)[0:11]
         results.append(result)
         
-
+    print(count)
     history = sorted(results , key=lambda i:i ['created_at'])
     
     context = {'history' : history}
-    print(context)
+    
     return render(request , 'home/history.html' , context)
 
 def top_winners(request):

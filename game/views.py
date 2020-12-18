@@ -6,6 +6,7 @@ from accounts.models import *
 import pusher
 import uuid
 import json
+from home.helpers import *
 # Create your views here.
 
 
@@ -22,6 +23,9 @@ def game_playing(request):
     return render(request, 'game/game_playing.html')
 
 def waiting_room(request , room_id):
+    if request.user.is_authenticated:
+        set_coins(request)
+        
     game = Game.objects.filter(room_id=room_id).first()
     user = request.user
     if game is None:
@@ -31,13 +35,17 @@ def waiting_room(request , room_id):
         result = request.POST.get('result')
         images = request.FILES.getlist('upload_file')
         reason_of_cancel = request.POST.get('reason_of_cancel')
-        print(reason_of_cancel)
-        game_result = GameResult(game = game , user = user , result = result , reason_of_cancel=reason_of_cancel)
+        
+        game_result = GameResult.objects.filter(game = game , user = user , result='PENDING').first()
+        game_result.result = result
+        if reason_of_cancel:
+            game_result.reason_of_cancel = reason_of_cancel
         game_result.save()
         for image in images:
             image_obj = Image(user = user,game_result =game_result,uploaded_image=image)
             image_obj.save()
         
+        game.is_over = True
         return redirect('/')
     
     context = {'room_id': room_id , 'game' : game}

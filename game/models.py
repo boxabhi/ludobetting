@@ -11,6 +11,7 @@ from channels.layers import get_channel_layer
 
 
 RESULT = (
+    ('PENDING', 'PENDING'),
     ('WON', 'WON'),
     ('LOST' , 'LOST'),
     ('CANCEL' , 'CANCEL')
@@ -81,10 +82,20 @@ class Game(models.Model):
 class GameResult(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE , null=True , blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE , null=True , blank=True)
-    result = models.CharField(max_length=25 , choices = RESULT)
+    result = models.CharField(max_length=25 , choices = RESULT ,  default='PENDING')
     reason_of_cancel = models.TextField(blank=True , null=True)
     created_at = models.DateTimeField(auto_now=True)
 
+    
+    @staticmethod
+    def create_game_result(game_id , user_id):
+        print(game_id)
+        game = Game.objects.get(id = game_id)
+        user = User.objects.get(id = user_id)   
+        game_result = GameResult(game = game , user = user)
+        game_result.save()
+            
+    
 
 class Image(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE , null=True , blank=True)
