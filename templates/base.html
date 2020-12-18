@@ -69,9 +69,9 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'history' %}">History</a></li>
                 {% endif %}
 
-                <li class="nav-item"><a class="nav-link" href="#">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Help</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Terms and conditions</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'howtoplay' %}">How To Play</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'help' %}">Help</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'terms' %}">Terms and conditions</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'top_winners' %}">Top winners</a></li>
                 {% if request.user.is_authenticated %}
 

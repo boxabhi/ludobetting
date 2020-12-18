@@ -30,3 +30,14 @@ def history(request):
 
 def top_winners(request):
     return render(request ,'home/top.html')
+
+def terms(request):
+    return render(request ,'home/termscondition.html')
+
+
+def help(request):
+    return render(request ,'home/help.html')
+
+
+def howtoplay(request):
+    return render(request ,'home/howtoplay.html')
