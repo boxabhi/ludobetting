@@ -41,7 +41,7 @@ def make_payment(orderId , orderAmount, customerName ,customerPhone , returnUrl)
         "customerName" : 'Ludo betting',
         "customerPhone" : customerPhone,
         "customerEmail" : "abhijeetg40@gmail.com",
-        "returnUrl" : 'http://127.0.0.1:800/0payment_success'
+        "returnUrl" : 'http://68.183.94.46/payment_success'
     }
     sortedKeys = sorted(postData)
     signatureData = ""

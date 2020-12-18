@@ -108,3 +108,13 @@ def top_winners(request):
     if request.user.is_authenticated:
         set_coins(request)
     return render(request ,'home/top.html')
+
+
+
+
+
+
+
+
+def success(request):
+    return render(request , 'transaction/success.html')

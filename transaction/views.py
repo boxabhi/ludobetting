@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from datetime import datetime, timedelta
 from home.helpers import set_coins
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 
@@ -66,3 +67,27 @@ def sell_coins(request):
     pending_requests = SellCoins.objects.filter(user = user , is_paid=False)
     context = {'pending_requests': pending_requests} 
     return render(request,'transaction/sell_coins.html', context)
+
+
+
+
+@csrf_exempt
+def payment_success(request):
+    data  = (request.body)
+    
+    
+    decode_data = data.decode("utf-8") 
+    raw_data = decode_data.split("&")
+    order_id = raw_data[0].split("=")
+    order_amount = raw_data[1].split('=')
+    transaction_status = raw_data[3].split("=")
+    
+    order_coins = OrderCoins.objects.filter(order_id=order_id[1]).first()
+    if transaction_status[1] == 'SUCCESS':
+        profile = Profile.objects.filter(user=order_coins.user).first()
+        profile.coins += int(float((order_amount[1])))
+        profile.save()
+        order_coins.status = True
+        order_coins.save()
+        return render(request,"transaction/success.html")
+    return redirect('/error')

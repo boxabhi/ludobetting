@@ -8,5 +8,6 @@ urlpatterns = [
     path('history' , history , name="history"),
     path('top-winners' , top_winners , name="top_winners"),
     
-    path('error' , error , name="error")
+    path('error' , error , name="error"),
+    path('success' , success , name="success")
 ]
