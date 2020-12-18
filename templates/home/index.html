@@ -146,7 +146,8 @@
     },
     mounted() {
       var _this = this;
-      let socket = new WebSocket('ws://localhost:8000/ws/tableData/' + this.username);
+      
+      let socket = new WebSocket('ws://localhost:8000/ws/tableData/' + _this.username);
       let allGames = new WebSocket('ws://localhost:8000/ws/allgames/?user=1')
 
 

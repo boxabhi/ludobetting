@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from accounts.models import *
 from .helpers import set_coins
 from transaction.models import *
@@ -21,10 +21,15 @@ def error(request):
         set_coins(request)
     return render(request, 'error.html')
 
+
+@login_required(login_url='/accounts/login/')
 def home(request , username=None):
     if request.user.is_authenticated:
         set_coins(request)
-        
+    
+    if request.user.username != username:
+        return redirect('/error')
+      
     return render(request , 'home/index.html')
 
 @login_required(login_url='/accounts/login/')

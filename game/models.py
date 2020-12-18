@@ -22,7 +22,7 @@ class Game(models.Model):
     room_id = models.CharField(max_length=100)
     player_one = models.CharField(max_length=10 ,blank=True , null=True)
     player_two = models.CharField(max_length=10 , blank=True , null=True)
-    requested_players = models.CharField(max_length=100 , blank=True , null=True)
+    requested_players = models.CharField(max_length=500 , default=',')
     is_over = models.BooleanField(default=False)
     state = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
