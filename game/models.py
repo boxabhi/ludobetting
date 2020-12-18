@@ -133,10 +133,10 @@ def game_handler(sender , instance,created,**kwargs):
                 'value': json.dumps(data)
             }
         )
+        games = Game.get_games(1)
         async_to_sync(channel_layer.group_send)(
-            'tableData',
-            {
-            'type': 'randomFunction',
-            'value': json.dumps(data)
+            'all_games',{
+            'type': 'sendgames',
+            'value': json.dumps(games)
             }
         )

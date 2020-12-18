@@ -18,7 +18,7 @@ class AllGames(WebsocketConsumer):
             self.channel_name
         )
         self.accept()
-        data = Game.get_games(1)
+        data = {'type' : 'games'  , 'data' : Game.get_games(1)}
         self.send(text_data=json.dumps({
             'payload': data
         }))
@@ -28,14 +28,27 @@ class AllGames(WebsocketConsumer):
     
     
     def receive(self,text_data):
+        
+        async_to_sync(self.channel_layer.group_send)(
+            'all_game',{
+                 'type':'sendgames',
+                    'value': (text_data),
+            })
+
     
-        self.channel_layer.group_send(
-            self.group_name,
-            {
-                'type':'randomFunction',
-                'value':text_data,
-            }
-        )
+    def sendgames(self , text_data):
+        data = json.loads(text_data['value'])
+        payload = {'type' : 'games'  , 'data' : data}
+        #data['type'] = 'games'
+        
+        self.send(text_data=json.dumps({
+            'payload': data
+        }))
+        
+
+    
+    
+    
     
     def request_game(self , text):
         print("heelo")
@@ -95,8 +108,6 @@ class TableData(WebsocketConsumer):
         user = User.objects.filter(username=data.get('requesting_user')).first()
         game = Game.objects.filter(game_creater = user,is_over=False).first()
         user_two = User.objects.filter(username=data.get('requested_user')).first()
-        print(game.id)
-        
         game.player_two = user_two.id
         game.save()
         profile_one = Profile.objects.filter(user = user).first()
@@ -122,7 +133,7 @@ class TableData(WebsocketConsumer):
         data = json.loads(text_data['value'])
         
         game = Game.decline_game_for_user(data.get('requesting_user') , data.get('requested_user'))
-        print(game)
+        
         if game:
             data['message'] = 'You cannot request a game more than 2 times'
         else:   
@@ -136,7 +147,6 @@ class TableData(WebsocketConsumer):
 
     def sendrequest(self, text_data):
         data = json.loads(text_data['value'])
-        print("dd")
         data['type'] = 'user_game'
         self.send(text_data=json.dumps({
             'payload': data
@@ -178,11 +188,7 @@ class JoinRequest(AsyncWebsocketConsumer):
             self.channel_name
         )
         await self.accept()
-        # self.user = self.scope['user']
-        # print("Thi sis user")
-        # print(self.user)
-        # await login(self.scope, user)
-        # await database_sync_to_async(self.scope["session"].save)()
+
         
     async def disconnect(self,close_code):
         pass
