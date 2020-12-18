@@ -6,9 +6,9 @@
     <title>Ludomission | A powerful ludo betting online platform</title>
     </title>
     <!-- SEO Meta Tags-->
-    
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
-   
+
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="theme-color" content="#ffffff">
     <!-- Vendor Styles including: Font Icons, Plugins, etc.-->
@@ -16,43 +16,33 @@
     <link rel="stylesheet" media="screen" href="/static/vendor/tiny-slider/dist/tiny-slider.css" />
     <!-- Main Theme Styles + Bootstrap-->
     <link rel="stylesheet" media="screen" href="/static/css/theme.min.css">
+
+    <style>
+        .nav-item,
+        .nav-link {
+            color: #fff !important
+        }
+    </style>
 </head>
 <!-- Body-->
 
-<header class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 px-3 "><a
-        class="navbar-brand d-none d-lg-block mr-3 order-lg-1" href="/" style="min-width: 7rem;">
-        <b>Ludo Mission</b>
-        <div class="navbar-toolbar d-flex align-items-center order-lg-3">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarDarkCollapse"><span class="navbar-toggler-icon"></span></button>
-                    <a class="navbar-tool" href="#">
-    
-            </a>
+<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand text-white" href="/"> <b>Ludo Mission</b></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    
-            {% if not request.user.is_authenticated %}
-            <a class=" btn btn-info btn-sm" href="{% url 'login' %}">
-                    <i class="czi-user mr-1"></i> Login
-            </a>
-            <a class=" btn btn-success btn-sm ml-3" href="{% url 'register' %}">
-                <i class="czi-user mr-1"></i> Register
-        </a>
-            {% endif  %}
-            {% if request.user.is_authenticated %}
-            <a class=" btn btn-info btn-sm ml-4" href="#">
-                <i class="czi-currency-exchange mr-2"></i>Coins {{ request.session.coins }}
-        </a>
-            
-            <a class=" btn btn-primary btn-sm ml-4" href="{% url 'logout' %}">
-                    <i class="czi-user mr-3"></i>Logout
-            </a>
-            {% endif %}
-
-        </div>
-        <div class="collapse navbar-collapse mr-auto order-lg-2" id="navbarDarkCollapse">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <hr class="hr-light d-lg-none mt-3 mb-2">
-            <ul class="navbar-nav">
+
+            <ul class="navbar-nav mr-auto">
+
+
                 {% if request.user.is_authenticated %}
-                <li class="nav-item active"><a class="nav-link" href="{% url 'home' request.user.username %}">Play</a></li>
+                <li class="nav-item active"><a class="nav-link" href="{% url 'home' request.user.username %}">Play</a>
+                </li>
 
                 <li class="nav-item"><a class="nav-link" href="{% url 'buy_coins' %}">Buy Coins</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'sell_coins' %}">Sell Coins</a></li>
@@ -67,21 +57,43 @@
                 {% if request.user.is_authenticated %}
 
                 <li class="nav-item dropdown text-right float-right ">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <b> Profile</b> 
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <b> Profile</b>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                      <a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a>
-                      <a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a>
-                     
+                        <a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a>
+                        <a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a>
+
                     </div>
-                  </li>
+                </li>
                 {% endif %}
 
 
             </ul>
+            <form class="form-inline my-2 my-lg-0">
+                {% if not request.user.is_authenticated %}
+                <a class=" btn btn-info btn-sm" href="{% url 'login' %}">
+                    <i class="czi-user mr-1"></i> Login
+                </a>
+                <a class=" btn btn-success btn-sm ml-3" href="{% url 'register' %}">
+                    <i class="czi-user mr-1"></i> Register
+                </a>
+                {% endif  %}
+                {% if request.user.is_authenticated %}
+                <a class=" btn btn-info btn-sm ml-4" href="#">
+                    <i class="czi-currency-exchange mr-2"></i>Coins {{ request.session.coins }}
+                </a>
+
+                <a class=" btn btn-primary btn-sm ml-4" href="{% url 'logout' %}">
+                    <i class="czi-user mr-3"></i>Logout
+                </a>
+                {% endif %}
+            </form>
         </div>
-</header>
+    </div>
+
+</nav>
 
 {% block start %}
 
@@ -100,9 +112,9 @@
 <style>
     footer {
         /* position: absolute; */
-   bottom: 0;
-   width: 100%;
-}
+        bottom: 0;
+        width: 100%;
+    }
 </style>
 
 

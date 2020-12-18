@@ -42,7 +42,7 @@
       <a :href="'/game/delete_game/'+user_game.id" class="btn btn-warning"><i class="czi-pot"></i></a>
     </li>
 
-    [[games]]
+   
     <ul class="list-group mt-5 mb-5 pb-5" id="live_games">
       <li v-for="game in games" :key="game.id"
         class="list-group-item d-flex justify-content-between align-items-center"><span><i
@@ -68,6 +68,7 @@
     data: {
       message: 'Hello Vue!',
       games: [],
+      url : 'ws://localhost:8000',
       username: '{{request.user.username}}',
       user_game: {},
       requesting_user: null,
@@ -107,7 +108,7 @@
       },
 
       requestGame(user) {
-        let socket = new WebSocket('ws://localhost:8000/ws/tableData/' + user);
+        let socket = new WebSocket(`${this.url}/ws/tableData/` + user);
         var _this = this;
         socket.onopen = function (e) {
           console.log(e)
@@ -119,7 +120,7 @@
         }
       },
       accept(user) {
-        let socket = new WebSocket('ws://localhost:8000/ws/tableData/' + this.username);
+        let socket = new WebSocket(`${this.url}/ws/tableData/` + this.username);
         var _this = this;
         socket.onopen = function (e) {
           socket.send(JSON.stringify({
@@ -131,7 +132,7 @@
         }
       },
       decline(user) {
-        let socket = new WebSocket('ws://localhost:8000/ws/tableData/' + this.username);
+        let socket = new WebSocket(`${this.url}/ws/tableData/` + this.username);
         var _this = this;
         socket.onopen = function (e) {
           socket.send(JSON.stringify({
@@ -147,8 +148,8 @@
     mounted() {
       var _this = this;
       
-      let socket = new WebSocket('ws://localhost:8000/ws/tableData/' + _this.username);
-      let allGames = new WebSocket('ws://localhost:8000/ws/allgames/?user=1')
+      let socket = new WebSocket(`${this.url}/ws/tableData/` + _this.username);
+      let allGames = new WebSocket(`${this.url}/ws/allgames/?user=1`)
 
 
 
@@ -199,7 +200,7 @@
         var games = JSON.parse(e.data).payload
         console.log(games)
         if(games.type == "games"){
-          alert("gamespeed_")
+        
           _this.games = games.data;
         }else if(games.type == 'game'){
           _this.games = (games)
@@ -219,9 +220,9 @@
     }
   });
 </script>
-
+<!-- 
 {% comment %} <script>
-  let socket = new WebSocket('ws://localhost:8000/ws/tableData/');
+  let socket = new WebSocket(`${this.url}/ws/tableData/`);
   socket.onopen = function (e) {
     console.log('Connection established');
   };
@@ -315,6 +316,6 @@
 
     }
   }
-</script> {% endcomment %}
+</script> {% endcomment %} -->
 
 {% endblock %}

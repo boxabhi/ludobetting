@@ -5,3 +5,4 @@ from .models import *
 admin.site.register(Game)
 admin.site.register(GameResult)
 admin.site.register(Image)
+admin.site.register(DisputedGame)
