@@ -89,5 +89,5 @@ def payment_success(request):
         profile.save()
         order_coins.status = True
         order_coins.save()
-        return render(request,"transaction/success.html")
+        return redirect('/success')
     return redirect('/error')
