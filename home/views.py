@@ -11,10 +11,14 @@ from django.contrib.auth.decorators import login_required
     
     
 def landing(request):
+    if request.user.is_authenticated:
+        set_coins(request)
     return render(request, 'home/landing.html')    
 
 
 def error(request):
+    if request.user.is_authenticated:
+        set_coins(request)
     return render(request, 'error.html')
 
 def home(request , username=None):
@@ -88,4 +92,6 @@ def history(request):
     return render(request , 'home/history.html' , context)
 
 def top_winners(request):
+    if request.user.is_authenticated:
+        set_coins(request)
     return render(request ,'home/top.html')

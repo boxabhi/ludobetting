@@ -18,7 +18,7 @@ def login_attempt(request):
         
             
         if user_by__whatsapp is None:
-            messages.success(request, 'User not found')
+            messages.success(request, 'User not found 🧐')
             return redirect('/accounts/login/')
         
         if user_by__whatsapp.is_verified == False:
@@ -33,7 +33,7 @@ def login_attempt(request):
                 login(request,user)
                 return redirect('/')
             else:
-                messages.success(request, 'Wrong Password')
+                messages.success(request, 'Wrong Password 🧐')
                 return redirect('/accounts/login/')
         except User.DoesNotExist:
             return redirect('/error')
@@ -115,7 +115,7 @@ def change_password(request):
     if request.method == "POST":
         password = request.POST.get('password')
         new_password = request.POST.get('new_password')
-        confirm_passsword = request.POST.get('confirm_passsword')
+        confirm_passsword = request.POST.get('confirm_password')
         
         if new_password != confirm_passsword:
             messages.success(request, 'New and Confirm password must be same. 😡')
@@ -140,11 +140,65 @@ def change_password(request):
 
 
 def forget_password_attempt(request):
-    return render(request, 'account/forget_password.html')
+    if request.method == 'POST':
+        whatsapp = request.POST.get("whatsapp")
+        profile = Profile.objects.filter(whatsapp=whatsapp).first()
+        
+        if profile is None:
+            messages.success(request, 'No account found 😲')
+            return redirect('/accounts/forget_password_attempt/')
+            
+        otp = send_otp(whatsapp)
+        profile.otp = otp
+        profile.save()
+        return redirect('/accounts/forget_password_otp/'+str(profile.id))
+    return render(request, 'accounts/forget_password.html')
 
+def forget_password_otp(request , id):
+    try:
+        profile = Profile.objects.get(id = id)
+    except Profile.DoesNotExist:
+        return redirect('/error')
+    
+    if request.method == 'POST':
+        otp = request.POST.get('otp')
+        if otp != profile.otp:
+            messages.success(request, 'Incorrect OTP 😲')
+            return redirect('/accounts/forget_password_otp/'+str(profile.id))
+        else:
+            messages.success(request, 'OTP matched 😎')
+            return redirect('/accounts/forget_password_change/'+str(profile.id))
+            
+    return render(request, 'accounts/forget_password_otp.html')
+            
+            
+            
+def forget_password_change(request , id):
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        confirm_passsword = request.POST.get('confirm_password')
+        print(password)
+        print(confirm_passsword)
+        if password != confirm_passsword:
+            messages.success(request, 'New and Confirm password must be same. 😡')
+            return redirect('/accounts/forget_password_change/'+id)
+        else:
+            try : 
+                profile = Profile.objects.get(id = id)
+                user = User.objects.get(id = profile.user.id)
+                user.set_password(password)
+                user.save()
+                messages.success(request, 'Your password changed! 😇')
+                return redirect('/accounts/login/')
+            except Profile.DoesNotExist:
+                return redirect('/error')
+                
+    return render(request, 'accounts/forget_password_change.html')
 
-
-
+        
+    
+        
+    
 
 
 def logout_attempt(request):
