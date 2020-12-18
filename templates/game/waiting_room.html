@@ -3,17 +3,23 @@
 
 
 <div class="container mt-5 pt-5 pb-5 mb-5">
+  
     {% if request.user.id != game.game_creater.id %}
-    <div class="text-center">
-        <h3>Waiting for room Code</h3>
+    <div>
+        <h3 class="text-center">Waiting for room Code</h3>
+        <div class="text-center">
         <div class="spinner-grow" id="spinner" role="status">
-           
             <span class="sr-only">Loading...</span>
+        </div>
         </div>
         <div class="form-group" style="display:none" id="room_code_div">
             <label>Room Code</label>
             <input class="form-control" value="" id="show_room_code">
+            <button class="btn btn-info mt-2 btn-sm" onclick="myFunction()"><i class="czi-add-document"></i> Copy Code
+            </button>
         </div>
+
+       
 
     </div>
     {% else %}
@@ -78,6 +84,7 @@
 
 
 <script>
+
     var url = 'ws://localhost:8000' + window.location.pathname
     var room_id = '{{room_id}}'
     let socket = new WebSocket('ws://localhost:8000/ws/game/room/' + room_id);
@@ -137,6 +144,15 @@
         }
 
     }
+
+    function myFunction() {
+    var copyText = document.getElementById("show_room_code");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    alert("Copied the text: " + copyText.value);
+}
+
 
 
 </script>

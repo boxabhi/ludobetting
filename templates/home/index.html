@@ -2,9 +2,9 @@
 {% block start %}
 
 <div id="app">
-  [[message]]
+
   <div class="container mt-5 pt-4 mb-5 pb-5">
-    <div class="alert alert-dark alert-with-icon" v-if="alert" role="alert" id="alert" >
+    <div class="alert alert-dark alert-with-icon" v-if="alert" role="alert" id="alert">
       <div class="alert-icon-box">
         <i class="alert-icon czi-bell"></i>
       </div>
@@ -25,27 +25,31 @@
       </div>
     </div>
 
-    <li v-if="Object.keys(user_game).length &&  'id' in user_game" class="shadow list-group-item d-flex justify-content-between align-items-center">
+    <li v-if="Object.keys(user_game).length &&  'id' in user_game"
+      class="shadow list-group-item d-flex justify-content-between align-items-center">
       <span>
-          [[user_game.game_creater]]
+        [[user_game.game_creater]]
         <i class="czi-play-circle text-muted mr-2"></i>
-        <b id="game_here">  You created a game worth [[user_game.coins]]</b>
+        <b id="game_here"> You created a game worth [[user_game.coins]]</b>
       </span>
 
-    <div  v-if="requesting_user">
-      <button class="btn btn-success" id="request_user" v-on:click="accept(requesting_user)">[[requesting_user]] requested Accept</button>
-      <button class="btn btn-danger"   v-on:click="decline(requesting_user)">Decline</button>
+      <div v-if="requesting_user">
+        <button class="btn btn-success" id="request_user" v-on:click="accept(requesting_user)">[[requesting_user]]
+          requested Accept</button>
+        <button class="btn btn-danger" v-on:click="decline(requesting_user)">Decline</button>
 
-</div>
+      </div>
       <a :href="'/game/delete_game/'+user_game.id" class="btn btn-warning"><i class="czi-pot"></i></a>
     </li>
 
 
     <ul class="list-group mt-5 mb-5 pb-5" id="live_games">
-    <li  v-for="game in games" :key="game.id"class="list-group-item d-flex justify-content-between align-items-center"><span><i class="czi-play-circle text-muted mr-2"></i>
-       [[game.game_creater]] Create a game worth [[game.coins]]
+      <li v-for="game in games" :key="game.id"
+        class="list-group-item d-flex justify-content-between align-items-center"><span><i
+            class="czi-play-circle text-muted mr-2"></i>
+          [[game.game_creater]] Create a game worth [[game.coins]]
         </span>
-        <button class="btn btn-outline-primary" v-on:click="requestGame(game.game_creater)" >Play</button>
+        <button class="btn btn-outline-primary" v-on:click="requestGame(game.game_creater)">Play</button>
       </li>
     </ul>
   </div>
@@ -64,13 +68,13 @@
     data: {
       message: 'Hello Vue!',
       games: [],
-      username : '{{request.user.username}}',
-      user_game : {},
-      requesting_user : null,
-      alert : null
+      username: '{{request.user.username}}',
+      user_game: {},
+      requesting_user: null,
+      alert: null
     },
     methods: {
-      create_game(){
+      create_game() {
         var coins = document.getElementById('coins')
         var message = document.getElementById('message')
         var alert = document.getElementById('alert')
@@ -81,113 +85,119 @@
         }
 
         if (coins.value.length) {
-      axios.post(url, {
-          'coins': coins.value
-        })
-        .then(res => {
-          if (res.data.status == false) {
-            this.alert = res.data.message
-            setTimeout(() => {
-              this.alert = null
-            }, 2000)
-
-          } else {
+          axios.post(url, {
+              'coins': coins.value
+            })
+            .then(res => {
+              if (res.data.status == false) {
                 this.alert = res.data.message
-            setTimeout(() => {
-                           this.alert = null
+                setTimeout(() => {
+                  this.alert = null
+                }, 2000)
 
-            }, 2000)
-          }
-        })
-        }}
+              } else {
+                this.alert = res.data.message
+                setTimeout(() => {
+                  this.alert = null
 
-    
+                }, 2000)
+              }
+            })
+        }
+      },
 
-      ,
-    
-      requestGame(user){
-      let socket = new WebSocket('ws://localhost:8000/ws/tableData/'+user);
-      var _this = this;
-      socket.onopen = function (e) {
-        console.log(e)
-        socket.send(JSON.stringify({'type' : 'request_game' , 'requested_user' : user ,'requesting_user' : _this.username}))
+      requestGame(user) {
+        let socket = new WebSocket('ws://localhost:8000/ws/tableData/' + user);
+        var _this = this;
+        socket.onopen = function (e) {
+          console.log(e)
+          socket.send(JSON.stringify({
+            'type': 'request_game',
+            'requested_user': user,
+            'requesting_user': _this.username
+          }))
+        }
+      },
+      accept(user) {
+        let socket = new WebSocket('ws://localhost:8000/ws/tableData/' + this.username);
+        var _this = this;
+        socket.onopen = function (e) {
+          socket.send(JSON.stringify({
+            'type': 'accept',
+            'requested_user': user,
+            'requesting_user': _this.username
+          }))
+          window.location.href = '/game/room/' + _this.user_game.room_id
+        }
+      },
+      decline(user) {
+        let socket = new WebSocket('ws://localhost:8000/ws/tableData/' + this.username);
+        var _this = this;
+        socket.onopen = function (e) {
+          socket.send(JSON.stringify({
+            'type': 'declined',
+            'requested_user': user,
+            'requesting_user': _this.username
+          }))
+
+          _this.requesting_user = null
+        }
       }
-    },
-    accept(user){
-      let socket = new WebSocket('ws://localhost:8000/ws/tableData/'+this.username);
-      var _this = this;
-      socket.onopen = function(e){
-        socket.send(JSON.stringify({'type' : 'accept','requested_user' : user ,'requesting_user' : _this.username}))
-         window.location.href  = '/game/room/' + _this.user_game.room_id
-      }
-
-
-      
-
-
-    },decline(user){
-      let socket = new WebSocket('ws://localhost:8000/ws/tableData/'+this.username);
-      var _this = this;
-      socket.onopen = function(e){
-        socket.send(JSON.stringify({'type' : 'declined','requested_user' : user ,'requesting_user' : _this.username}))
-      }
-
-    }
-  
-
     },
     mounted() {
       var _this = this;
-      let socket = new WebSocket('ws://localhost:8000/ws/tableData/'+this.username);
+      let socket = new WebSocket('ws://localhost:8000/ws/tableData/' + this.username);
       let allGames = new WebSocket('ws://localhost:8000/ws/allgames/?user=1')
 
 
 
       socket.onopen = function (e) {
         var id = '{{request.user.id}}'
-        socket.send(JSON.stringify({'id' : id}))
-      
+        socket.send(JSON.stringify({
+          'id': id
+        }))
+
       };
       socket.onmessage = function (e) {
         var data = JSON.parse(e.data)
         console.log(data)
-        if(data.payload.type == 'request'){
+        if (data.payload.type == 'request') {
           _this.requesting_user = data.payload.requesting_user
-        }else if(data.payload.type == 'user_game'){
+        } else if (data.payload.type == 'user_game') {
           console.log(data.payload)
-            _this.requesting_user = data.payload.requesting_user
-        }else if(data.payload.type == 'request_declined'){
-            _this.alert =  data.payload.message
-            setTimeout(()=>{
-              _this.alert = null
-            } , 3000)
-        }else if(data.payload.type == 'request_accepted'){
+          _this.requesting_user = data.payload.requesting_user
+        } else if (data.payload.type == 'request_declined') {
+          _this.alert = data.payload.message
+          setTimeout(() => {
+            _this.alert = null
+          }, 3000)
+        } else if (data.payload.type == 'request_accepted') {
           _this.alert = 'Your request has been Accepted'
-            setTimeout(()=>{
-              _this.alert = null
-            } , 3000)
+          setTimeout(() => {
+            _this.alert = null
+          }, 3000)
 
-          window.location.href  = '/game/room/' + data.payload.room_id
+          window.location.href = '/game/room/' + data.payload.room_id
 
-        }else if(data.payload.type == 'game_created'){
-              _this.user_game = data.payload
+        } else if (data.payload.type == 'game_created') {
+          _this.user_game = data.payload
         }
-    
+
       };
       socket.onclose = function (e) {
-      //  console.log('Connection closed');
+        //  console.log('Connection closed');
       };
 
-      allGames.onopen = function(e) {
-       // console.log('Allgames connected')
+      allGames.onopen = function (e) {
+        // console.log('Allgames connected')
       }
-      allGames.onmessage = function(e){
+      allGames.onmessage = function (e) {
         var games = JSON.parse(e.data).payload
         _this.games = games;
-      //  console.log(_this.games)
+        //  console.log(_this.games)
       }
 
-      allGames.onclose = function(e){
+      allGames.onclose = function (e) {
         console.log('Allgames closed')
       }
 

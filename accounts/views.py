@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from .models import *
 from .helpers import send_otp
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 
 
@@ -89,7 +91,7 @@ def otp_attempt(request , user_id):
     return render(request , 'accounts/otp.html')
 
 
-
+@login_required(login_url='/accounts/login/')
 def edit_profile(request):
     if request.method == "POST":
         username = request.POST.get('username')
@@ -108,10 +110,31 @@ def edit_profile(request):
             return redirect('/error')
     return render(request , 'accounts/edit_profile.html')
 
-
+@login_required(login_url='/accounts/login/')
 def change_password(request):
     if request.method == "POST":
-        pass
+        password = request.POST.get('password')
+        new_password = request.POST.get('new_password')
+        confirm_passsword = request.POST.get('confirm_passsword')
+        
+        if new_password != confirm_passsword:
+            messages.success(request, 'New and Confirm password must be same. 😡')
+            return redirect('/accounts/change_password/')
+        
+        user = authenticate(username=request.user.username,password=password)
+        if user is None:
+            messages.success(request, 'Your old Password is wrong. 😤')
+            return redirect('/accounts/change_password/')
+        
+        raw_user = User.objects.get(id = request.user.id)
+        raw_user.set_password(new_password)
+        raw_user.save()
+        
+        login(request,raw_user)
+        
+        messages.success(request, 'Your password changed! 😇')
+        return redirect('/accounts/change_password/')
+        
     return render(request , 'accounts/change_password.html')
  
 
