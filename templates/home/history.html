@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block start %}
 
-<div class="container">
+<div class="container mt-5">
     <h3 class="text-center mb-4">All your transactions history</h3>
 <div class="table-responsive font-size-md">
     <table class="table table-hover mb-0">
@@ -25,13 +25,15 @@
             <span class="badge badge-danger m-0">{{h.status}}</span>
             {% elif h.status == 'Cancelled' %}
             <span class="badge badge-warning m-0">{{h.status}}</span>
+            {%  elif h.status == 'Paid' %}
+            <span class="badge badge-success m-0">{{h.status}}</span>
             {%  else %}
             <span class="badge badge-dark m-0">{{h.status}}</span>
             {% endif %}
 
           
           </td>
-          <td class="py-3">{{h.amount}}</td>
+          <td class="py-3"><b>₹</b>{{h.amount}}</td>
         </tr>
         {% endfor %}
       </tbody>

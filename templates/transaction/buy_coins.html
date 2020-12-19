@@ -2,7 +2,7 @@
 {% block start %}
 
 
-<div class="container mb-5 pb-5">
+<div class="container mb-5 pb-5 mt-5">
     <h3 class="text-center">Buy coins to battle on Ludomission</h3>
     <div class="card py-2 mt-4">
         <form class="card-body needs-validation" novalidate="" method="post">
@@ -11,7 +11,7 @@
                 <label for="recover-email">Enter amount</label>
                 <input class="form-control" type="text" name="amount" placeholder="Enter amount" id="recover-email"
                     required="">
-                <div class="invalid-feedback">Please provide valid email address.</div>
+                <div class="invalid-feedback">Please enter amount.</div>
             </div>
 
             <button type="submit" class="btn btn-accent">Load Coins</button>
@@ -28,7 +28,7 @@
             <input type="hidden" name="customerName" value="Ludo betting"/>
             <input type="hidden" name="customerEmail" value="abhijeetg40@gmail.com"/>
             <input type="hidden" name="customerPhone" value="{{checkout.customerPhone}}"/>
-            <input type="hidden" name="returnUrl" value="http://68.183.94.46/payment_success">
+            <input type="hidden" name="returnUrl" value="http://127.0.0.1:8000/payment_success">
             <input type="hidden" name="signature" value="{{checkout.signature}}"/>
             <div class="text-center">
                 

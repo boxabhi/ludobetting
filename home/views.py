@@ -117,4 +117,6 @@ def top_winners(request):
 
 
 def success(request):
+    if request.user.is_authenticated:
+        set_coins(request)
     return render(request , 'transaction/success.html')
