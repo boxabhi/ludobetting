@@ -1,0 +1,72 @@
+{% extends "admin/base.html" %}
+{% block start %}
+
+<section class="col-lg-8">
+    <!-- Toolbar-->
+    <h3 class="pt-4 pb-4">All List for Order Coins</h3>
+
+    <!-- Disputes list-->
+    <div class="table-responsive font-size-md">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th> #</th>
+                    <th>User</th>
+                    <th>Amount</th>
+                    <th> Is Paid</th>
+                    <th> Order Id</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order_coin in page_obj  %}
+                <tr>
+                    <td class="py-3 align-middle">{{forloop.counter}}</td>
+                    <td class="py-3 align-middle text-capitalize">{{order_coin.user.username}}</td>
+
+                    <td class="py-3 align-middle">{{order_coin.amount}}</td>
+                    <td class="py-3 align-middle">{{order_coin.order_id}}</td>
+                    <td class="py-3 align-middle">
+
+                        {% if order_coin.status %}
+                        <span class="badge badge-success m-0">Paid</span>
+
+                        {%  else %}
+                        <span class="badge badge-danger m-0">Not Paid</span>
+                        {% endif %}
+                    </td>
+                    <td class="py-3 align-middle">{{order_coin.created_at}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <hr class="pb-4">
+
+    {% if page_obj.has_other_pages %}
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+        {% for i in page_obj.paginator.page_range %}
+        {% if page_obj.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+    {% endif %}
+
+</section>
+
+
+
+{% endblock %}

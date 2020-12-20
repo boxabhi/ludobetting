@@ -4,71 +4,79 @@
 
 
 
-   <section class="col-lg-8">
+   <section class="col-lg-8 mt-5 container">
           
+    <h2>Profile for {{profile.user.username}}</h2>
           <!-- Profile edit-->
-          <form>
+          <form class="container">
            
             <div class="row">
               <div class="col-sm-6">
                 <div class="form-group">
-                  <label for="account-fn">user id</label>
-                  <input class="form-control" type="text" id="account-fn" value="123">
+                  <label for="account-fn">Username</label>
+                  <input class="form-control" type="text" readonly id="account-fn" value="{{profile.user.username}}">
                 </div>
               </div>
               <div class="col-sm-6">
                 <div class="form-group">
-                  <label for="account-ln">User name</label>
-                  <input class="form-control" type="text" id="account-ln" value="username">
+                  <label for="account-ln">Whatsapp</label>
+                  <input class="form-control" type="text" readonly id="account-ln" value="{{profile.whatsapp}}">
                 </div>
               </div>
               <div class="col-sm-6">
                 <div class="form-group">
-                  <label for="account-email">Email Address</label>
-                  <input class="form-control" type="email" id="account-email" value="abc@abc.com" disabled>
+                  <label for="account-email">Coins</label>
+                  <input class="form-control" type="text"  readonlyid="account-email" value="{{profile.coins}}" disabled>
                 </div>
               </div>
               <div class="col-sm-6">
                 <div class="form-group">
                   <label for="account-phone">Phone Number</label>
-                  <input class="form-control" type="text" id="account-phone" value="7786853588" required>
+                  <input class="form-control" type="text" id="account-phone" value="{{profile.whatsapp}}" readonly required>
                 </div>
               </div>
 
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="account-phone">Total Coins</label>
-                  <input class="form-control" type="text" id="account-phone" value="555" required>
-                </div>
-              </div>
-              
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="account-confirm-pass">Password</label>
-                  <div class="password-toggle">
-                    <input class="form-control" type="password" id="account-confirm-pass">
-                    <label class="password-toggle-btn">
-                      <input class="custom-control-input" type="checkbox"><i class="czi-eye password-toggle-indicator"></i><span class="sr-only">Show password</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div class="col-12">
-                <hr class="mt-2 mb-3">
-                <div class="d-flex flex-wrap justify-content-between align-items-center">
-                  <div class="custom-control custom-checkbox d-block">
-                  <a href="{% url 'penalty'%}">
-                    <button class="btn btn-primary mt-3 mt-sm-0" type="button">Penalty</button>
-                    </a>
-                  </div>
-                  <a href="">
-
-                  <button class="btn btn-primary mt-3 mt-sm-0" type="button">Update profile</button>
-                  </a>
-                </div>
-              </div>
+        
             </div>
           </form>
+
+         
+          <div class="table-responsive font-size-md">
+              <table class="table table-hover mb-0">
+                <thead>
+                  <tr>
+                    <th>Message #</th>
+                    <th>Date Purchased</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for h in history %}
+                  <tr>
+                    <td class="py-3"><a class="nav-link-style font-weight-medium font-size-sm" href="#order-details" data-toggle="modal">{{h.message}}</a></td>
+                    <td class="py-3">{{h.created_at}}</td>
+                    <td class="py-3">
+                      {% if h.status == 'Won' %}
+                      <span class="badge badge-success m-0">{{h.status}}</span>
+                      {% elif h.status == 'Lost' %}
+                      <span class="badge badge-danger m-0">{{h.status}}</span>
+                      {% elif h.status == 'Cancelled' %}
+                      <span class="badge badge-warning m-0">{{h.status}}</span>
+                      {%  elif h.status == 'Paid' %}
+                      <span class="badge badge-success m-0">{{h.status}}</span>
+                      {%  else %}
+                      <span class="badge badge-dark m-0">{{h.status}}</span>
+                      {% endif %}
+          
+                    
+                    </td>
+                    <td class="py-3"><b>₹</b>{{h.amount}}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
         </section>
 
 

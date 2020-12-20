@@ -9,18 +9,24 @@
             <table class="table table-hover mb-0">
               <thead>
                 <tr>
-                <th> Dispute id</th>
-                  <th>User Disputes</th>
+                <th> #</th>
+                  <th>Game amount</th>
+                  <th>Game Creator</th>
+                  <th> Date</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
+                {% for disputed in disputed %}
                 <tr>
-                 <td class="py-3 align-middle">123</td>
-                  <td class="py-3 align-middle">User1 vs User2</td>
-                  <td class="py-3 align-middle"><a class="nav-link-style mr-2" href="#" data-toggle="tooltip" title="View details"><i class="btn btn-primary btn-sm">View details</i></td>
+                 <td class="py-3 align-middle">{{forloop.counter}}</td>
+                 <td class="py-3 align-middle">{{disputed.game.coins}}</td>
+
+                  <td class="py-3 align-middle">{{disputed.game.game_creator.username}}</td>
+                  <td class="py-3 align-middle">
+                    <a class="nav-link-style mr-2" href="{% url 'view_disputes' disputed.id %}" data-toggle="tooltip" title="View details"><i class="btn btn-primary btn-sm">View details</i></td>
                 </tr>
-                
+                  {% endfor %}
               </tbody>
             </table>
           </div>

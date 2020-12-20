@@ -3,70 +3,111 @@
 
 <section class="col-lg-8 pt-lg-4 pb-4 mb-3">
 
-            
-           
-            
-                
-              
-             
+
+
+
+
+
+
+
+  <div class="pt-2 px-4 pl-lg-0 pr-xl-5">
+    <h2 class="h3 py-2 text-center text-sm-left">Payment Requests</h2>
+
+
+    <div class="table-responsive">
+      <table class="table table-fixed font-size-sm mb-0">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Username</th>
+            <th> Number</th>
+            <th> Mode</th>
+
+            <th>Amount</th>
+            <th>Is Paid</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
           
-            <div class="pt-2 px-4 pl-lg-0 pr-xl-5">
-              <h2 class="h3 py-2 text-center text-sm-left">Payment Requests</h2>
-              
-              
-              <div class="table-responsive">
-                <table class="table table-fixed font-size-sm mb-0">
-                  <thead>
-                    <tr>
-                      <th>User Mobile No</th>
-                      <th>payment accept from</th>
-                      <th>Payment Number</th>
-                      <th>Requested date</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>7786853588</td>
-                      <td>Phone pay</td>
-                      <td>7786853588</td>
-                      <td>12-12-2020</td>
-                      <td class="py-3 align-middle"><a class="nav-link-style mr-2" href="{%url 'paycoins'%}" data-toggle="tooltip" title="Paynow"><i class="btn btn-primary btn-sm">Pay Now</i></td>
-                    </tr>
-                    <tr>
-                     <td>7786853588</td>
-                      <td>Google Pay</td>
-                      <td>7786853588</td>
-                      <td>12-12-2020</td>
-                      <td class="py-3 align-middle"><a class="nav-link-style mr-2" href="{%url 'paycoins'%}" data-toggle="tooltip" title="Paynow"><i class="btn btn-primary btn-sm">Pay Now</i></td>
-                    </tr>
-                   
-                  </tbody>
-                </table>
-              </div>
-              <hr class="mb-grid-gutter">
-              <!-- Pagination-->
-                 <nav class="d-flex justify-content-between pt-2" aria-label="Page navigation">
-            <ul class="pagination">
-              <li class="page-item"><a class="page-link" href="#"><i class="czi-arrow-left mr-2"></i>Prev</a></li>
-            </ul>
-            <ul class="pagination">
-              <li class="page-item d-sm-none"><span class="page-link page-link-static">1 / 5</span></li>
-              <li class="page-item active d-none d-sm-block" aria-current="page"><span class="page-link">1<span class="sr-only">(current)</span></span></li>
-              <li class="page-item d-none d-sm-block"><a class="page-link" href="#">2</a></li>
-              <li class="page-item d-none d-sm-block"><a class="page-link" href="#">3</a></li>
-              <li class="page-item d-none d-sm-block"><a class="page-link" href="#">4</a></li>
-              <li class="page-item d-none d-sm-block"><a class="page-link" href="#">5</a></li>
-            </ul>
-            <ul class="pagination">
-              <li class="page-item"><a class="page-link" href="#" aria-label="Next">Next<i class="czi-arrow-right ml-2"></i></a></li>
-            </ul>
-          </nav>
-            </div>
-          </section>
-        </div>
-      </div>
+          {% for sell_coin in page_obj %}
+          <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{sell_coin.user.username}}</td>
+            <td>{{sell_coin.number}}</td>
+            <td>{{sell_coin.payment_mode}}</td>
+            <td>{{sell_coin.amount}}</td>
+
+            <td> {% if sell_coin.is_paid %}
+              <span class="badge badge-success m-0">Paid</span>
+
+              {%  else %}
+              <span class="badge badge-danger m-0">Not Paid</span>
+              {% endif %}</td>
+
+              <td>{{sell_coin.created_at}}</td>
+
+            <td class="py-3 align-middle">
+              <a class="nav-link-style mr-2" href="{%url 'paycoins'%}" data-toggle="tooltip"
+                title="Paynow"><i class="btn btn-primary btn-sm">Pay Now</i></td>
+          </tr>
+
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+    <hr class="mb-grid-gutter">
+    <!-- Pagination-->
+
+    {% if page_obj.has_other_pages %}
+    <nav class="d-flex justify-content-between pt-2" aria-label="Page navigation">
+
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link"href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+        {% for i in page_obj.paginator.page_range %}
+        {% if page_obj.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+  </nav>
+    {% endif %}
+<!-- 
+    <nav class="d-flex justify-content-between pt-2" aria-label="Page navigation">
+      <ul class="pagination">
+        <li class="page-item"><a class="page-link" href="#"><i class="czi-arrow-left mr-2"></i>Prev</a></li>
+      </ul>
+      <ul class="pagination">
+        <li class="page-item d-sm-none"><span class="page-link page-link-static">1 / 5</span></li>
+        <li class="page-item active d-none d-sm-block" aria-current="page"><span class="page-link">1<span
+              class="sr-only">(current)</span></span></li>
+        <li class="page-item d-none d-sm-block"><a class="page-link" href="#">2</a></li>
+        <li class="page-item d-none d-sm-block"><a class="page-link" href="#">3</a></li>
+        <li class="page-item d-none d-sm-block"><a class="page-link" href="#">4</a></li>
+        <li class="page-item d-none d-sm-block"><a class="page-link" href="#">5</a></li>
+      </ul>
+      <ul class="pagination">
+        <li class="page-item"><a class="page-link" href="#" aria-label="Next">Next<i
+              class="czi-arrow-right ml-2"></i></a></li>
+      </ul>
+    </nav> -->
+  </div>
+</section>
+</div>
+</div>
+</div>
 
 
 {% endblock %}

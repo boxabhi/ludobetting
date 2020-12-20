@@ -9,9 +9,10 @@ service nginx status
 
 daphne ludomission.asgi:application
 
-systemctl daemon-reload
-systemctl start daphne.service
-systemctl status daphne.service
+sudo systemctl daemon-reload
+sudo systemctl start daphne.service
+sudo systemctl status daphne.service
+sudo systemctl restart daphne.service
 
 
 export DJANGO_SETTINGS_MODULE=ludomission.settings
