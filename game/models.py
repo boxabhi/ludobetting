@@ -154,7 +154,7 @@ class Image(models.Model):
 class DisputedGame(models.Model):
     game = models.ForeignKey(Game  , on_delete=models.CASCADE)
     winner = models.ForeignKey(User , on_delete=models.CASCADE , blank=True , null=True)
-        
+    is_reviewed = models.BooleanField(default=False)
     
     
     

@@ -14,12 +14,12 @@ from django.contrib import messages
 
 
 def index(request):
-    return render(request, 'admin/admin-home.html')
+    return render(request, 'admin_panel/admin-home.html')
 
 def userlist(request):
     profiles = Profile.objects.all()
     context = {'profiles' : profiles}
-    return render(request, 'admin/userlists.html' , context)
+    return render(request, 'admin_panel/userlists.html' , context)
 
 def viewuser(request , profile_id):
     context = {}
@@ -89,18 +89,34 @@ def viewuser(request , profile_id):
         context = {'profile': profile ,'history' : history}
     except Profile.DoesNotExist:
         return redirect('/error')
-    return render(request, 'admin/viewuser.html' , context)
+    return render(request, 'admin_panel/viewuser.html' , context)
 
 
 def disputesgame(request):
-    disputeds = DisputedGame.objects.all()
-    context = {'disputeds':disputeds}
-    
-    return render(request, 'admin/disputeslist.html'  , context)
+    objects = DisputedGame.objects.all()
+    paginator  = Paginator(objects, 20)
+    page  = request.GET.get('page' , 1)
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj= paginator.page(paginator.num_pages)
+    context = {'page_obj': page_obj}
+
+    return render(request, 'admin_panel/disputeslist.html'  , context)
 
 
-def viewdisputes(request):
-    return render(request, 'admin/viewdisputes.html')
+def viewdisputes(request , disputed_id):
+    context = {}
+    try:
+        diputed_game = DisputedGame.objects.get(id = disputed_id)
+        game_result = GameResult.objects.filter(game = diputed_game.game).first()
+        images = Image.objects.filter(game_result = game_result)
+        context = {'diputed_game' : diputed_game , 'game_result' : game_result , 'images' : images}
+    except DisputedGame.DoesNotExist:
+        return redirect('/error')
+    return render(request, 'admin_panel/viewdisputes.html' , context)
 
 
 
@@ -117,7 +133,7 @@ def total_purchase(request):
         page_obj= paginator.page(paginator.num_pages)
     context = {'order_coins'  : objects , 'page_obj': page_obj}
     print(page_obj)
-    return render(request, 'admin/total_purchase.html' , context)
+    return render(request, 'admin_panel/total_purchase.html' , context)
 
 
 
@@ -137,10 +153,10 @@ def sellcoinsrequest(request):
     context = {'page_obj': page_obj}
     for p in page_obj:
         print(p)
-    return render(request, 'admin/sellcoinsrequests.html' , context)
+    return render(request, 'admin_panel/sellcoinsrequests.html' , context)
 
 def paycoins(request):
-    return render(request, 'admin/paycoins.html')
+    return render(request, 'admin_panel/paycoins.html')
 
 def penalty(request):
     if request.method == 'POST':
@@ -169,7 +185,7 @@ def penalty(request):
                 penalty.save()
         messages.success(request, 'Penalty added successfully 🧐')
         return redirect('/paneladmin/penalty/')
-    return render(request, 'admin/penalty.html')
+    return render(request, 'admin_panel/penalty.html')
 
 
 def show_penalty(request):
@@ -184,7 +200,7 @@ def show_penalty(request):
         page_obj= paginator.page(paginator.num_pages)
         
     context = {'page_obj': page_obj}
-    return render(request, 'admin/show_penalty.html' , context)
+    return render(request, 'admin_panel/show_penalty.html' , context)
     
     
 
@@ -214,5 +230,5 @@ def change_password(request):
         
         messages.success(request, 'Your password changed! 😇')
         return redirect('/paneladmin/change_password/')
-    return render(request , 'admin/change_password.html')
+    return render(request , 'admin_panel/change_password.html')
     
