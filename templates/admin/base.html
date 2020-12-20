@@ -69,7 +69,7 @@
     </div>
   </div>
   <div class="container mb-5 pb-3">
-    <div class="bg-light box-shadow-lg rounded-lg overflow-hidden">
+    <div class="bg-light box-shadow-lg ">
       <div class="row">
 
         <aside class="col-lg-4">
@@ -82,33 +82,25 @@
               <div class="bg-secondary p-4">
                 <h3 class="font-size-sm mb-0 text-muted">Account</h3>
               </div>
-              <ul class="list-unstyled mb-0">
-                <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
-                    href="dashboard-settings.html"><i class="czi-settings opacity-60 mr-2"></i>Settings</a></li>
-                <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
-                    href="dashboard-purchases.html"><i class="czi-basket opacity-60 mr-2"></i>Purchases</a></li>
-                <li class="mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
-                    href="dashboard-favorites.html"><i class="czi-heart opacity-60 mr-2"></i>Favorites<span
-                      class="font-size-sm text-muted ml-auto">4</span></a></li>
-              </ul>
+            
               <div class="bg-secondary p-4">
                 <h3 class="font-size-sm mb-0 text-muted">Seller Dashboard</h3>
               </div>
               <ul class="list-unstyled mb-0">
                 <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 active"
-                    href="{% url 'adminhome' %}">Home</a></li>
+                    href="{% url 'adminhome' %}"><i class="czi-bookmark mr-2"></i>Home</a></li>
                 <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 "
-                    href="{% url 'userlists' %}">User<span class="font-size-sm text-muted ml-auto">375.00</span></a>
+                    href="{% url 'userlists' %}"><i class="czi-user-circle mr-2"></i>User<span class="font-size-sm text-muted ml-auto">375.00</span></a>
                 </li>
                 <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
-                    href="{%url 'disputegame'%}">Dispute game<span class="font-size-sm text-muted ml-auto">5</span></a>
+                    href="{%url 'disputegame'%}"><i class="czi-filter-alt mr-2"></i>Dispute game<span class="font-size-sm text-muted ml-auto">5</span></a>
                 </li>
                 <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
-                    href="{%url 'sellcoinsrequest'%}">sell coin request<span
+                    href="{%url 'sellcoinsrequest'%}"><i class="czi-coin mr-2"></i>Sell coin request<span
                       class="font-size-sm text-muted ml-auto">4</span></a></li>
 
                 <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
-                    href="{%url 'order_coins'%}">Order Coins<span class="font-size-sm text-muted ml-auto">4</span></a>
+                    href="{%url 'order_coins'%}"><i class="czi-bag mr-2"></i> Order Coins<span class="font-size-sm text-muted ml-auto">4</span></a>
                 </li>
 
 
@@ -116,6 +108,18 @@
                   href="{%url 'show_penalty'%}"><i class="czi-heart opacity-60 mr-2"></i> Penalty</a></span class="font-size-sm text-muted ml-auto"></span></a>
               </li>
 
+
+              <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                href="{% url 'admin_change_password' %}"><i class="czi-settings opacity-60 mr-2"></i>Change Admin Password</a></li>
+
+              
+                
+              <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                href="{% url 'logout' %}"><i class=" czi-forward opacity-60 mr-2"></i>Logout</a></li>
+
+              
+
+               
 
 
               </ul>
@@ -128,43 +132,14 @@
 
 
         {% endblock %}
-      </div>
-    </div>
-  </div>
-  <footer class="bg-dark p-4 footer text-center mt-5 pt-5">
-    <p class="text-white">Ludo mission 2021</p>
-  </footer>
+    
+        </div>
 
+        </div>
+        </div>
+      
+  
 
-
-
-
-
-  <style>
-    footer {
-      /* position: absolute; */
-      bottom: 0;
-      width: 100%;
-    }
-  </style>
-
-
-  <div class="cz-handheld-toolbar">
-    <div class="d-table table-fixed w-100"><a class="d-table-cell cz-handheld-toolbar-item"
-        href="account-wishlist.html"><span class="cz-handheld-toolbar-icon"><i class="czi-heart"></i></span><span
-          class="cz-handheld-toolbar-label">Wishlist</span></a><a class="d-table-cell cz-handheld-toolbar-item"
-        href="#navbarCollapse" data-toggle="collapse" onclick="window.scrollTo(0, 0)"><span
-          class="cz-handheld-toolbar-icon"><i class="czi-menu"></i></span><span
-          class="cz-handheld-toolbar-label">Menu</span></a><a class="d-table-cell cz-handheld-toolbar-item"
-        href="shop-cart.html"><span class="cz-handheld-toolbar-icon"><i class="czi-cart"></i><span
-            class="badge badge-primary badge-pill ml-1">4</span></span><span
-          class="cz-handheld-toolbar-label">$265.00</span></a>
-    </div>
-  </div>
-  <!-- Back To Top Button--><a class="btn-scroll-top" href="#top" data-scroll><span
-      class="btn-scroll-top-tooltip text-muted font-size-sm mr-2">Top</span><i class="btn-scroll-top-icon czi-arrow-up">
-    </i></a>
-  <!-- Vendor scrits: js libraries and plugins-->
   <script src="/static/vendor/jquery/dist/jquery.slim.min.js"></script>
   <script src="/static/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/static/vendor/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>

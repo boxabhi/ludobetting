@@ -16,6 +16,7 @@ urlpatterns = [
         path('penalty/' , penalty , name="penalty"),
         path('show_penalty/' , show_penalty,name='show_penalty'),
         
-        path('order_coins/' , total_purchase  , name="order_coins")
+        path('order_coins/' , total_purchase  , name="order_coins"),
+        path('change_password/' , change_password , name="admin_change_password")
  
 ]

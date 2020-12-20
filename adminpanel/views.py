@@ -190,3 +190,29 @@ def show_penalty(request):
 
 
 
+
+def change_password(request):
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        new_password = request.POST.get('new_password')
+        confirm_passsword = request.POST.get('confirm_password')
+        
+        if new_password != confirm_passsword:
+            messages.success(request, 'New and Confirm password must be same. 😡')
+            return redirect('/accounts/change_password/')
+        
+        user = authenticate(username=request.user.username,password=password)
+        if user is None:
+            messages.success(request, 'Your old Password is wrong. 😤')
+            return redirect('/accounts/change_password/')
+        
+        raw_user = User.objects.get(id = request.user.id)
+        raw_user.set_password(new_password)
+        raw_user.save()
+        
+        login(request,raw_user)
+        
+        messages.success(request, 'Your password changed! 😇')
+        return redirect('/paneladmin/change_password/')
+    return render(request , 'admin/change_password.html')
+    
