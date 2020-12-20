@@ -14,7 +14,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Favicon and Touch Icons-->
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-  
+
   <link rel="mask-icon" color="#fe6a6a" href="safari-pinned-tab.svg">
   <meta name="msapplication-TileColor" content="#ffffff">
   <meta name="theme-color" content="#ffffff">
@@ -28,7 +28,8 @@
 
 <body class="toolbar-enabled">
   <header class="navbar navbar-expand-lg navbar-dark bg-dark px-3 " style="background-color: #f2f5fc;"><a
-      class="navbar-brand d-none d-lg-block mr-3 order-lg-1" href="#" style="min-width: 7rem;">Ludo Mission Admin Panel</a>
+      class="navbar-brand d-none d-lg-block mr-3 order-lg-1" href="#" style="min-width: 7rem;">Ludo Mission Admin
+      Panel</a>
     <div class="navbar-toolbar d-flex align-items-center order-lg-3">
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCustomCollapse"><span
           class="navbar-toggler-icon"></span></button><a class="navbar-tool" href="#">
@@ -43,7 +44,7 @@
     <div class="collapse navbar-collapse mr-auto order-lg-2" id="navbarCustomCollapse">
       <hr class="hr-light d-lg-none mt-3 mb-2">
       <ul class="navbar-nav">
-        
+
       </ul>
     </div>
   </header>
@@ -73,7 +74,8 @@
 
         <aside class="col-lg-4">
           <!-- Account menu toggler (hidden on screens larger 992px)-->
-          <div class="d-block d-lg-none p-4"><a class="btn btn-outline-accent d-block" href="#account-menu" data-toggle="collapse"><i class="czi-menu mr-2"></i>Account menu</a></div>
+          <div class="d-block d-lg-none p-4"><a class="btn btn-outline-accent d-block" href="#account-menu"
+              data-toggle="collapse"><i class="czi-menu mr-2"></i>Account menu</a></div>
           <!-- Actual menu-->
           <div class="cz-sidebar-static h-100 p-0">
             <div class="secondary-nav collapse border-right" id="account-menu">
@@ -81,38 +83,47 @@
                 <h3 class="font-size-sm mb-0 text-muted">Account</h3>
               </div>
               <ul class="list-unstyled mb-0">
-                <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="dashboard-settings.html"><i class="czi-settings opacity-60 mr-2"></i>Settings</a></li>
-                <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="dashboard-purchases.html"><i class="czi-basket opacity-60 mr-2"></i>Purchases</a></li>
-                <li class="mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="dashboard-favorites.html"><i class="czi-heart opacity-60 mr-2"></i>Favorites<span class="font-size-sm text-muted ml-auto">4</span></a></li>
+                <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                    href="dashboard-settings.html"><i class="czi-settings opacity-60 mr-2"></i>Settings</a></li>
+                <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                    href="dashboard-purchases.html"><i class="czi-basket opacity-60 mr-2"></i>Purchases</a></li>
+                <li class="mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                    href="dashboard-favorites.html"><i class="czi-heart opacity-60 mr-2"></i>Favorites<span
+                      class="font-size-sm text-muted ml-auto">4</span></a></li>
               </ul>
               <div class="bg-secondary p-4">
                 <h3 class="font-size-sm mb-0 text-muted">Seller Dashboard</h3>
               </div>
               <ul class="list-unstyled mb-0">
                 <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 active"
-                  href="{% url 'adminhome' %}">Home</a></li>
-              <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 "
-                  href="{% url 'userlists' %}">User<span class="font-size-sm text-muted ml-auto">375.00</span></a>
-              </li>
-              <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
-                  href="{%url 'disputegame'%}">Dispute game<span class="font-size-sm text-muted ml-auto">5</span></a>
-              </li>
-              <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
-                  href="{%url 'sellcoinsrequest'%}">sell coin request<span
-                    class="font-size-sm text-muted ml-auto">4</span></a></li>
-                  
-                    <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
-                      href="{%url 'order_coins'%}">Order Coins<span
-                        class="font-size-sm text-muted ml-auto">4</span></a></li>
-                      
-                    
+                    href="{% url 'adminhome' %}">Home</a></li>
+                <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 "
+                    href="{% url 'userlists' %}">User<span class="font-size-sm text-muted ml-auto">375.00</span></a>
+                </li>
+                <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                    href="{%url 'disputegame'%}">Dispute game<span class="font-size-sm text-muted ml-auto">5</span></a>
+                </li>
+                <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                    href="{%url 'sellcoinsrequest'%}">sell coin request<span
+                      class="font-size-sm text-muted ml-auto">4</span></a></li>
 
-                  </ul>
+                <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                    href="{%url 'order_coins'%}">Order Coins<span class="font-size-sm text-muted ml-auto">4</span></a>
+                </li>
+
+
+                <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                  href="{%url 'show_penalty'%}"><i class="czi-heart opacity-60 mr-2"></i> Penalty</a></span class="font-size-sm text-muted ml-auto"></span></a>
+              </li>
+
+
+
+              </ul>
             </div>
           </div>
         </aside>
         <!-- Sidebar-->
-      
+
         {% block start %}
 
 

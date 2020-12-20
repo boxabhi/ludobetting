@@ -1,0 +1,71 @@
+{% extends "admin/base.html" %}
+{% block start %}
+
+<section class="col-lg-8">
+    <!-- Toolbar-->
+    <div class="">
+    <h3 class="pt-4 pb-4">All Penalty</h3>
+
+    <div class="float-right text-right mb-5 mr-4">
+    <a href="{% url 'penalty' %}" class="btn btn-success">Create a Penalty</a>
+</div>
+</div>
+
+    <!-- Disputes list-->
+    <div class="table-responsive font-size-md">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th> #</th>
+                    <th>Username</th>
+               
+                    <th>Amount</th>
+                    <th>reason</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for penalty in page_obj  %}
+                <tr>
+                    <td class="py-3 align-middle">{{forloop.counter}}</td>
+                    <td class="py-3 align-middle text-capitalize">{{penalty.user.username}}</td>
+
+
+                    <td class="py-3 align-middle">{{penalty.amount}}</td>
+                    <td class="py-3 align-middle">{{penalty.reason}}</td>
+                    
+                    <td class="py-3 align-middle">{{penalty.created_at}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <hr class="pb-4">
+
+    {% if page_obj.has_other_pages %}
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+        {% for i in page_obj.paginator.page_range %}
+        {% if page_obj.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+    {% endif %}
+
+</section>
+
+
+
+{% endblock %}

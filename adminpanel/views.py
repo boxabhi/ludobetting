@@ -4,6 +4,8 @@ from transaction.models import *
 from game.models import *
 from django.core.paginator import Paginator
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import messages
+
 # Create your views here.
 
 
@@ -141,5 +143,50 @@ def paycoins(request):
     return render(request, 'admin/paycoins.html')
 
 def penalty(request):
+    if request.method == 'POST':
+        amount = request.POST.get('amount')
+        whatsapp = request.POST.get('whatsapp')
+        username = request.POST.get('username')
+        reason = request.POST.get('reason')
+        
+        user = None
+        
+        if whatsapp:
+            user = Profile.objects.filter(whatsapp = whatsapp).first()
+            if user is None:
+                messages.success(request, 'User not found 🧐')
+                return redirect('/paneladmin/penalty/')
+            else:
+                penalty = Penalty(user = user.user , amount = amount ,reason=reason)
+                penalty.save()
+        elif username:
+            user = User.objects.filter(username=username).first()
+            if user is None:
+                messages.success(request, 'User not found 🧐')
+                return redirect('/paneladmin/penalty/')
+            else:
+                penalty = Penalty(user = user , amount = amount ,reason=reason)
+                penalty.save()
+        messages.success(request, 'Penalty added successfully 🧐')
+        return redirect('/paneladmin/penalty/')
     return render(request, 'admin/penalty.html')
+
+
+def show_penalty(request):
+    objects = Penalty.objects.all()
+    paginator  = Paginator(objects, 2)
+    page  = request.GET.get('page' , 1)
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj= paginator.page(paginator.num_pages)
+        
+    context = {'page_obj': page_obj}
+    return render(request, 'admin/show_penalty.html' , context)
+    
+    
+
+
 
