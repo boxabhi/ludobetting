@@ -105,7 +105,6 @@ def history(request):
     return render(request , 'home/history.html' , context)
 
 def top_winners(request):
-<<<<<<< HEAD
     if request.user.is_authenticated:
         set_coins(request)
     return render(request ,'home/top.html')
@@ -121,8 +120,6 @@ def success(request):
     if request.user.is_authenticated:
         set_coins(request)
     return render(request , 'transaction/success.html')
-=======
-    return render(request ,'home/top.html')
 
 def terms(request):
     return render(request ,'home/termscondition.html')
@@ -134,4 +131,4 @@ def help(request):
 
 def howtoplay(request):
     return render(request ,'home/howtoplay.html')
->>>>>>> adminbranch
+
