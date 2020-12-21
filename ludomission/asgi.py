@@ -8,15 +8,16 @@ https://docs.djangoproject.com/en/3.1/howto/deployment/asgi/
 """
 
 import os
-#from django.core.asgi import get_asgi_application
-from channels.routing import ProtocolTypeRouter,URLRouter
-from django.urls import path
-from game import consumers
-from django.urls import re_path
+from django.conf.urls import url
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ludomission.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ludomission.settings")
 django_asgi_app = get_asgi_application()
+
+from channels.auth import AuthMiddlewareStack
+from channels.routing import ProtocolTypeRouter, URLRouter
+from django.urls import path
+from game import consumers
 
 
 ws_pattern= [
@@ -30,7 +31,7 @@ ws_pattern= [
 application= ProtocolTypeRouter(
    
     {
-        # "http": django_asgi_app,
+        "http": django_asgi_app,
         'websocket':(URLRouter(ws_pattern))
     }
 )

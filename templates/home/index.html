@@ -42,14 +42,15 @@
       <a :href="'/game/delete_game/'+user_game.id" class="btn btn-warning"><i class="czi-pot"></i></a>
     </li>
 
-   
+
     <ul class="list-group mt-5 mb-5 pb-5" id="live_games">
       <li v-for="game in games" :key="game.id"
         class="list-group-item d-flex justify-content-between align-items-center"><span><i
             class="czi-play-circle text-muted mr-2"></i>
           [[game.game_creater]] Create a game worth [[game.coins]]
         </span>
-        <button class="btn btn-primary" :id="game.room_id"  v-on:click="requestGame(game.game_creater,game.coins,game.room_id)">Play</button>
+        <button class="btn btn-primary" :id="game.room_id"
+          v-on:click="requestGame(game.game_creater,game.coins,game.room_id)">Play</button>
       </li>
     </ul>
   </div>
@@ -68,12 +69,12 @@
     data: {
       message: 'Hello Vue!',
       games: [],
-      url :   'ws://68.183.94.46:8001',    //'ws://68.183.94.46',
+      url: 'wss://ludomission.com:8001', //'ws://68.183.94.46',
       username: '{{request.user.username}}', //http://68.183.94.46/user/boxabhi/90[]
       user_game: {},
       requesting_user: null,
       alert: null,
-      coins : '{{request.session.coins}}'
+      coins: '{{request.session.coins}}'
     },
     methods: {
       create_game() {
@@ -82,43 +83,43 @@
         var alert = document.getElementById('alert')
         var url = '/game/api/create_game'
 
-      
-      
-        if(coins.value.length == 0){
+
+
+        if (coins.value.length == 0) {
           this.alert = 'Enter a game amount 🤑'
-                setTimeout(() => {
-                  this.alert = null
-                }, 2000)
+          setTimeout(() => {
+            this.alert = null
+          }, 2000)
 
           return;
         }
 
-        if(coins.value.length && parseInt(coins.value) < 50){
+        if (coins.value.length && parseInt(coins.value) < 50) {
           console.log(coins.value.length)
           this.alert = 'Game amount must be greater than 50 💵'
-                setTimeout(() => {
-                  this.alert = null
-                }, 2000)
+          setTimeout(() => {
+            this.alert = null
+          }, 2000)
 
           return;
         }
 
-        if(coins.value.length && parseInt(coins.value) % 50 != 0){
+        if (coins.value.length && parseInt(coins.value) % 50 != 0) {
           this.alert = 'Game amount must be 50, 100, 150... etc. 💵'
-                setTimeout(() => {
-                  this.alert = null
-                }, 2000)
+          setTimeout(() => {
+            this.alert = null
+          }, 2000)
 
           return;
         }
 
-        if(parseInt(coins.value) > parseInt(this.coins) ){
+        if (parseInt(coins.value) > parseInt(this.coins)) {
           this.alert = "You don't have enough coins 😵"
-                setTimeout(() => {
-                  this.alert = null
-                }, 2000)
-                return;
-          
+          setTimeout(() => {
+            this.alert = null
+          }, 2000)
+          return;
+
         }
 
         var payload = {
@@ -147,23 +148,23 @@
         }
       },
 
-      requestGame(user , coins , id) {
+      requestGame(user, coins, id) {
         let socket = new WebSocket(`${this.url}/ws/tableData/` + user);
         var button = document.getElementById(id)
         var _this = this;
 
-        if(parseInt(this.coins) < coins){
+        if (parseInt(this.coins) < coins) {
           button.innerHTML = "Not enough coins"
           button.classList.add('btn-dark')
 
-          setTimeout(()=>{
-          button.innerHTML = "Play"
-          button.classList.remove('btn-dark')
-          },1000)
+          setTimeout(() => {
+            button.innerHTML = "Play"
+            button.classList.remove('btn-dark')
+          }, 1000)
 
           return;
         }
-        
+
 
         socket.onopen = function (e) {
           console.log(e)
@@ -202,7 +203,7 @@
     },
     mounted() {
       var _this = this;
-      
+
       let socket = new WebSocket(`${this.url}/ws/tableData/` + _this.username);
       let allGames = new WebSocket(`${this.url}/ws/allgames/?user=1`)
 
@@ -242,7 +243,15 @@
 
       };
       socket.onclose = function (e) {
-        //  console.log('Connection closed');
+        setTimeout(() => {
+          socket.onopen = function (e) {
+            var id = '{{request.user.id}}'
+            socket.send(JSON.stringify({
+              'id': id
+            }))
+
+          };
+        }, 1000)
       };
 
       allGames.onopen = function (e) {
@@ -254,15 +263,15 @@
       allGames.onmessage = function (e) {
         var games = JSON.parse(e.data).payload
         console.log(games)
-        if(games.type == "games"){
-        
+        if (games.type == "games") {
+
           _this.games = games.data;
-        }else if(games.type == 'game'){
+        } else if (games.type == 'game') {
           _this.games = (games)
-        }else{
+        } else {
           _this.games = games
         }
-        
+
       }
 
       allGames.onclose = function (e) {
