@@ -87,7 +87,7 @@
 
     var url = 'wss://ludomission.com:8001' + window.location.pathname
     var room_id = '{{room_id}}'
-    let socket = new WebSocket('wss://ludomission.com:8001' + room_id);
+    let socket = new WebSocket('wss://ludomission.com:8001/' + room_id);
     socket.onopen = function (e) {
         console.log('Connection established');
     };
