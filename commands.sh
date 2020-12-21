@@ -6,7 +6,7 @@ sudo systemctl status gunicorn
 service nginx status
 
 
-
+daphne -b 0.0.0.0 -p 8001 ludomission.asgi:application
 daphne ludomission.asgi:application
 
 sudo systemctl daemon-reload

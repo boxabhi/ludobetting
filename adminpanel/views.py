@@ -123,7 +123,7 @@ def viewdisputes(request , disputed_id):
 
 def total_purchase(request):
     objects  = OrderCoins.objects.all()
-    paginator  = Paginator(objects, 20)
+    paginator  = Paginator(objects, 2)
     page  = request.GET.get('page' , 1)
     try:
         page_obj = paginator.page(page)
