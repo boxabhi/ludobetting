@@ -41,7 +41,22 @@ class Game(models.Model):
     room_code = models.CharField(max_length=100 , blank=True , null=True)
     
     def __str__(self):
-        return 'Game by - ' + self.game_creater.username + ' (' + self.room_id + ')'
+        return 'Game by - ' + self.game_creater.username + ' (' + str(self.room_id) + ')'
+    
+    @staticmethod
+    def get_running_games():
+        games = Game.objects.filter(status = 'RUNNING')
+        payload = []
+        for game in games:
+            result = {}
+            result['id'] = game.id
+            user_one = User.objects.get(id = game.player_one)
+            user_two = User.objects.get(id = game.player_two)
+            result['message'] = user_one.username + ' vs ' + user_two.username
+            payload.append(result)
+        return payload
+       
+        
     
     @staticmethod
     def get_games(user_id):
@@ -198,10 +213,33 @@ def disputed_handler(sender , instance,created,**kwargs):
     
 @receiver(post_save, sender=Game)
 def game_handler(sender , instance,created,**kwargs): 
+    print("######")
     print(instance)
     print(created)
+    print("######")
+    channel_layer = channels.layers.get_channel_layer()
+    
+    if created is False:
+        games = Game.objects.filter(is_over = False)
+        payload = []
+        for game in games:
+            result = {}
+            if not game.is_over:
+                result['id'] = game.id
+                result['game_creater'] = game.game_creater.username
+                result['coins']  = game.coins
+                result['room_id'] = game.room_id
+                result['state'] = game.state
+                payload.append(result)
+        print(payload)    
+        async_to_sync(channel_layer.group_send)(
+            'all_games',{
+            'type': 'sendgames',
+            'value': json.dumps(payload)
+            }
+        )
+    
     if created or not created:
-        channel_layer = channels.layers.get_channel_layer()
         data = {}
         data['id'] = instance.id
         data['game_creater'] = instance.game_creater.username

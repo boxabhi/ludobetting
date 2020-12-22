@@ -25,8 +25,8 @@
       </div>
     </div>
 
-{% if pending_games %}
-{% for game in pending_games %}
+    {% if pending_games %}
+    {% for game in pending_games %}
     <div class="alert alert-danger alert-with-icon mt-3" role="alert">
       <div class="alert-icon-box">
         <i class="alert-icon czi-security-check"></i>
@@ -81,9 +81,10 @@
     data: {
       message: 'Hello Vue!',
       games: [],
+      running_games: [],
       //url: 'wss://ludomission.com:8001', 
-      url : 'ws://127.0.0.1:8000',
-      username: '{{request.user.username}}', 
+      url: 'ws://127.0.0.1:8000',
+      username: '{{request.user.username}}',
       user_game: {},
       requesting_user: null,
       alert: null,
@@ -231,7 +232,7 @@
       };
       socket.onmessage = function (e) {
         var data = JSON.parse(e.data)
-        console.log(data)
+
         if (data.payload.type == 'request') {
           _this.requesting_user = data.payload.requesting_user
         } else if (data.payload.type == 'user_game') {
@@ -252,8 +253,7 @@
 
         } else if (data.payload.type == 'game_created') {
           _this.user_game = data.payload
-        }
-
+        } 
       };
       socket.onclose = function (e) {
         setTimeout(() => {

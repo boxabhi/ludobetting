@@ -22,7 +22,7 @@ class AllGames(WebsocketConsumer):
         
         self.user = self.scope["user"]
         self.accept()
-        data = {'type' : 'games'  , 'data' : Game.get_games(self.user)}
+        data = {'type' : 'games'  , 'data' : Game.get_games(self.user) , 'running_games' : Game.get_running_games()}
         self.send(text_data=json.dumps({
             'payload': data
         }))
@@ -43,18 +43,19 @@ class AllGames(WebsocketConsumer):
     
     def sendgames(self , text_data):
         data = json.loads(text_data['value'])
+        print(data)
         payload = {'type' : 'games'  , 'data' : data}
         self.send(text_data=json.dumps({
             'payload': data
         }))
         
+    def deleted_game(self, text_data):
+        data = json.loads(text_data['value'])
+        payload = {'type' : 'deleted_game' , 'data' : data}
+        self.send(text_data=json.dumps({
+            'payload': data
+        }))
 
-    
-    
-    
-    
-    def request_game(self , text):
-        print("heelo")
         
 
 class TableData(WebsocketConsumer):
@@ -82,8 +83,6 @@ class TableData(WebsocketConsumer):
     def receive(self,text_data):
         data = json.loads(text_data)
         if data.get('type') == 'request_game':
-            
-            
             async_to_sync(self.channel_layer.group_send)(
                 'user_%s' % data.get('requested_user'),{
                     'type':'sendrequest',
@@ -113,6 +112,7 @@ class TableData(WebsocketConsumer):
         user = User.objects.filter(username=data.get('requesting_user')).first()
         game = Game.objects.filter(game_creater = user,is_over=False).first()
         user_two = User.objects.filter(username=data.get('requested_user')).first()
+        game.status = 'RUNNING'
         game.player_two = user_two.id
         game.save()
         profile_one = Profile.objects.filter(user = user).first()
