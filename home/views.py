@@ -1,13 +1,20 @@
 from django.shortcuts import render,redirect
 from accounts.models import *
-from .helpers import set_coins
+from .helpers import set_coins,fake_data
 from transaction.models import *
 from game.models import *
 from django.contrib.auth.decorators import login_required
 from itertools import chain
+
+from django.http import JsonResponse
 # Create your views here.
 
 
+
+
+def fake_api(request):
+    data = fake_data()
+    return JsonResponse(data , safe=False)
     
     
 def landing(request):

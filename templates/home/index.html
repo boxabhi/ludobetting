@@ -12,13 +12,9 @@
     </div>
 
     <div class="text-center">
-      <div class="input-group">
-        <div class="input-group-prepend ">
-          <span class="input-group-text bg-accent text-white">
-            <i class="czi-dollar"></i>
-          </span>
-        </div>
-        <input type="text" id="coins" class="form-control" placeholder="Enter Coins">
+      <div class="input-group border-0 rounded-0">
+       
+        <input type="text" id="coins" class="form-control rounded-0" placeholder="Enter Coins">
         <div class="input-group-append">
           <button type="button" class="btn btn-danger" v-on:click="create_game()">Set</button>
         </div>
@@ -38,7 +34,7 @@
 
 
     <li v-if="Object.keys(user_game).length &&  'id' in user_game"
-      class="shadow list-group-item d-flex justify-content-between align-items-center">
+      class="shadow rounded-0 list-group-item d-flex justify-content-between align-items-center">
       <span>
         [[user_game.game_creater]]
         <i class="czi-play-circle text-muted mr-2"></i>
@@ -57,13 +53,24 @@
 
     <ul class="list-group mt-5 mb-5 pb-5" id="live_games">
       <li v-for="game in games" :key="game.id"
-        class="list-group-item d-flex justify-content-between align-items-center"><span><i
+        class="list-group-item d-flex rounded-0 justify-content-between align-items-center"><span><i
             class="czi-play-circle text-muted mr-2"></i>
-          [[game.game_creater]] Create a game worth [[game.coins]]
+          <b>[[game.game_creater]]</b> Created a game worth <span class="badge badge-success p-2"><b>₹ [[game.coins]]</b></span>
         </span>
-        <button class="btn btn-primary" :id="game.room_id"
+        <button class="btn btn-primary btn-sm" :id="game.room_id"
           v-on:click="requestGame(game.game_creater,game.coins,game.room_id)">Play</button>
       </li>
+
+      <li v-for="game in comming_games" :key="game.id"
+      class="list-group-item d-flex rounded-0 justify-content-between align-items-center"><span><i
+          class="czi-play-circle text-muted mr-2"></i>
+        <b>[[game.game_creater]]</b> Created a game worth <span class="badge badge-success p-2"><b>₹ [[game.coins]]</b></span>
+
+
+      </span>
+      <button class="btn btn-primary btn-sm" :id="game.room_id"
+        v-on:click="requestGame(game.game_creater,game.coins,game.room_id,2)">Play</button>
+    </li>
     </ul>
   </div>
 
@@ -82,8 +89,10 @@
       message: 'Hello Vue!',
       games: [],
       running_games: [],
-      //url: 'wss://ludomission.com:8001', 
-      url: 'ws://127.0.0.1:8000',
+      comming_games : [],
+
+      url: 'wss://ludomission.com:8001', 
+      //url: 'ws://127.0.0.1:8000',
       username: '{{request.user.username}}',
       user_game: {},
       requesting_user: null,
@@ -96,9 +105,6 @@
         var message = document.getElementById('message')
         var alert = document.getElementById('alert')
         var url = '/game/api/create_game'
-
-
-
         if (coins.value.length == 0) {
           this.alert = 'Enter a game amount 🤑'
           setTimeout(() => {
@@ -161,8 +167,16 @@
             })
         }
       },
+      addData(){
+        var _this = this
+          axios.get('/api/get_games')
+          .then(result =>{
+            console.log(result.data)
+            _this.comming_games = result.data
+          })
+      },
 
-      requestGame(user, coins, id) {
+      requestGame(user, coins, id, flag=1) {
         let socket = new WebSocket(`${this.url}/ws/tableData/` + user);
         var button = document.getElementById(id)
         var _this = this;
@@ -178,6 +192,18 @@
 
           return;
         }
+
+        if(parseInt(flag) == 2){
+          button.innerHTML = "Can't play"
+          button.classList.add('btn-dark')
+
+          setTimeout(() => {
+            button.innerHTML = "Play"
+            button.classList.remove('btn-dark')
+          }, 1000)
+
+        }
+
 
 
         socket.onopen = function (e) {
@@ -220,9 +246,6 @@
 
       let socket = new WebSocket(`${this.url}/ws/tableData/` + _this.username);
       let allGames = new WebSocket(`${this.url}/ws/allgames/?user=1`)
-
-
-
       socket.onopen = function (e) {
         var id = '{{request.user.id}}'
         socket.send(JSON.stringify({
@@ -274,12 +297,13 @@
         }))
       }
       allGames.onmessage = function (e) {
-        var games = JSON.parse(e.data).payload
+        var games = JSON.parse(e.data)
         console.log(games)
-        if (games.type == "games") {
-          console.log('Errror 1')
-          _this.games = games.data;
+        if (games.payload.type == "games") {
+          console.log(games.payload.data)
+          _this.games = games.payload.data;
         } else if (games.type == 'game') {
+          console.log("eee")
           _this.games = (games)
         } 
         else {
@@ -305,6 +329,11 @@
         console.log('Allgames closed')
       }
 
+     setInterval(()=>{
+      _this.addData()
+     },4000)
+
+     
 
     }
   });
