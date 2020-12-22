@@ -10,15 +10,6 @@ from home.helpers import *
 # Create your views here.
 
 
-pusher_client = pusher.Pusher(
-  app_id='1123072',
-  key='c8c9c5c7311851c8d82d',
-  secret='5de35561e0a1814c29c2',
-  cluster='ap2',
-  ssl=True
-)
-
-
 def game_playing(request):
     return render(request, 'game/game_playing.html')
 

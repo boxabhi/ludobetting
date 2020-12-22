@@ -7,6 +7,7 @@ from asgiref.sync import async_to_sync
 import json
 from django.core import serializers
 from channels.layers import get_channel_layer
+from accounts.models import *
 # Create your models here.
 
 
@@ -15,6 +16,13 @@ RESULT = (
     ('WON', 'WON'),
     ('LOST' , 'LOST'),
     ('CANCEL' , 'CANCEL')
+)
+
+STATUS = (
+    ('CREATED' , 'CREATED'),
+    ('RUNNING' , 'RUNNING'),
+    ('WAITING' , 'WAITING'),
+    ('OVER' , 'OVER'),
 )
 
 class Game(models.Model):
@@ -26,10 +34,14 @@ class Game(models.Model):
     requested_players = models.CharField(max_length=500 , default=',')
     is_over = models.BooleanField(default=False)
     state = models.IntegerField(default=0)
+    status = models.CharField(max_length=100 , choices=STATUS , default='CREATED')
     created_at = models.DateTimeField(auto_now_add=True)
     result_by_player_one = models.ForeignKey(User, related_name='result_by_player_one', on_delete=models.CASCADE , blank=True , null=True)
     result_by_player_two = models.ForeignKey(User, related_name='result_by_player_two' ,on_delete=models.CASCADE , blank=True , null=True)
     room_code = models.CharField(max_length=100 , blank=True , null=True)
+    
+    def __str__(self):
+        return 'Game by - ' + self.game_creater.username + ' (' + self.room_id + ')'
     
     @staticmethod
     def get_games(user_id):
@@ -96,7 +108,9 @@ class GameResult(models.Model):
         user = User.objects.get(id = user_id)   
         game_result = GameResult(game = game , user = user)
         game_result.save()
- 
+    
+    def __str__(self):
+        return 'Game result by  - ' + self.user.username + ' (' + self.game.room_id + ')'
  
 @receiver(post_save, sender=GameResult)
 def game_result_handler(sender , instance,created,**kwargs):
@@ -147,6 +161,9 @@ class Image(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE , null=True , blank=True)
     game_result = models.ForeignKey(GameResult , on_delete=models.CASCADE , null=True , blank=True)
     uploaded_image = models.ImageField(upload_to = 'static/images')
+    
+    def __str__(self):
+        return self.user.username + ' ' + self.game_result.game.room_id
 
 
     
@@ -158,6 +175,25 @@ class DisputedGame(models.Model):
     winner = models.ForeignKey(User , on_delete=models.CASCADE , blank=True , null=True)
     is_reviewed = models.BooleanField(default=False)
     
+    def __str__(self):
+        return  self.game.result_by_player_one.username +' vs '+ self.game.result_by_player_two.username + ' (' + self.game.room_id + ')'
+
+
+@receiver(post_save, sender=DisputedGame)
+def disputed_handler(sender , instance,created,**kwargs):
+    
+    if instance.winner:
+        print("eh")
+        game = Game.objects.get(id = instance.game.id)
+        profile = Profile.objects.get(id = instance.winner.id)
+        print(profile.coins)
+        profile.coins += game.coins
+        print(game.coins)
+        
+        profile.save()
+
+
+
     
     
 @receiver(post_save, sender=Game)
