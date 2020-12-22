@@ -53,8 +53,7 @@
 
     <ul class="list-group mt-5 mb-5 pb-5" id="live_games">
       <li v-for="game in games" :key="game.id"
-        class="list-group-item d-flex rounded-0 justify-content-between align-items-center"><span><i
-            class="czi-play-circle text-muted mr-2"></i>
+        class="list-group-item d-flex rounded-0 justify-content-between align-items-center"><span>
           <b>[[game.game_creater]]</b> Created a game worth <span class="badge badge-success p-2"><b>₹ [[game.coins]]</b></span>
         </span>
         <button class="btn btn-primary btn-sm" :id="game.room_id"
@@ -79,7 +78,7 @@
      {{game.message |safe}}
     </span>
    
-    <span class="badge badge-success" >Game Running</button>
+  
   </li>
   {% endfor %}
 
