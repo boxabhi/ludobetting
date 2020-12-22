@@ -34,8 +34,8 @@ def home(request , username=None):
         return redirect('/error')
     
     
-    pending_game_one = Game.objects.filter(player_one = request.user.id , result_by_player_one__isnull=True)
-    pending_game_two = Game.objects.filter(player_two = request.user.id , result_by_player_two__isnull=True)
+    pending_game_one = Game.objects.filter(player_one = request.user.id , result_by_player_one__isnull=True , state__gte=1)
+    pending_game_two = Game.objects.filter(player_two = request.user.id , result_by_player_two__isnull=True , state__gte=1)
     pending_games = list(chain(pending_game_one , pending_game_two))   
     context = {'pending_games' : pending_games}   
     return render(request , 'home/index.html' , context)
@@ -73,8 +73,10 @@ def history(request):
         result['created_at'] = str(sell_coin.created_at)[0:11]
         results.append(result)
     count = 0
+    print(game_results)
     for game_result in game_results:
         count+=1
+        result = {}
         result['amount'] = game_result.game.coins
         if game_result.result == 'WON':
             result['status'] = 'Won'

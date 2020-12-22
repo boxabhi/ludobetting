@@ -82,6 +82,8 @@ class TableData(WebsocketConsumer):
     def receive(self,text_data):
         data = json.loads(text_data)
         if data.get('type') == 'request_game':
+            
+            
             async_to_sync(self.channel_layer.group_send)(
                 'user_%s' % data.get('requested_user'),{
                     'type':'sendrequest',
@@ -250,7 +252,7 @@ class ChatConsumer(WebsocketConsumer):
         self.accept()
         game = Game.objects.filter(room_id = self.room_name).first()
         print(game.room_code)
-        if len(game.room_code):
+        if game.room_code and len(game.room_code):
             self.send(text_data=json.dumps({
                 'message': {'room_code': game.room_code}
         }))

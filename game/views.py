@@ -31,6 +31,7 @@ def waiting_room(request , room_id):
     if game is None:
         return redirect('/error')
     
+
     print(f'{request.user.id} - {game.player_one}')
     print(f'{request.user.id} - {game.player_two}')
     
