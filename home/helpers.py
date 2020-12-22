@@ -1913,7 +1913,7 @@ indian_last_names = [
 ]
 
 
-indian_abuse = ['Khelogi ludo mere sath','ritzy lover' ,'Always looser','Mere Sath ludo khelo' ,'I am ludo king','Ludo mere baap ka','Bhosadike' ,'Beti chod','Laal goot meri','Chodu' ,'Kaat dungo','Gaand' ,'Gaandu' ,'Gadha', 'Bakland' ,'Lauda' , 'Lauda fek marunga', 'Kamina hu mai']
+indian_abuse = ['अकु','प्रियंका','दीपक','श्वेता','श्वेता','शिवानी','प्रिया','आलिया','Khelo ludo Pel ke','Khelogi ludo mere sath','ritzy lover' ,'Always looser','Mere Sath ludo khelo' ,'I am ludo king','Ludo mere baap ka','Bhosadike' ,'Beti chod','Laal goot meri','Chodu' ,'Kaat dungo','Gaand' ,'Gaandu' ,'Gadha', 'Bakland' ,'Lauda' , 'Lauda fek marunga', 'Kamina hu mai']
 emoji = ['😍' ,'🥰', '😘' ,'🥶', '😱' ,'😨', '😰' , '😥' ,'😓', '🤗', '🤔' ,'🤭', '🤫', '🤥' , '💪🏻','🍌','❤️' ,'🧡' ,'💛','🚩' ,'🔴','💸']
 
 
@@ -1942,7 +1942,7 @@ def fake():
 
 def fake_data():
     payload = []
-    count = [1,2,3,5,6,7,8]
+    count = [1,2,3,5,6,7,8,15,18]
     n = random.choices(count)
     while len(payload) < n[0]:
         player_one = fake_list()
@@ -1957,7 +1957,20 @@ def fake_data():
     return (payload)
 
 
-
+def fake_running_games():
+    payload = []
+    count = [15,20, 25,30,40]
+    n = random.choices(count)
+    while len(payload) < n[0]:
+        player_one = fake_list()
+        player_two = fake_list()
+        player_three = fake_list()
+        amount = fake()
+        result = {}
+        result['message'] = '<b>' + player_one + ' ' + player_two +'</b> vs <b>' + player_three + ' </b>'
+        payload.append(result)
+    return (payload)
+    
 
         
     
