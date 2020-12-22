@@ -10,19 +10,24 @@ from accounts.models import *
 
 
 class AllGames(WebsocketConsumer):
-    def connect(self):
+    http_user_and_session = True
+    http_user = True
+    def connect(self , **kwargs):
         self.room_name = 'all_games'
         self.group_name =  'all_games'
         async_to_sync(self.channel_layer.group_add)(
             self.group_name,
             self.channel_name
         )
+        
+        self.user = self.scope["user"]
         self.accept()
-        data = {'type' : 'games'  , 'data' : Game.get_games(1)}
+        data = {'type' : 'games'  , 'data' : Game.get_games(self.user)}
         self.send(text_data=json.dumps({
             'payload': data
         }))
         
+    
     def disconnect(self,close_code):
         pass
     
@@ -31,16 +36,14 @@ class AllGames(WebsocketConsumer):
         
         async_to_sync(self.channel_layer.group_send)(
             'all_game',{
-                 'type':'sendgames',
-                    'value': (text_data),
+                'type':'sendgames',
+                'value': (text_data),
             })
 
     
     def sendgames(self , text_data):
         data = json.loads(text_data['value'])
         payload = {'type' : 'games'  , 'data' : data}
-        #data['type'] = 'games'
-        
         self.send(text_data=json.dumps({
             'payload': data
         }))
@@ -217,6 +220,7 @@ class Room(SyncConsumer):
         })
         
     def websocket_receive(self, event):
+        print(self.room_name)
         async_to_sync(self.channel_layer.group_send)(self.room_name ,{
             'type' : 'websocket.message',
             'text' : event.get('text')
@@ -243,8 +247,17 @@ class ChatConsumer(WebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
-
         self.accept()
+        game = Game.objects.filter(room_id = self.room_name).first()
+        print(game.room_code)
+        if len(game.room_code):
+            self.send(text_data=json.dumps({
+                'message': {'room_code': game.room_code}
+        }))
+            
+        
+
+        
 
     def disconnect(self, close_code):
         # Leave room group
@@ -256,7 +269,7 @@ class ChatConsumer(WebsocketConsumer):
     # Receive message from WebSocket
     def receive(self, text_data):
         
-
+        
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
@@ -269,8 +282,10 @@ class ChatConsumer(WebsocketConsumer):
     # Receive message from room group
     def chat_message(self, event):
         message = json.loads(event['message'])
-       
-
+        game = Game.objects.filter(room_id = self.room_name).first()
+        game.room_code =   message.get('room_code')
+        game.save()
+        
         # Send message to WebSocket
         self.send(text_data=json.dumps({
             'message': message

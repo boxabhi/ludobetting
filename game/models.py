@@ -27,11 +27,13 @@ class Game(models.Model):
     is_over = models.BooleanField(default=False)
     state = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+    result_by_player_one = models.ForeignKey(User, related_name='result_by_player_one', on_delete=models.CASCADE , blank=True , null=True)
+    result_by_player_two = models.ForeignKey(User, related_name='result_by_player_two' ,on_delete=models.CASCADE , blank=True , null=True)
+    room_code = models.CharField(max_length=100 , blank=True , null=True)
     
     @staticmethod
     def get_games(user_id):
-        games = Game.objects.filter(is_over = False)
+        games = Game.objects.filter(is_over = False).exclude(game_creater = user_id)
         payload = []
         for game in games:
             result = {}

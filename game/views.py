@@ -31,6 +31,18 @@ def waiting_room(request , room_id):
     if game is None:
         return redirect('/error')
     
+    print(f'{request.user.id} - {game.player_one}')
+    print(f'{request.user.id} - {game.player_two}')
+    
+    if int(request.user.id) == int(game.player_one):
+        game.result_by_player_one = request.user
+        game.state +=1 
+        game.save()
+    if int(request.user.id) == int(game.player_two):
+        game.result_by_player_two = request.user
+        game.state +=1 
+        game.save()
+    
     if request.method == 'POST':
         result = request.POST.get('result')
         images = request.FILES.getlist('upload_file')
@@ -41,6 +53,7 @@ def waiting_room(request , room_id):
         if reason_of_cancel:
             game_result.reason_of_cancel = reason_of_cancel
         game_result.save()
+        
         for image in images:
             image_obj = Image(user = user,game_result =game_result,uploaded_image=image)
             image_obj.save()

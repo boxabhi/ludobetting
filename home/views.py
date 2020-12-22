@@ -4,7 +4,7 @@ from .helpers import set_coins
 from transaction.models import *
 from game.models import *
 from django.contrib.auth.decorators import login_required
-
+from itertools import chain
 # Create your views here.
 
 
@@ -26,11 +26,19 @@ def error(request):
 def home(request , username=None):
     if request.user.is_authenticated:
         set_coins(request)
+        
+   
     
+
     if request.user.username != username:
         return redirect('/error')
-      
-    return render(request , 'home/index.html')
+    
+    
+    pending_game_one = Game.objects.filter(player_one = request.user.id , result_by_player_one__isnull=True)
+    pending_game_two = Game.objects.filter(player_two = request.user.id , result_by_player_two__isnull=True)
+    pending_games = list(chain(pending_game_one , pending_game_two))   
+    context = {'pending_games' : pending_games}   
+    return render(request , 'home/index.html' , context)
 
 @login_required(login_url='/accounts/login/')
 def history(request):

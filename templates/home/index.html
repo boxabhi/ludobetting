@@ -25,6 +25,18 @@
       </div>
     </div>
 
+{% if pending_games %}
+{% for game in pending_games %}
+    <div class="alert alert-danger alert-with-icon mt-3" role="alert">
+      <div class="alert-icon-box">
+        <i class="alert-icon czi-security-check"></i>
+      </div>
+      You have a pending game <a href="/game/room/{{game.room_id}}" class="btn btn-success">Update result</a>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+
     <li v-if="Object.keys(user_game).length &&  'id' in user_game"
       class="shadow list-group-item d-flex justify-content-between align-items-center">
       <span>
@@ -69,8 +81,9 @@
     data: {
       message: 'Hello Vue!',
       games: [],
-      url: 'wss://ludomission.com:8001', //'ws://68.183.94.46',
-      username: '{{request.user.username}}', //http://68.183.94.46/user/boxabhi/90[]
+      //url: 'wss://ludomission.com:8001', 
+      url : 'ws://127.0.0.1:8000',
+      username: '{{request.user.username}}', 
       user_game: {},
       requesting_user: null,
       alert: null,
@@ -264,7 +277,6 @@
         var games = JSON.parse(e.data).payload
         console.log(games)
         if (games.type == "games") {
-
           _this.games = games.data;
         } else if (games.type == 'game') {
           _this.games = (games)
