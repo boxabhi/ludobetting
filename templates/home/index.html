@@ -82,8 +82,8 @@
       message: 'Hello Vue!',
       games: [],
       running_games: [],
-      url: 'wss://ludomission.com:8001', 
-     // url: 'ws://127.0.0.1:8000',
+      //url: 'wss://ludomission.com:8001', 
+      url: 'ws://127.0.0.1:8000',
       username: '{{request.user.username}}',
       user_game: {},
       requesting_user: null,
@@ -277,11 +277,26 @@
         var games = JSON.parse(e.data).payload
         console.log(games)
         if (games.type == "games") {
+          console.log('Errror 1')
           _this.games = games.data;
         } else if (games.type == 'game') {
           _this.games = (games)
-        } else {
-          _this.games = games
+        } 
+        else {
+          
+           var g = games[0]
+           
+           for(var i =0;i<_this.games.length;i++){
+             console.log(_this.games[i].id , g.id)
+             if(_this.games[i].id == g.id){
+              _this.games.splice(i,1)
+              _this.games.push(g)
+              break;
+              console.log('Its a match')
+             }
+           }
+
+          //_this.games = games
         }
 
       }

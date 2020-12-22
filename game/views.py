@@ -7,8 +7,6 @@ import pusher
 import uuid
 import json
 from home.helpers import *
-from channels.layers import get_channel_layer
-
 # Create your views here.
 
 
@@ -52,8 +50,8 @@ def waiting_room(request , room_id):
             game.save()
         if game.player_one is not None and int(request.user.id) == int(game.player_two):
             game.result_by_player_two = request.user
-            game.state +=1 
-            game.save()
+        game.state +=1 
+        game.save()
         
         
         return redirect('/')
@@ -80,7 +78,7 @@ def delete_game(request , id):
 
 @csrf_exempt
 def games(request):
-    
+    pusher_client.trigger('my-channel', 'my-event', {'message': 'hello world'})
     message = {'message': 'hello world'}
     return JsonResponse(message, safe=False)
 

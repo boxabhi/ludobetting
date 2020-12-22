@@ -43,15 +43,7 @@ class AllGames(WebsocketConsumer):
     
     def sendgames(self , text_data):
         data = json.loads(text_data['value'])
-        print(data)
         payload = {'type' : 'games'  , 'data' : data}
-        self.send(text_data=json.dumps({
-            'payload': data
-        }))
-        
-    def deleted_game(self, text_data):
-        data = json.loads(text_data['value'])
-        payload = {'type' : 'deleted_game' , 'data' : data}
         self.send(text_data=json.dumps({
             'payload': data
         }))
