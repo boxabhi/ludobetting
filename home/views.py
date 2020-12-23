@@ -38,10 +38,8 @@ def home(request , username=None):
         return redirect('/error')
     
     
-    pending_game_one = Game.objects.filter(player_one = request.user.id , result_by_player_one__isnull=True , state__gte=1)
-    pending_game_two = Game.objects.filter(player_two = request.user.id , result_by_player_two__isnull=True , state__gte=1)
-    pending_games = list(chain(pending_game_one , pending_game_two))   
-    context = {'pending_games' : pending_games  , 'running_games' : data}   
+    pending_game_result  =  GameResult.objects.filter(user = request.user , result = 'PENDING') 
+    context = {'pending_games' : pending_game_result  , 'running_games' : data}  
     return render(request , 'home/index.html' , context)
 
 @login_required(login_url='/accounts/login/')
@@ -51,8 +49,7 @@ def history(request):
     
     order_coins = OrderCoins.objects.filter(user = request.user)
     sell_coins = SellCoins.objects.filter(user = request.user)
-    game_results = GameResult.objects.filter(user = request.user , game__is_over=True)
-    print(game_results)
+    game_results = GameResult.objects.filter(user = request.user , game__is_over=True , game__status='OVER').exclude(result='PENDING')
     results = []
     for order_coins in order_coins:
         result = {}

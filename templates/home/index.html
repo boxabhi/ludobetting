@@ -27,7 +27,7 @@
       <div class="alert-icon-box">
         <i class="alert-icon czi-security-check"></i>
       </div>
-      You have a pending game <a href="/game/room/{{game.room_id}}" class="btn btn-success">Update result</a>
+      You have a pending game <a href="/game/room/{{game.game.room_id}}" class="btn btn-success">Update result</a>
     </div>
     {% endfor %}
     {% endif %}
@@ -108,8 +108,8 @@
       running_games: [],
       comming_games : [],
 
-      url: 'wss://ludomission.com:8001', 
-      //url: 'ws://127.0.0.1:8000',
+      //url: 'wss://ludomission.com:8001', 
+      url: 'ws://127.0.0.1:8000',
       username: '{{request.user.username}}',
       user_game: {},
       requesting_user: null,
@@ -313,9 +313,9 @@
       }
       allGames.onmessage = function (e) {
         var games = JSON.parse(e.data)
-       
+       console.log(games)
         if (games.payload.type == "games") {
-         
+          console.log(games.payload.data)
           _this.games = games.payload.data;
         } else if (games.type == 'game') {
          
@@ -344,9 +344,9 @@
         console.log('Allgames closed')
       }
 
-     setInterval(()=>{
-      _this.addData()
-     },4000)
+    //  setInterval(()=>{
+    //   _this.addData()
+    //  },4000)
 
      
 

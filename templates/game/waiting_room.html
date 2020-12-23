@@ -27,7 +27,11 @@
     <div class="form-group">
         <label for="pass-visibility">Enter Room Code</label>
         <div class="password-toggle">
-            <input type="text" id="room_code" class="form-control" placeholder="Enter room code">
+            {% if game.room_code %}
+            <input type="text" id="room_code" value="{{game.room_code}}" class="form-control" placeholder="Enter room code">
+            {% else %}
+            <input type="text" id="room_code" value="" class="form-control" placeholder="Enter room code">
+            {% endif %}
         </div>
         <button class="btn btn-accent mt-2" onclick="sendRoomCode()">Send room code</button>
         <button class="btn btn-danger mt-2" onclick="changeRoomCode()">Change Room code</button>
@@ -88,8 +92,8 @@
     var url ='ws://127.0.0.1:8000'  + window.location.pathname
     //var url = 'wss://ludomission.com:8001' + window.location.pathname
     var room_id = '{{room_id}}'
-    let socket = new WebSocket('wss://ludomission.com:8001/ws/game/room/' + room_id);
-    //let socket = new WebSocket('ws://127.0.0.1:8000/ws/game/room/' + room_id);
+    //let socket = new WebSocket('wss://ludomission.com:8001/ws/game/room/' + room_id);
+    let socket = new WebSocket('ws://127.0.0.1:8000/ws/game/room/' + room_id);
 
     socket.onopen = function (e) {
         console.log('Connection established');

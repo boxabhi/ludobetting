@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 import channels.layers
 from django.dispatch import receiver
 from asgiref.sync import async_to_sync
@@ -95,8 +95,7 @@ class Game(models.Model):
         game = Game.objects.filter(game_creater = user,is_over=False).first()
         
         check_user_exits = game.requested_players.split(',')
-        print(check_user_exits)
-        print(requested_user)
+    
         if check_user_exits.count(requested_user) > 2:
             return True
         game.requested_players += ',' + requested_user
@@ -118,7 +117,7 @@ class GameResult(models.Model):
     
     @staticmethod
     def create_game_result(game_id , user_id):
-        print(game_id)
+       
         game = Game.objects.get(id = game_id)
         user = User.objects.get(id = user_id)   
         game_result = GameResult(game = game , user = user)
@@ -134,15 +133,20 @@ def game_result_handler(sender , instance,created,**kwargs):
     game.is_over = True
     game.save()
     if len(check_game_result) == 2:
+        print(check_game_result)
         game_result_obj_one =    check_game_result[0]
         game_result_obj_two =    check_game_result[1]
+        print(game_result_obj_one.result)
+        print(game_result_obj_two.result)
+        
         if game_result_obj_one.result == 'WON' and game_result_obj_one.result == 'LOST':
             winner = Profile.objects.filter(user = game_result_obj_one.user).first()
             winner.coins +=  (.95 * game.coins)
             game_result_obj_one.result  = 'WON'
             game_result_obj_one.save()
             winner.save()
-            
+            game.status = 'OVER'
+            game.save()
         elif game_result_obj_one.result == 'LOST' and game_result_obj_one.result == 'WON':
             winner = Profile.objects.filter(user = game_result_obj_two.user).first()
             winner.coins +=  (.95 * game.coins)
@@ -158,16 +162,18 @@ def game_result_handler(sender , instance,created,**kwargs):
             
             user_obj_one.save()
             user_obj_two.save()
-            
+            game.status = 'OVER'
+            game.save()
             
             game_result_obj_two.result  = 'CANCEL'
             game_result_obj_one.result  = 'CANCEL'
             game_result_obj_two.save()
             game_result_obj_one.save()
 
-        elif game_result_obj_one.result == 'WON' and game_result_obj_one.result == 'WON':
+        elif game_result_obj_one.result == 'WON' and game_result_obj_two.result == 'WON':
             disputed = DisputedGame(game = game)
             disputed.save()
+           
         
              
     
@@ -191,34 +197,45 @@ class DisputedGame(models.Model):
     is_reviewed = models.BooleanField(default=False)
     
     def __str__(self):
-        return  self.game.result_by_player_one.username +' vs '+ self.game.result_by_player_two.username + ' (' + self.game.room_id + ')'
+        return  str(self.is_reviewed)
 
 
 @receiver(post_save, sender=DisputedGame)
 def disputed_handler(sender , instance,created,**kwargs):
     
     if instance.winner:
-        print("eh")
         game = Game.objects.get(id = instance.game.id)
+        game.status = 'OVER'
         profile = Profile.objects.get(id = instance.winner.id)
-        print(profile.coins)
         profile.coins += game.coins
-        print(game.coins)
-        
         profile.save()
 
 
 
-    
+@receiver(post_delete, sender=Game)
+def game_delete(sender , instance,**kwargs):
+    channel_layer = channels.layers.get_channel_layer()
+    games = Game.objects.filter(is_over = False)
+    payload = []
+    for game in games:
+        result = {}
+        if not game.is_over:
+            result['id'] = game.id
+            result['game_creater'] = game.game_creater.username
+            result['coins']  = game.coins
+            result['room_id'] = game.room_id
+            result['state'] = game.state
+            payload.append(result)
+    async_to_sync(channel_layer.group_send)(
+        'all_games',{
+        'type': 'sendgames',
+        'value': json.dumps({'data' : payload , 'type' : 'games'})
+        })
     
 @receiver(post_save, sender=Game)
 def game_handler(sender , instance,created,**kwargs): 
-    print("######")
     print(instance)
-    print(created)
-    print("######")
     channel_layer = channels.layers.get_channel_layer()
-    
     if created is False:
         games = Game.objects.filter(is_over = False)
         payload = []
@@ -231,11 +248,11 @@ def game_handler(sender , instance,created,**kwargs):
                 result['room_id'] = game.room_id
                 result['state'] = game.state
                 payload.append(result)
-        print(payload)    
+  
         async_to_sync(channel_layer.group_send)(
             'all_games',{
             'type': 'sendgames',
-            'value': json.dumps(payload)
+            'value': json.dumps({'data' : payload , 'type' : 'games'})
             }
         )
     
@@ -254,12 +271,20 @@ def game_handler(sender , instance,created,**kwargs):
             }
         )
         
-        
-        
-        games = Game.get_games(1)
+        games = Game.objects.filter(is_over = False)
+        payload = []
+        for game in games:
+            result = {}
+            if not game.is_over:
+                result['id'] = game.id
+                result['game_creater'] = game.game_creater.username
+                result['coins']  = game.coins
+                result['room_id'] = game.room_id
+                result['state'] = game.state
+                payload.append(result)
         async_to_sync(channel_layer.group_send)(
             'all_games',{
             'type': 'sendgames',
-            'value': json.dumps(games)
+            'value': json.dumps({'data' : payload , 'type' : 'games'})
             }
         )

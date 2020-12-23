@@ -43,11 +43,15 @@ class AllGames(WebsocketConsumer):
     
     def sendgames(self , text_data):
         data = json.loads(text_data['value'])
+       
         payload = {'type' : 'games'  , 'data' : data}
         self.send(text_data=json.dumps({
             'payload': data
         }))
 
+    
+    def send_fake_games(self , text_data):
+        pass
         
 
 class TableData(WebsocketConsumer):
@@ -166,13 +170,6 @@ class TableData(WebsocketConsumer):
             self.change_game_state(value.get('id'))
         self.send(event['value'])
  
- 
-    @sync_to_async
-    def change_game_state(id):
-        game = Game.objects.get(id=id)
-        
-        game.state = 1
-        game.save()
 
 
 

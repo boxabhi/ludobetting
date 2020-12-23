@@ -33,7 +33,8 @@ def waiting_room(request , room_id):
         images = request.FILES.getlist('upload_file')
         reason_of_cancel = request.POST.get('reason_of_cancel')
         
-        game_result = GameResult.objects.filter(game = game , user = user , result='PENDING').first()
+        game_result,_ = GameResult.objects.get_or_create(game = game , user = user , result='PENDING')
+        print(game_result)
         game_result.result = result
         if reason_of_cancel:
             game_result.reason_of_cancel = reason_of_cancel
@@ -44,11 +45,11 @@ def waiting_room(request , room_id):
             image_obj.save()
         
         game.is_over = True
-        if game.player_one is not None and int(request.user.id) == int(game.player_one):
+        if game.player_one is not None and request.user.id == game.player_one:
             game.result_by_player_one = request.user
             game.state +=1 
             game.save()
-        if game.player_one is not None and int(request.user.id) == int(game.player_two):
+        if game.player_one is not None and request.user.id  == game.player_two:
             game.result_by_player_two = request.user
         game.state +=1 
         game.save()
