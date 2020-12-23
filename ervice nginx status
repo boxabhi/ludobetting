@@ -1,0 +1,17 @@
+[0;1;31m●[0m gunicorn.service - gunicorn daemon
+     Loaded: loaded (/etc/systemd/system/gunicorn.service; disabled; vendor preset: enabled)
+     Active: [0;1;31mfailed[0m (Result: exit-code) since Mon 2020-12-21 13:53:02 UTC; 6s ago
+TriggeredBy: [0;1;32m●[0m gunicorn.socket
+    Process: 29245 ExecStart=/home/djangoprojectdir/ludobetting/djangoprojectenv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/run/gunicorn.sock ludomission.wsgi:application [0;1;31m(code=exited, status=3)[0m
+   Main PID: 29245 (code=exited, status=3)
+
+Dec 21 13:53:01 ubuntu-s-1vcpu-1gb-blr1-01 gunicorn[29248]: Sentry is attempting to send 0 pending error messages
+Dec 21 13:53:01 ubuntu-s-1vcpu-1gb-blr1-01 gunicorn[29248]: Waiting up to 2 seconds
+Dec 21 13:53:01 ubuntu-s-1vcpu-1gb-blr1-01 gunicorn[29248]: Press Ctrl-C to quit
+Dec 21 13:53:01 ubuntu-s-1vcpu-1gb-blr1-01 gunicorn[29249]: Sentry is attempting to send 0 pending error messages
+Dec 21 13:53:01 ubuntu-s-1vcpu-1gb-blr1-01 gunicorn[29249]: Waiting up to 2 seconds
+Dec 21 13:53:01 ubuntu-s-1vcpu-1gb-blr1-01 gunicorn[29249]: Press Ctrl-C to quit
+Dec 21 13:53:02 ubuntu-s-1vcpu-1gb-blr1-01 gunicorn[29245]: [2020-12-21 13:53:02 +0000] [29245] [INFO] Shutting down: Master
+Dec 21 13:53:02 ubuntu-s-1vcpu-1gb-blr1-01 gunicorn[29245]: [2020-12-21 13:53:02 +0000] [29245] [INFO] Reason: Worker failed to boot.
+Dec 21 13:53:02 ubuntu-s-1vcpu-1gb-blr1-01 systemd[1]: [0;1;39m[0;1;31m[0;1;39mgunicorn.service: Main process exited, code=exited, status=3/NOTIMPLEMENTED[0m
+Dec 21 13:53:02 ubuntu-s-1vcpu-1gb-blr1-01 systemd[1]: [0;1;38;5;185m[0;1;39m[0;1;38;5;185mgunicorn.service: Failed with result 'exit-code'.[0m
