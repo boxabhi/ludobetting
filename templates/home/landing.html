@@ -3,84 +3,82 @@
 
 
 <div class="cz-carousel">
-    <div class="cz-carousel-inner" data-carousel-options='{"axis": "horizontal", "nav": false , "loop": true , "speed": 300}'>
+    <div class="cz-carousel-inner"
+        data-carousel-options='{"axis": "horizontal", "nav": false , "loop": true , "speed": 300}'>
         {% for banner in banners %}
-        <img src="/media/{{banner.image}}" alt="Ludo-mission" >
+        <img src="/media/{{banner.image}}" alt="Ludo-mission">
         {% endfor %}
     </div>
-  </div>
+</div>
 
 <div class="container">
 
 
     <div class="text-center p-5">
-            <h2>Want a try </h2>
-            <p>Click the play Button</p>
-            {% if request.user.is_authenticated %}
-            <a class="btn btn-primary" href="/user/{{request.user.username}}">Play</a>
-            {% else %}
-            <a class="btn btn-primary" href="{% url 'login' %}">Create Account</a>
+        <h2>Want a try </h2>
+        <p>Click the play Button</p>
+        {% if request.user.is_authenticated %}
+        <a class="btn btn-primary" href="/user/{{request.user.username}}">Play</a>
+        {% else %}
+        <a class="btn btn-primary" href="{% url 'login' %}">Create Account</a>
 
-            {% endif %}
-        </div>
+        {% endif %}
+    </div>
 
 
 
     <section class="container py-3">
-        <h2 class="h3 text-center">Select a topic</h2>
+        <h2 class="h3 text-center">Why LudoMission is Different?</h2>
         <div class="row pt-4">
             <div class="col-lg-4 col-sm-6 mb-grid-gutter  "><a class="card border-0 bg-warning text-white box-shadow"
-                    href="help-single-topic.html">
+                    href="#">
                     <div class="card-body text-center"><i class="czi-user-circle h2 mt-2 mb-4 text-primary"></i>
-                        <h6>Managing account</h6>
-                        <p class="font-size-sm text-white pb-2">Proin nec turpis vel tortor venenatis tempus. Sed mollis
-                            vel arcu in tempor. Mauris enim purus, laoreet nec elit non euismod tempur accusantium.</p>
-                        <div class="btn btn-outline-primary btn-sm mb-2">Learn more</div>
+                        <h6>Play with your friends</h6>
+                        <div class="btn btn-outline-primary btn-sm mb-2">Ludo Mission</div>
                     </div>
                 </a></div>
-            <div class="col-lg-4 col-sm-6 mb-grid-gutter"><a class="card border-0 box-shadow"
-                    href="help-single-topic.html">
+            <div class="col-lg-4 col-sm-6 mb-grid-gutter"><a class="bg-dark card border-0 box-shadow"
+                    href="#">
                     <div class="card-body text-center"><i class="czi-laptop h2 mt-2 mb-4 text-primary"></i>
-                        <h6>Working with dashboard</h6>
-                        <p class="font-size-sm text-muted pb-2">Proin nec turpis vel tortor venenatis tempus. Sed mollis
-                            vel arcu in tempor. Mauris enim purus, laoreet nec elit non euismod tempur accusantium.</p>
-                        <div class="btn btn-outline-primary btn-sm mb-2">Learn more</div>
+                        <h6>Load Money from UPI, Credit Card etc</h6>
+                        <div class="btn btn-outline-primary btn-sm mb-2">Ludo Mission</div>
+
                     </div>
                 </a></div>
-            <div class="col-lg-4 col-sm-6 mb-grid-gutter"><a class="card border-0 box-shadow"
-                    href="help-single-topic.html">
+            <div class="col-lg-4 col-sm-6 mb-grid-gutter"><a class="bg-accent card border-0 box-shadow"
+                    href="#">
                     <div class="card-body text-center"><i class="czi-card h2 mt-2 mb-4 text-primary"></i>
-                        <h6>Payment options</h6>
-                        <p class="font-size-sm text-muted pb-2">Proin nec turpis vel tortor venenatis tempus. Sed mollis
-                            vel arcu in tempor. Mauris enim purus, laoreet nec elit non euismod tempur accusantium.</p>
-                        <div class="btn btn-outline-primary btn-sm mb-2">Learn more</div>
+                        <h6>Easy Payouts</h6>
+
+                        <div class="btn btn-outline-primary btn-sm mb-2">Ludo Mission</div>
+
                     </div>
                 </a></div>
-            <div class="col-lg-4 col-sm-6 mb-grid-gutter"><a class=" card border-0 box-shadow"
-                    href="help-single-topic.html">
+            <div class="col-lg-4 col-sm-6 mb-grid-gutter"><a class="bg-info card border-0 box-shadow"
+                    href="#">
                     <div class="card-body text-center"><i class="czi-delivery h2 mt-2 mb-4 text-primary"></i>
-                        <h6>Delivery information</h6>
-                        <p class="font-size-sm text-muted pb-2">Proin nec turpis vel tortor venenatis tempus. Sed mollis
-                            vel arcu in tempor. Mauris enim purus, laoreet nec elit non euismod tempur accusantium.</p>
-                        <div class="btn btn-outline-primary btn-sm mb-2">Learn more</div>
+                        <h6>Real Money in your account</h6>
+                      
+                        <div class="btn btn-outline-primary btn-sm mb-2">Ludo Mission</div>
+
                     </div>
                 </a></div>
-            <div class="col-lg-4 col-sm-6 mb-grid-gutter"><a class="card border-0 box-shadow"
-                    href="help-single-topic.html">
+            <div class="col-lg-4 col-sm-6 mb-grid-gutter"><a class="bg-danger  card border-0 box-shadow"
+                    href="#">
                     <div class="card-body text-center"><i class="czi-currency-exchange h2 mt-2 mb-4 text-primary"></i>
                         <h6>Refund policy</h6>
-                        <p class="font-size-sm text-muted pb-2">Proin nec turpis vel tortor venenatis tempus. Sed mollis
-                            vel arcu in tempor. Mauris enim purus, laoreet nec elit non euismod tempur accusantium.</p>
-                        <div class="btn btn-outline-primary btn-sm mb-2">Learn more</div>
+
+                        <div class="btn btn-outline-primary btn-sm mb-2">Ludo Mission</div>
+
                     </div>
                 </a></div>
             <div class="col-lg-4 col-sm-6 mb-grid-gutter"><a class=" bg-success card border-0 box-shadow"
-                    href="help-single-topic.html">
+                    href="#">
                     <div class="card-body text-center"><i class="czi-loudspeaker h2 mt-2 mb-4 text-primary"></i>
-                        <h6>Affiliate program</h6>
-                        <p class="font-size-sm text-muted pb-2">Proin nec turpis vel tortor venenatis tempus. Sed mollis
-                            vel arcu in tempor. Mauris enim purus, laoreet nec elit non euismod tempur accusantium.</p>
-                        <div class="btn btn-outline-primary btn-sm mb-2">Learn more</div>
+                        <h6>Fun with All</h6>
+
+                        <div class="btn btn-outline-primary btn-sm mb-2">Ludo Mission</div>
+
                     </div>
                 </a></div>
         </div>
@@ -92,6 +90,11 @@
 
 
 
-
+<style>
+    h6{
+        font-weight: bold;
+        color:#fff !important
+    }
+</style>
 
 {% endblock %}
