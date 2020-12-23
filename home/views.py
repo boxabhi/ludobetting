@@ -104,7 +104,7 @@ def history(request):
             
         except User.DoesNotExist:
             pass
-        result['message'] = 'Match between ' +vs
+        result['message'] =  vs
         result['created_at'] = str(game_result.created_at)[0:11]
         results.append(result)
         

@@ -93,6 +93,8 @@ class TableData(WebsocketConsumer):
                         }
                 )
         elif data.get('type') == 'declined':
+            data = json.loads(text_data)
+            print(data)
             async_to_sync(self.channel_layer.group_send)(
                 'user_%s' % data.get('requested_user'),{
                     'type':'decline_request',
@@ -211,7 +213,7 @@ class Room(SyncConsumer):
         })
         
     def websocket_receive(self, event):
-        print(self.room_name)
+        
         async_to_sync(self.channel_layer.group_send)(self.room_name ,{
             'type' : 'websocket.message',
             'text' : event.get('text')

@@ -23,10 +23,6 @@ def waiting_room(request , room_id):
         return redirect('/error')
     
 
-    print(f'{request.user.id} - {game.player_one}')
-    print(f'{request.user.id} - {game.player_two}')
-    
-    
     
     if request.method == 'POST':
         result = request.POST.get('result')
@@ -34,7 +30,6 @@ def waiting_room(request , room_id):
         reason_of_cancel = request.POST.get('reason_of_cancel')
         
         game_result,_ = GameResult.objects.get_or_create(game = game , user = user , result='PENDING')
-        print(game_result)
         game_result.result = result
         if reason_of_cancel:
             game_result.reason_of_cancel = reason_of_cancel

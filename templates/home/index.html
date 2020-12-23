@@ -42,9 +42,9 @@
       </span>
 
       <div v-if="requesting_user">
-        <button class="btn btn-success" id="request_user" v-on:click="accept(requesting_user)">[[requesting_user]]
+        <button class="btn btn-success btn-sm" id="request_user" v-on:click="accept(requesting_user)">[[requesting_user]]
           requested Accept</button>
-        <button class="btn btn-danger" v-on:click="decline(requesting_user)">Decline</button>
+        <button class="btn btn-danger btn-sm" v-on:click="decline(requesting_user)">Decline</button>
 
       </div>
       <a :href="'/game/delete_game/'+user_game.id" class="btn btn-warning"><i class="czi-pot"></i></a>

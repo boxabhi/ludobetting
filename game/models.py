@@ -132,8 +132,12 @@ def game_result_handler(sender , instance,created,**kwargs):
     check_game_result = GameResult.objects.filter(game = game)
     game.is_over = True
     game.save()
+    
+    print(check_game_result)
     if len(check_game_result) == 2:
         print(check_game_result)
+        game.status = 'OVER'
+        game.save()
         game_result_obj_one =    check_game_result[0]
         game_result_obj_two =    check_game_result[1]
         print(game_result_obj_one.result)
