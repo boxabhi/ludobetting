@@ -1,50 +1,48 @@
 {% extends "base.html" %}
 {% block start %}
 
+<div class="bg-light">
 <div class="container mt-5 pt-5 mb-5 pb-5">
     <h3 class="text-center mb-5 ">Top winners of Ludo mission</h3>
 <div class="tab-content">
     <div class="tab-pane fade active show" id="result4" role="tabpanel">
       <ul class="nav nav-tabs media-tabs nav-justified" role="tablist">
-        <li class="nav-item"><a class="nav-link" href="#" data-toggle="tab" role="tab">
-            <div class="media align-items-center">
-              <div class="media-tab-media box-shadow-0 mr-3"><img src="/static/images/01.jpg" alt="Profile image">
+
+        {% for winner in winners %}
+        <li class="nav-item ">
+          <a class="nav-link" href="#" data-toggle="tab" role="tab">
+            <div class="media align-items-center shadow-lg p-4">
+              <div class="media-tab-media box-shadow-0 mr-3"><img src="/media/{{winner.image}}" alt="Ludo king winner">
               </div>
               <div class="media-body">
-                <div class="media-tab-subtitle text-muted font-size-xs mb-1">CEO, Co-founder</div>
-                <h6 class="media-tab-title text-nowrap mb-0">William Smith</h6>
+                <div class="media-tab-subtitle text-muted font-size-xs mb-1">{{winner.name}}</div>
+                <h6 class="media-tab-title text-nowrap mb-0">Won <span class="badge badge-success">₹ {{winner.amount}}</span></h6>
               </div>
             </div></a></li>
-        <li class="nav-item"><a class="nav-link active" href="#" data-toggle="tab" role="tab">
-            <div class="media align-items-center">
-              <div class="media-tab-media box-shadow-0 mr-3"><img src="/static/images/02.jpg" alt="Profile image">
-              </div>
-              <div class="media-body">
-                <div class="media-tab-subtitle text-muted font-size-xs mb-1">Manager</div>
-                <h6 class="media-tab-title text-nowrap mb-0">Emma Gallaher</h6>
-              </div>
-            </div></a></li>
-        <li class="nav-item"><a class="nav-link" href="#" data-toggle="tab" role="tab">
-            <div class="media align-items-center">
-              <div class="media-tab-media box-shadow-0 mr-3"><img src="/static/images/03.jpg" alt="Profile image">
-              </div>
-              <div class="media-body">
-                <div class="media-tab-subtitle text-muted font-size-xs mb-1">Lead accountant</div>
-                <h6 class="media-tab-title text-nowrap mb-0">Benjamin Miller</h6>
-              </div>
-            </div></a></li>
-        <li class="nav-item"><a class="nav-link" href="#" data-toggle="tab" role="tab">
-            <div class="media align-items-center">
-              <div class="media-tab-media box-shadow-0 mr-3"><img src="/static/images/04.jpg" alt="Profile image">
-              </div>
-              <div class="media-body">
-                <div class="media-tab-subtitle text-muted font-size-xs mb-1">Chief editor</div>
-                <h6 class="media-tab-title text-nowrap mb-0">Anna Lee</h6>
-              </div>
-            </div></a></li>
+
+          {% endfor %}
+      
+     
       </ul>
     </div>
   </div>
+
+  
+  <h3 class="text-center">Play and win real CASH</h3>
+
+   
+
+
+  <div class="shadow p-3 text-center">
+      <img src="/media/images/googlepay.jpg" class="img-responsive img-fluid" style="height: 120px;">
+      <img src="/media/images/phonepe.jpg" class="img-responsive img-fluid" style="height: 100px;">
+
+      <img src="/media/images/paytm.png" class="img-responsive img-fluid" style="height: 120px;">
+
+  </div>
+
   
   </div>
+  </div>
+
   {% endblock %}

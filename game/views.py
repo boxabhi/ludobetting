@@ -71,7 +71,15 @@ def waiting_room(request , room_id):
         
         return redirect('/')
     
-    context = {'room_id': room_id , 'game' : game}
+    
+    
+    user_one = User.objects.get(id = game.player_one)
+    user_two = User.objects.get(id = game.player_two)
+    
+    
+    context = {'room_id': room_id , 'game' : game , 'user_one' : user_one , 'user_two' : user_two}
+    
+    
     return render(request, 'game/waiting_room.html' , context)
 
 

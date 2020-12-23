@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block start %}
 
-<div class="container">
+<div class="container mt-5">
 
     <h3 class="text-center">Turn your coins into Cash in simple steps</h3>
 
@@ -9,10 +9,10 @@
 
 
     <div class="shadow p-3 text-center">
-        <img src="/static/images/googlepay.jpg" class="img-responsive img-fluid" style="height: 150px;">
-        <img src="/static/images/phonepe.jpg" class="img-responsive img-fluid" style="height: 120px;">
+        <img src="/media/images/googlepay.jpg" class="img-responsive img-fluid" style="height: 120px;">
+        <img src="/media/images/phonepe.jpg" class="img-responsive img-fluid" style="height: 100px;">
 
-        <img src="/static/images/paytm.png" class="img-responsive img-fluid" style="height: 150px;">
+        <img src="/media/images/paytm.png" class="img-responsive img-fluid" style="height: 120px;">
 
     </div>
 
@@ -28,7 +28,12 @@
             </div>
             {% endfor %}
             {% endif %}
-            <div class="form-group">
+
+            <div class="show_border">
+                <p class="text-center text-success p-3">1 coins = 1 rupee ,  only two request allowed per day . एक दिन में केवल दो रिक्वेस्ट ही स्वीकार्य है , Request processing time: within 12 hour</p>
+            </div>
+
+            <div class="form-group mt-3">
                 
                 <label for="recover-email">Enter UPI number</label>
                 <input class="form-control" type="text" name="number" placeholder="Your UPI number"
@@ -139,6 +144,12 @@
 </div>
 
 
+
+
+<style>
+    .show_border {border-style: dotted;}
+    .solid {border-style: solid;}
+ </style>
 
 
 

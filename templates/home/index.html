@@ -94,6 +94,21 @@
 
 </div>
 
+
+<audio id="game_request" src="/media/audio/request.mpeg" >
+
+</audio>
+
+
+
+<audio id="game_accept" src="/media/audio/accept.mpeg" >
+
+</audio>
+
+
+<audio id="error" src="/media/audio/error.mp3" >
+
+</audio>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"
   integrity="sha512-DZqqY3PiOvTP9HkjIWgjO6ouCbq+dxqWoJZ/Q+zPYNHmlnI2dQnbJ5bxAHpAMw+LXRm4D72EIRXzvcHQtE8/VQ=="
   crossorigin="anonymous"></script>
@@ -119,6 +134,18 @@
       requested_games : [],
     },
     methods: {
+      error(){
+        var e = document.getElementById('error')
+        e.play()
+      },
+      playRequestedAudio(){
+        var e = document.getElementById('game_request')
+        e.play()
+      },
+      playAcceptAudio(){
+        var e = document.getElementById('game_accept')
+        e.play()
+      },
       create_game() {
         var coins = document.getElementById('coins')
         var message = document.getElementById('message')
@@ -198,6 +225,9 @@
         var button = document.getElementById(id)
         var _this = this;
 
+
+        
+
         var count = 0
         _this.requested_games.map((game)=>{
           if(game == id) count++;
@@ -210,7 +240,9 @@
                 setTimeout(() => {
                   this.alert = null
                 }, 2000)
+                _this.error()
                 return;
+               
         }
         
 
@@ -223,7 +255,7 @@
             button.innerHTML = "Play"
             button.classList.remove('btn-dark')
           }, 1000)
-
+          _this.error()
           return;
         }
 
@@ -231,14 +263,14 @@
 
 
         if(parseInt(flag) == 2){
-          button.innerHTML = "Can't play"
+          button.innerHTML = "Someone joined"
           button.classList.add('btn-dark')
 
           setTimeout(() => {
             button.innerHTML = "Play"
             button.classList.remove('btn-dark')
           }, 1000)
-
+          _this.error()
         }
 
 
@@ -253,7 +285,7 @@
 
           button.innerHTML = "Requested"
           button.classList.add('btn-dark')
-
+          _this.playRequestedAudio()
           setTimeout(() => {
             button.innerHTML = "Play"
             button.classList.remove('btn-dark')
@@ -287,8 +319,11 @@
       }
     },
     mounted() {
-      var _this = this;
+      
+     
 
+      var _this = this;
+    
       let socket = new WebSocket(`${this.url}/ws/tableData/` + _this.username);
       let allGames = new WebSocket(`${this.url}/ws/allgames/?user=1`)
       socket.onopen = function (e) {
@@ -313,6 +348,7 @@
           }, 3000)
         } else if (data.payload.type == 'request_accepted') {
           _this.alert = 'Your request has been Accepted'
+          _this.playAcceptAudio()
           setTimeout(() => {
             _this.alert = null
           }, 3000)

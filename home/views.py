@@ -8,6 +8,8 @@ from itertools import chain
 
 from django.http import JsonResponse
 from game.helpers import game_cron_job
+
+from .models import *
 # Create your views here.
 
 
@@ -22,7 +24,9 @@ def landing(request):
     if request.user.is_authenticated:
         set_coins(request)
     game_cron_job()
-    return render(request, 'home/landing.html')    
+    images = Banners.objects.all()
+    context = {'banners' : images}
+    return render(request, 'home/landing.html' , context)    
 
 
 def error(request):
@@ -120,7 +124,10 @@ def top_winners(request):
     if request.user.is_authenticated:
         set_coins(request)
     game_cron_job()
-    return render(request ,'home/top.html')
+    
+    winners = TopWinners.objects.all()
+    context = {'winners': winners}
+    return render(request ,'home/top.html' , context)
 
 
 
