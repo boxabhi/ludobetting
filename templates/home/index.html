@@ -36,14 +36,12 @@
     <li v-if="Object.keys(user_game).length &&  'id' in user_game"
       class="shadow rounded-0 list-group-item d-flex justify-content-between align-items-center">
       <span>
-        [[user_game.game_creater]]
-        <i class="czi-play-circle text-muted mr-2"></i>
-        <b id="game_here"> You created a game worth [[user_game.coins]]</b>
+        <b id="game_here"> {{request.user.username}} vs [[requesting_user]] [[user_game.coins]]</b>
       </span>
 
       <div v-if="requesting_user">
-        <button class="btn btn-success btn-sm" id="request_user" v-on:click="accept(requesting_user)">[[requesting_user]]
-          requested Accept</button>
+        <button class="btn btn-success btn-sm" id="request_user" v-on:click="accept(requesting_user)">
+         Play</button>
         <button class="btn btn-danger btn-sm" v-on:click="decline(requesting_user)">Decline</button>
 
       </div>
@@ -226,7 +224,7 @@
         var _this = this;
 
 
-        
+
 
         var count = 0
         _this.requested_games.map((game)=>{
@@ -271,6 +269,7 @@
             button.classList.remove('btn-dark')
           }, 1000)
           _this.error()
+          return;
         }
 
 
@@ -289,7 +288,7 @@
           setTimeout(() => {
             button.innerHTML = "Play"
             button.classList.remove('btn-dark')
-          }, 4000)
+          }, 5000)
         }
       },
       accept(user) {
