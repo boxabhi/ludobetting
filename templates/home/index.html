@@ -109,8 +109,8 @@
       running_games: [],
       comming_games : [],
 
-      url: 'wss://ludomission.com:8001', 
-     // url: 'ws://127.0.0.1:8000',
+     // url: 'wss://ludomission.com:8001', 
+     url: 'ws://127.0.0.1:8000',
       username: '{{request.user.username}}',
       user_game: {},
       requesting_user: null,
@@ -205,6 +205,7 @@
         _this.requested_games.push(id)
         
         if(count >= 2){
+          button.disabled = true
           _this.alert = "Can't request more than 2 time in a row"
                 setTimeout(() => {
                   this.alert = null
@@ -256,7 +257,7 @@
           setTimeout(() => {
             button.innerHTML = "Play"
             button.classList.remove('btn-dark')
-          }, 1000)
+          }, 4000)
         }
       },
       accept(user) {
