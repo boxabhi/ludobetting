@@ -31,8 +31,7 @@ def waiting_room(request , room_id):
         images = request.FILES.getlist('upload_file')
         reason_of_cancel = request.POST.get('reason_of_cancel')
         
-        print(len(reason_of_cancel))
-        return redirect('/game/room/' + str(game.room_id) )
+        
         
         if game.room_code is None :
             messages.success(request, 'Something went wrong You must enter room code 😒')

@@ -51,7 +51,7 @@
         <h4 class="text-center">Update Game results</h4>
         {% csrf_token %}
         <div class="form-group">
-            <select class="form-control" id="result" name="result" onchange="showOption()">
+            <select class="form-control" required id="result" name="result" onchange="showOption()">
                 <option>Choose</option>
                 <option value="WON">Won</option>
                 <option value="LOST">Lost</option>

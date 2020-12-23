@@ -10,7 +10,6 @@ from accounts.models import *
 
 def game_cron_job():
     games_obj = Game.objects.filter(status='RUNNING')
-    print(games_obj)
     for game in games_obj:
         game_result_obj = GameResult.objects.filter(game = game)
         
@@ -19,9 +18,12 @@ def game_cron_job():
             game_result_obj_one = game_result_obj[0]
             game_result_obj_two = game_result_obj[1]
             
+            print(game_result_obj_one.result)
+            print(game_result_obj_two.result)
             
             
-            if game_result_obj_one != 'PENDING' and game_result_obj_two != 'PENDING':
+            
+            if game_result_obj_one.result != 'PENDING' and game_result_obj_two.result != 'PENDING':
                 if game_result_obj_one.result == 'WON' and game_result_obj_two.result == 'LOST':
                     winner = Profile.objects.filter(user = game_result_obj_one.user).first()
                     winner.coins +=  (.95 * game.coins) + game.coins
