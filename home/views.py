@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from itertools import chain
 
 from django.http import JsonResponse
+from game.helpers import game_cron_job
 # Create your views here.
 
 
@@ -20,12 +21,14 @@ def fake_api(request):
 def landing(request):
     if request.user.is_authenticated:
         set_coins(request)
+    game_cron_job()
     return render(request, 'home/landing.html')    
 
 
 def error(request):
     if request.user.is_authenticated:
         set_coins(request)
+    game_cron_job()
     return render(request, 'error.html')
 
 
@@ -37,7 +40,7 @@ def home(request , username=None):
     if request.user.username != username:
         return redirect('/error')
     
-    
+    game_cron_job()
     pending_game_result  =  GameResult.objects.filter(user = request.user , result = 'PENDING') 
     context = {'pending_games' : pending_game_result  , 'running_games' : data}  
     return render(request , 'home/index.html' , context)
@@ -108,16 +111,15 @@ def history(request):
         result['created_at'] = str(game_result.created_at)[0:11]
         results.append(result)
         
-    print(count)
+    game_cron_job()
     history = sorted(results , key=lambda i:i ['created_at'])
-    
     context = {'history' : history}
-    
     return render(request , 'home/history.html' , context)
 
 def top_winners(request):
     if request.user.is_authenticated:
         set_coins(request)
+    game_cron_job()
     return render(request ,'home/top.html')
 
 

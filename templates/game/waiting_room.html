@@ -4,6 +4,13 @@
 
 <div class="container mt-5 pt-5 pb-5 mb-5">
   
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-danger">
+      {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
     {% if request.user.id != game.game_creater.id %}
     <div>
         <h3 class="text-center">Waiting for room Code</h3>
