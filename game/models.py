@@ -182,6 +182,7 @@ class GameResult(models.Model):
 
 class Image(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE , null=True , blank=True)
+    game = models.ForeignKey(Game , on_delete=models.CASCADE , blank=True , null=True)
     game_result = models.ForeignKey(GameResult , on_delete=models.CASCADE , null=True , blank=True)
     uploaded_image = models.ImageField(upload_to = 'static/images')
     

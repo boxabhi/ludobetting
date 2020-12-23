@@ -112,10 +112,12 @@ def viewdisputes(request , disputed_id):
     try:
         diputed_game = DisputedGame.objects.get(id = disputed_id)
         game_result = GameResult.objects.filter(game = diputed_game.game).first()
-        images = Image.objects.filter(game_result = game_result)
+        images = Image.objects.filter(game = diputed_game.game)
+    
         context = {'diputed_game' : diputed_game , 'game_result' : game_result , 'images' : images}
     except DisputedGame.DoesNotExist:
         return redirect('/error')
+    print(context)
     return render(request, 'admin_panel/viewdisputes.html' , context)
 
 

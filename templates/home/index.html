@@ -125,7 +125,7 @@
       comming_games : [],
 
       url: 'wss://ludomission.com:8001', 
-     //url: 'ws://127.0.0.1:8000',
+      //url: 'ws://127.0.0.1:8000',
       username: '{{request.user.username}}',
       user_game: {},
       requesting_user: null,
@@ -295,13 +295,17 @@
       accept(user) {
         let socket = new WebSocket(`${this.url}/ws/tableData/` + this.username);
         var _this = this;
+        _this.playAcceptAudio()
         socket.onopen = function (e) {
           socket.send(JSON.stringify({
             'type': 'accept',
             'requested_user': user,
             'requesting_user': _this.username
           }))
+          setTimeout(() => {
           window.location.href = '/game/room/' + _this.user_game.room_id
+            
+          },1000)
         }
       },
       decline(user) {

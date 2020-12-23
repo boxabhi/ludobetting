@@ -57,7 +57,18 @@ def history(request):
     order_coins = OrderCoins.objects.filter(user = request.user)
     sell_coins = SellCoins.objects.filter(user = request.user)
     game_results = GameResult.objects.filter(user = request.user , game__is_over=True , game__status='OVER').exclude(result='PENDING')
+    penalty = Penalty.objects.filter(user = request.user)
     results = []
+    
+    for p in penalty:
+        result = {}
+        result['amount'] = p.amount
+        result['status'] = 'Deducted'
+        result['message'] = p.reason
+        result['created_at'] = str(p.created_at)[0:10]       
+        results.append(result)
+        
+    
     for order_coins in order_coins:
         result = {}
         result['amount'] = order_coins.amount
@@ -117,6 +128,7 @@ def history(request):
         
     game_cron_job()
     history = sorted(results , key=lambda i:i ['created_at'])
+    #history.reverse()
     context = {'history' : history}
     return render(request , 'home/history.html' , context)
 

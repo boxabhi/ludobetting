@@ -55,7 +55,7 @@ def waiting_room(request , room_id):
         game_result.save()
         
         for image in images:
-            image_obj = Image(user = user,game_result =game_result,uploaded_image=image)
+            image_obj = Image(user = user,game =game,game_result =game_result,uploaded_image=image)
             image_obj.save()
         
         game.is_over = True

@@ -1942,7 +1942,7 @@ def fake():
 
 def fake_data():
     payload = []
-    count = [1,2,3,5,6,7,8,15,18]
+    count = [1,3,5,6,8]
     n = random.choices(count)
     while len(payload) < n[0]:
         player_one = fake_list()
