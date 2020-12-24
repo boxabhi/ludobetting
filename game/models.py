@@ -44,8 +44,8 @@ class Game(models.Model):
         return 'Game by - ' + self.game_creater.username + ' (' + str(self.room_id) + ')'
     
     @staticmethod
-    def get_running_games():
-        games = Game.objects.filter(status = 'RUNNING')
+    def get_running_games(user):
+        games = Game.objects.filter(status = 'RUNNING').exclude(game_creater = user)
         payload = []
         for game in games:
             result = {}
