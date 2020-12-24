@@ -60,7 +60,9 @@ class Game(models.Model):
     
     @staticmethod
     def get_games(user_id):
-        games = Game.objects.filter(is_over = False, status= 'CREATED').exclude(game_creater = user_id)
+        user = User.objects.filter(id=id).first()
+        
+        games = Game.objects.filter(is_over = False, status= 'CREATED').exclude(game_creater = user)
         payload = []
         for game in games:
             result = {}

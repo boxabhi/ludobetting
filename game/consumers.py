@@ -26,7 +26,7 @@ class AllGames(WebsocketConsumer):
         self.accept()
         if self.user.is_authenticated:
             
-            data = {'type' : 'games'  , 'data' : Game.get_games(self.user) , 'running_games' : Game.get_running_games()}
+            data = {'type' : 'games'  , 'data' : Game.get_games(self.user.id) , 'running_games' : Game.get_running_games()}
             self.send(text_data=json.dumps({
                 'payload': data
             }))
