@@ -219,13 +219,8 @@
       },
 
       requestGame(user, coins, id, flag=1) {
-        let socket = new WebSocket(`${this.url}/ws/tableData/` + user);
         var button = document.getElementById(id)
         var _this = this;
-
-
-
-
         var count = 0
         _this.requested_games.map((game)=>{
           if(game == id) count++;
@@ -273,7 +268,7 @@
         }
 
 
-
+        let socket = new WebSocket(`${this.url}/ws/tableData/` + user);
         socket.onopen = function (e) {
          
           socket.send(JSON.stringify({
@@ -329,7 +324,7 @@
     
       let socket = new WebSocket(`${this.url}/ws/tableData/` + _this.username);
       let allGames = new WebSocket(`${this.url}/ws/allgames/?user=1`)
-      let fgames = new WebSocket(`${this.url}/ws/running`);
+     // let fgames = new WebSocket(`${this.url}/ws/running`);
 
       socket.onopen = function (e) {
         var id = '{{request.user.id}}'
@@ -410,14 +405,14 @@
         }
       }
 
-      fgames.onopen = function (e) {
-       console.log("Connected")
-      }
+      // fgames.onopen = function (e) {
+      //  console.log("Connected")
+      // }
 
-      fgames.onmessage = function (e) {
-        // var data = JSON.parse(e.data)
-        // _this.comming_games = data.data
-      }
+      // fgames.onmessage = function (e) {
+      //   // var data = JSON.parse(e.data)
+      //   // _this.comming_games = data.data
+      // }
 
 
       allGames.onclose = function (e) {
