@@ -323,10 +323,11 @@
       var _this = this;
     
       let socket = new WebSocket(`${this.url}/ws/tableData/` + _this.username);
-      let allGames = new WebSocket(`${this.url}/ws/allgames/?user=1`)
+      let allGames = new WebSocket(`${this.url}/ws/allgames/`)
      // let fgames = new WebSocket(`${this.url}/ws/running`);
 
       socket.onopen = function (e) {
+        console.log("Socket Connected!");
         var id = '{{request.user.id}}'
         socket.send(JSON.stringify({
           'id': id
@@ -360,6 +361,8 @@
         } 
       };
       socket.onclose = function (e) {
+        console.log("Socket closed!");
+
         setTimeout(() => {
           socket.onopen = function (e) {
             var id = '{{request.user.id}}'
@@ -372,6 +375,7 @@
       };
 
       allGames.onopen = function (e) {
+        console.log("All games connected")
         var id = '{{request.user.id}}'
         allGames.send(JSON.stringify({
           'id': id

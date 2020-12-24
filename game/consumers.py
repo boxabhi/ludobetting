@@ -70,7 +70,7 @@ class FakeGames(AsyncConsumer):
             data = {'type' : 'fgames'  , 'data' : fake_data() }
             await self.send({
                 'type': 'websocket.send',
-                'text':  json.dumps(data),
+                'text':  "Hello from backend!!!"
             })
         
             
