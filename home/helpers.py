@@ -1968,6 +1968,7 @@ def fake_running_games():
         amount = fake()
         result = {}
         result['message'] = '<b>' + player_one + ' ' + player_two +'</b> vs <b>' + player_three + ' </b>'
+        result['coins'] = random.choice(amount)
         payload.append(result)
     return (payload)
     

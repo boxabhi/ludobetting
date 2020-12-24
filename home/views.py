@@ -46,6 +46,11 @@ def home(request , username=None):
     
     game_cron_job()
     pending_game_result  =  GameResult.objects.filter(user = request.user , result = 'PENDING') 
+    
+    games = Game.objects.filter(status = 'CREATED')
+    
+    print(games)
+    
     context = {'pending_games' : pending_game_result  , 'running_games' : data}  
     return render(request , 'home/index.html' , context)
 

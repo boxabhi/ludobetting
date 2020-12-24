@@ -11,6 +11,14 @@
       <span id="message">[[alert]] </span>
     </div>
 
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-danger">
+      {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
     <div class="text-center">
       <div class="input-group border-0 rounded-0">
        
@@ -36,7 +44,7 @@
     <li v-if="Object.keys(user_game).length &&  'id' in user_game"
       class="shadow rounded-0 list-group-item d-flex justify-content-between align-items-center">
       <span>
-        <b id="game_here"> {{request.user.username}} vs [[requesting_user]] [[user_game.coins]]</b>
+        <b id="game_here"> {{request.user.username}} <span v-if="requesting_user">vs [[requesting_user]] </span> <span class="badge badge-warning">₹ [[user_game.coins]]</span></b>
       </span>
 
       <div v-if="requesting_user">
@@ -75,7 +83,12 @@
     class="list-group-item d-flex rounded-0 pt-3  pb-3 justify-content-between align-items-center"><span><i
         class="czi-play-circle text-muted mr-2"></i>
      {{game.message |safe}}
-    </span>
+
+     <span class="badge badge-success p-2"><b>₹ {{game.coins}}</b></span>
+
+
+      </span>
+   
    
   
   </li>
@@ -323,7 +336,7 @@
       var _this = this;
     
       let socket = new WebSocket(`${this.url}/ws/tableData/` + _this.username);
-      let allGames = new WebSocket(`${this.url}/ws/allgames/`)
+      let allGames = new WebSocket(`${this.url}/ws/allgames`)
      // let fgames = new WebSocket(`${this.url}/ws/running`);
 
       socket.onopen = function (e) {
