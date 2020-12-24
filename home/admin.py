@@ -6,3 +6,4 @@ from .models import *
 admin.site.register(Banners)
 admin.site.register(Mobile)
 admin.site.register(TopWinners)
+admin.site.register(Help)

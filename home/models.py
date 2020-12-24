@@ -28,3 +28,12 @@ class TopWinners(models.Model):
         return self.name 
 
 
+
+class Help(models.Model):
+    name = models.CharField(max_length=100)
+    mobile = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100)
+    problem = models.TextField()
+    
+    def __str__(self):
+        return self.name + ' asked for help'

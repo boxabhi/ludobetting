@@ -163,6 +163,17 @@ def terms(request):
 
 
 def help(request):
+    if request.method == 'POST':
+        print("Ssss")
+        name = request.POST.get('name')
+        mobile = request.POST.get('mobile')
+        email = request.POST.get('email')
+        problem = request.POST.get('problem')
+        help = Help(name = name, mobile = mobile, email = email , problem = problem)
+        help.save()
+        messages.success(request, "We will get back to you!")
+        return redirect('/help')
+        
     return render(request ,'home/help.html')
 
 

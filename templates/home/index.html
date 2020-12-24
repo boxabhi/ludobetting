@@ -135,8 +135,8 @@
       running_games: [],
       comming_games : [],
 
-      url: 'wss://ludomission.com:8001', 
-      //url: 'ws://127.0.0.1:8000',
+     url: 'wss://ludomission.com:8001', 
+    //  url: 'ws://127.0.0.1:8000',
       username: '{{request.user.username}}',
       user_game: {},
       requesting_user: null,
@@ -398,11 +398,20 @@
         var games = JSON.parse(e.data)
        console.log(games)
         if (games.payload.type == "games") {
-          console.log(games.payload.data)
-          _this.games = games.payload.data;
+          var username = '{{request.user}}'
+          var g = games.payload.data.map((game)=>{
+            if(game.game_created != username)
+            return game
+          })
+
+          _this.games = g;
         } else if (games.type == 'game') {
-         
-          _this.games = (games)
+          var username = '{{request.user}}'
+          var g = games.map((game)=>{
+            if(game.game_created != username)
+            return game
+          })
+          _this.games = (g)
         } 
         else {
           
@@ -414,7 +423,6 @@
               _this.games.splice(i,1)
               _this.games.push(g)
               break;
-             
              }
            }
 
