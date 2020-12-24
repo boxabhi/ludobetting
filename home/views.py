@@ -8,6 +8,7 @@ from itertools import chain
 
 from django.http import JsonResponse
 from game.helpers import game_cron_job
+from django.contrib import messages
 
 from .models import *
 # Create your views here.
