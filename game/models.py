@@ -60,7 +60,7 @@ class Game(models.Model):
     
     @staticmethod
     def get_games(user_id):
-        games = Game.objects.filter(is_over = False).exclude(game_creater = user_id)
+        games = Game.objects.filter(is_over = False, status= 'CREATED').exclude(game_creater = user_id)
         payload = []
         for game in games:
             result = {}
@@ -78,7 +78,7 @@ class Game(models.Model):
     def get_user_game(username):
         
         user = User.objects.filter(username=username).first()
-        game = Game.objects.filter(game_creater =user , is_over=False).first()
+        game = Game.objects.filter(game_creater =user, status='CREATED').first()
         if game is None:
             return None
         payload = {}
