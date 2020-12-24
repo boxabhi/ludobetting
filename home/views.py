@@ -102,7 +102,7 @@ def history(request):
     for game_result in game_results:
         count+=1
         result = {}
-        result['amount'] = game_result.game.coins
+        result['amount'] = game_result.winning_amount
         if game_result.result == 'WON':
             result['status'] = 'Won'
         elif game_result.result == 'LOST':

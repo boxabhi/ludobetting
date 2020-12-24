@@ -113,6 +113,7 @@ class GameResult(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE , null=True , blank=True)
     result = models.CharField(max_length=25 , choices = RESULT ,  default='PENDING')
     reason_of_cancel = models.TextField(blank=True , null=True)
+    winning_amount = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now=True)
 
     

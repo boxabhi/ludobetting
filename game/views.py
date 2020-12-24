@@ -68,8 +68,8 @@ def waiting_room(request , room_id):
         game.state +=1 
         game.save()
         
-        
-        return redirect('/')
+        messages.success(request, 'Result Updated')
+        return redirect('/user/' + request.user)
     
     
     if game.player_one is None or game.player_two is None:
