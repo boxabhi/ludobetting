@@ -11,25 +11,25 @@
             <div class="form-group">
                 <label for="recover-email">Enter username</label>
                 <input class="form-control"  type="text" name="username" placeholder="Your username"  id="recover-email" required="">
-                <div class="invalid-feedback">Please provide valid email address.</div>
+                <div class="invalid-feedback">Please provide username.</div>
               </div>
     
           <div class="form-group">
             <label for="recover-email">Enter whatsapp number</label>
-            <input class="form-control" type="text" name="whatsapp" placeholder="Your whatsapp number"  id="recover-email" required="">
-            <div class="invalid-feedback">Please provide valid email address.</div>
+            <input class="form-control" type="number" name="whatsapp" placeholder="Your whatsapp number"  id="recover-email" required="">
+            <div class="invalid-feedback">Please provide number.</div>
           </div>
 
           <div class="form-group">
             <label for="recover-email">Enter your password </label>
             <input class="form-control" type="password" name="password" placeholder="Your secret password"  id="recover-email" required="">
-            <div class="invalid-feedback">Please provide valid email address.</div>
+            <div class="invalid-feedback">Please provide valid password.</div>
           </div>
 
           <div class="d-flex flex-wrap justify-content-between">
             <div class="custom-control custom-checkbox">
-              <input class="custom-control-input" type="checkbox" required checked="" id="remember_me">
-              <label class="custom-control-label" for="remember_me">Agree terms and conditions</label>
+              <input class="custom-control-input" required type="checkbox" required checked="" id="remember_me">
+              <label class="custom-control-label" for="remember_me">Agree terms and conditions<a href="{% url 'terms' %}">View</a></label>
             </div><a class="nav-link-inline font-size-sm" href="{% url 'login' %}">Login</a>
           </div>
           

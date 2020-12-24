@@ -6,3 +6,4 @@ from .models import *
 admin.site.register(OrderCoins)
 admin.site.register(SellCoins)
 admin.site.register(Penalty)
+admin.site.register(CashFree)

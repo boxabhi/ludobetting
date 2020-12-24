@@ -34,6 +34,12 @@ class Penalty(models.Model):
     def __str__(self):
         return self.user.username
 
+class CashFree(models.Model):
+    url = models.CharField(max_length=1000)
+    app_id = models.CharField(max_length=100)
+    secret = models.CharField(max_length=1000)
+    use = models.BooleanField(default=False)
+
 
 @receiver(post_save, sender=Penalty)
 def penalty_handler(sender , instance,created,**kwargs): 
