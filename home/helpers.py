@@ -1913,7 +1913,7 @@ indian_last_names = [
 ]
 
 
-indian_abuse = ['अकु','प्रियंका','दीपक','श्वेता','श्वेता','शिवानी','प्रिया','आलिया','Khelo ludo Pel ke','Khelogi ludo mere sath','ritzy lover' ,'Always looser','Mere Sath ludo khelo' ,'I am ludo king','Ludo mere baap ka','Bhosadike' ,'Beti chod','Laal goot meri','Chodu' ,'Kaat dungo','Gaand' ,'Gaandu' ,'Gadha', 'Bakland' ,'Lauda' , 'Lauda fek marunga', 'Kamina hu mai']
+indian_abuse = ['अकु','प्रियंका','दीपक','श्वेता','श्वेता','शिवानी','प्रिया','आलिया','Khelo ludo Pel ke','Khelogi ludo mere sath','ritzy lover' ,'Always looser','Mere Sath ludo khelo' ,'I am ludo king','Ludo mere baap ka','Bhosadike' ,'Beti chod','Laal goot meri','Chodu' ,'Kaat dungo','Gaand' ,'Gaandu' ,'Gadha', 'Bakland' ,'Lauda', 'Kamina hu mai']
 emoji = ['😍' ,'🥰', '😘' ,'🥶', '😱' ,'😨', '😰' , '😥' ,'😓', '🤗', '🤔' ,'🤭', '🤫', '🤥' , '💪🏻','🍌','❤️' ,'🧡' ,'💛','🚩' ,'🔴','💸']
 
 
@@ -1959,7 +1959,7 @@ def fake_data():
 
 def fake_running_games():
     payload = []
-    count = [15,20, 25,30,40]
+    count = [3,5,6,8,12]
     n = random.choices(count)
     while len(payload) < n[0]:
         player_one = fake_list()
