@@ -134,7 +134,7 @@ def history(request):
         
     game_cron_job()
     history = sorted(results , key=lambda i:i ['created_at'])
-    #history.reverse()
+    history.reverse()
     context = {'history' : history}
     return render(request , 'home/history.html' , context)
 
