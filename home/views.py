@@ -1,24 +1,38 @@
 from django.shortcuts import render,redirect
 from accounts.models import *
-from .helpers import set_coins
+from .helpers import set_coins,fake_data,fake_running_games
 from transaction.models import *
 from game.models import *
 from django.contrib.auth.decorators import login_required
 from itertools import chain
+
+from django.http import JsonResponse
+from game.helpers import game_cron_job
+
+from .models import *
 # Create your views here.
 
 
+
+
+def fake_api(request):
+    data = fake_data()
+    return JsonResponse(data , safe=False)
     
     
 def landing(request):
     if request.user.is_authenticated:
         set_coins(request)
-    return render(request, 'home/landing.html')    
+    game_cron_job()
+    images = Banners.objects.all()
+    context = {'banners' : images}
+    return render(request, 'home/landing.html' , context)    
 
 
 def error(request):
     if request.user.is_authenticated:
         set_coins(request)
+    game_cron_job()
     return render(request, 'error.html')
 
 
@@ -26,18 +40,13 @@ def error(request):
 def home(request , username=None):
     if request.user.is_authenticated:
         set_coins(request)
-        
-   
-    
-
+    data = fake_running_games()    
     if request.user.username != username:
         return redirect('/error')
     
-    
-    pending_game_one = Game.objects.filter(player_one = request.user.id , result_by_player_one__isnull=True , state__gte=1)
-    pending_game_two = Game.objects.filter(player_two = request.user.id , result_by_player_two__isnull=True , state__gte=1)
-    pending_games = list(chain(pending_game_one , pending_game_two))   
-    context = {'pending_games' : pending_games}   
+    game_cron_job()
+    pending_game_result  =  GameResult.objects.filter(user = request.user , result = 'PENDING') 
+    context = {'pending_games' : pending_game_result  , 'running_games' : data}  
     return render(request , 'home/index.html' , context)
 
 @login_required(login_url='/accounts/login/')
@@ -47,9 +56,19 @@ def history(request):
     
     order_coins = OrderCoins.objects.filter(user = request.user)
     sell_coins = SellCoins.objects.filter(user = request.user)
-    game_results = GameResult.objects.filter(user = request.user , game__is_over=True)
-    print(game_results)
+    game_results = GameResult.objects.filter(user = request.user , game__is_over=True , game__status='OVER').exclude(result='PENDING')
+    penalty = Penalty.objects.filter(user = request.user)
     results = []
+    
+    for p in penalty:
+        result = {}
+        result['amount'] = p.amount
+        result['status'] = 'Deducted'
+        result['message'] = p.reason
+        result['created_at'] = str(p.created_at)[0:10]       
+        results.append(result)
+        
+    
     for order_coins in order_coins:
         result = {}
         result['amount'] = order_coins.amount
@@ -103,21 +122,24 @@ def history(request):
             
         except User.DoesNotExist:
             pass
-        result['message'] = 'Match between ' +vs
+        result['message'] =  vs
         result['created_at'] = str(game_result.created_at)[0:11]
         results.append(result)
         
-    print(count)
+    game_cron_job()
     history = sorted(results , key=lambda i:i ['created_at'])
-    
+    #history.reverse()
     context = {'history' : history}
-    
     return render(request , 'home/history.html' , context)
 
 def top_winners(request):
     if request.user.is_authenticated:
         set_coins(request)
-    return render(request ,'home/top.html')
+    game_cron_job()
+    
+    winners = TopWinners.objects.all()
+    context = {'winners': winners}
+    return render(request ,'home/top.html' , context)
 
 
 

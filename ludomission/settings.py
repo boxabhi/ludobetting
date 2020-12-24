@@ -84,6 +84,17 @@ WSGI_APPLICATION = 'ludomission.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'myproject',
+#         'USER': 'myprojectuser',
+#         'PASSWORD': 'password',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -126,6 +137,16 @@ USE_TZ = True
 
 ASGI_APPLICATION = "ludomission.asgi.application"
 
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://127.0.0.1:6379/1",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#         }
+#     }
+# }
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
@@ -138,15 +159,29 @@ CHANNEL_LAYERS = {
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+# STATIC_URL = '/static/'
+# MEDIA_URL = '/media/'
+# STATICFILES_DIRS = [
+#     BASE_DIR / "static",
+# ]
+STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+
+STATICFILES_DIR = {
+    os.path.join(BASE_DIR , "hotels/static")
+}
+
+MEDIA_ROOT =  os.path.join(BASE_DIR, 'public/static') 
 MEDIA_URL = '/media/'
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
-PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
-# STATIC_ROOT =  os.path.join(BASE_DIR,"staticfiles")
-MEDIA_ROOT =  os.path.join(BASE_DIR,"media")
+
+
+# PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+# STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
+# # STATIC_ROOT =  os.path.join(BASE_DIR,"staticfiles")
+# MEDIA_ROOT =  os.path.join(BASE_DIR,"media")
 
 
 sentry_sdk.init(

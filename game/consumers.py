@@ -1,4 +1,5 @@
 from channels.generic.websocket import AsyncWebsocketConsumer,WebsocketConsumer
+from channels.consumer import AsyncConsumer
 import asyncio
 from channels.consumer import SyncConsumer
 from asgiref.sync import async_to_sync,sync_to_async
@@ -7,6 +8,7 @@ from game.models import *
 from channels.auth import login
 from django.contrib.auth.models import User
 from accounts.models import *
+from home.helpers import  fake_data
 
 
 class AllGames(WebsocketConsumer):
@@ -43,12 +45,35 @@ class AllGames(WebsocketConsumer):
     
     def sendgames(self , text_data):
         data = json.loads(text_data['value'])
+       
         payload = {'type' : 'games'  , 'data' : data}
         self.send(text_data=json.dumps({
             'payload': data
         }))
 
+    
+    def send_fake_games(self , text_data):
+        pass
+
+
+import time
+class FakeGames(AsyncConsumer):
+    async def websocket_connect(self,event):
+        self.room_name = 'fake_games'
+        self.group_name=  'fake_games'
+        await self.send({
+            "type": "websocket.accept"
+        })
+
+        while True:
+            await asyncio.sleep(3)
+            data = {'type' : 'fgames'  , 'data' : fake_data() }
+            await self.send({
+                'type': 'websocket.send',
+                'text':  json.dumps(data),
+            })
         
+            
 
 class TableData(WebsocketConsumer):
     def connect(self):
@@ -66,7 +91,8 @@ class TableData(WebsocketConsumer):
         self.send(text_data=json.dumps({
             'payload': data
         }))
-        
+    
+    
         
 
     def disconnect(self,close_code):
@@ -89,6 +115,8 @@ class TableData(WebsocketConsumer):
                         }
                 )
         elif data.get('type') == 'declined':
+            data = json.loads(text_data)
+            print(data)
             async_to_sync(self.channel_layer.group_send)(
                 'user_%s' % data.get('requested_user'),{
                     'type':'decline_request',
@@ -166,13 +194,6 @@ class TableData(WebsocketConsumer):
             self.change_game_state(value.get('id'))
         self.send(event['value'])
  
- 
-    @sync_to_async
-    def change_game_state(id):
-        game = Game.objects.get(id=id)
-        
-        game.state = 1
-        game.save()
 
 
 
@@ -214,7 +235,7 @@ class Room(SyncConsumer):
         })
         
     def websocket_receive(self, event):
-        print(self.room_name)
+        
         async_to_sync(self.channel_layer.group_send)(self.room_name ,{
             'type' : 'websocket.message',
             'text' : event.get('text')

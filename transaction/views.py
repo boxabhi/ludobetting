@@ -49,6 +49,12 @@ def sell_coins(request):
             messages.success(request, "You don't have enough coins 😒")
             return redirect('/transaction/sell-coins/')
             
+        if int(amount) < 100:
+            messages.success(request, "Amount must be greator than 100 😒")
+            return redirect('/transaction/sell-coins/')
+            
+            
+                
             
         total_requests = SellCoins.objects.filter(user=user,created_at__gte = datetime.now() - timedelta(days=1) , is_paid=False)
         

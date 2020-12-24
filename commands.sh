@@ -16,3 +16,7 @@ sudo systemctl restart daphne.service
 
 
 export DJANGO_SETTINGS_MODULE=ludomission.settings
+
+cd /home/djangoprojectdir/ludobetting
+
+source djangoprojectenv/source/bin

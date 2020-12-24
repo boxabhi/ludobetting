@@ -3,9 +3,24 @@
 
 
 <div class="container mt-5 pt-5 pb-5 mb-5">
-  
+    <div class="show_border mb-4">
+    <h3 class="text-center text-danger text-capitalize m-4">{{user_one.username}} vs {{user_two.username}} for ₹ {{game.coins}}</h3>
+    </div>
+
+    <div class="solid">
+        <p class="text-center text-success p-4 h5">notice: कृपया धयान दे , गेम स्टार्ट होने के बाद 4-5 चांसेस तक हर बार स्क्रीनशॉट लेते रहे  . जरुरत पड़ने पर यह आपके कम आएगा .</p>
+    </div>
+
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-danger">
+      {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
     {% if request.user.id != game.game_creater.id %}
-    <div>
+    <div class="m-4">
         <h3 class="text-center">Waiting for room Code</h3>
         <div class="text-center">
         <div class="spinner-grow" id="spinner" role="status">
@@ -27,7 +42,11 @@
     <div class="form-group">
         <label for="pass-visibility">Enter Room Code</label>
         <div class="password-toggle">
-            <input type="text" id="room_code" class="form-control" placeholder="Enter room code">
+            {% if game.room_code %}
+            <input type="text" id="room_code" value="{{game.room_code}}" class="form-control" placeholder="Enter room code">
+            {% else %}
+            <input type="text" id="room_code" value="" class="form-control" placeholder="Enter room code">
+            {% endif %}
         </div>
         <button class="btn btn-accent mt-2" onclick="sendRoomCode()">Send room code</button>
         <button class="btn btn-danger mt-2" onclick="changeRoomCode()">Change Room code</button>
@@ -36,11 +55,22 @@
     {% endif %}
 
 
+    <div class="show_border">
+        <p class="text-center p-3">₹50 penalty for wrong update., ₹25 panelty if you dont update after losing .</p>
+    </div>
+
+
+
+    <div class="solid mt-3">
+        <p class="text-center text-warning p-4 h4">For cancelling game, video proof in necessary otherwise game will not be cancelled</p>
+    </div>
+
+
     <form method="post" class="mt-5" enctype="multipart/form-data">
         <h4 class="text-center">Update Game results</h4>
         {% csrf_token %}
         <div class="form-group">
-            <select class="form-control" id="result" name="result" onchange="showOption()">
+            <select class="form-control" required id="result" name="result" onchange="showOption()">
                 <option>Choose</option>
                 <option value="WON">Won</option>
                 <option value="LOST">Lost</option>
@@ -81,15 +111,20 @@
 </div>
 
 
+<style>
+   .show_border {border-style: dotted;}
+   .solid {border-style: solid;}
+</style>
+
 
 
 <script>
       
-    var url ='ws://127.0.0.1:8000'  + window.location.pathname
-    //var url = 'wss://ludomission.com:8001' + window.location.pathname
+    //var url ='ws://127.0.0.1:8000'  + window.location.pathname
+    var url = 'wss://ludomission.com:8001' + window.location.pathname
     var room_id = '{{room_id}}'
-    //let socket = new WebSocket('wss://ludomission.com:8001/ws/game/room/' + room_id);
-    let socket = new WebSocket('ws://127.0.0.1:8000/ws/game/room/' + room_id);
+    let socket = new WebSocket('wss://ludomission.com:8001/ws/game/room/' + room_id);
+    //let socket = new WebSocket('ws://127.0.0.1:8000/ws/game/room/' + room_id);
 
     socket.onopen = function (e) {
         console.log('Connection established');

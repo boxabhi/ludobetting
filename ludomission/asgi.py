@@ -25,7 +25,8 @@ ws_pattern= [
     path('ws/allgames/' , consumers.AllGames),
     path('ws/room/' , consumers.Room),
     path('ws/game/room/<room_name>' , consumers.ChatConsumer),
-    path('ws/join/' , consumers.JoinRequest)
+    path('ws/join/' , consumers.JoinRequest),
+    path('ws/running' , consumers.FakeGames)
 ]
 
 application= ProtocolTypeRouter(

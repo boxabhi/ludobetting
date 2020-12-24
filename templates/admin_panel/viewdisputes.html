@@ -7,10 +7,11 @@
 
 <div class="cz-carousel cz-controls-static cz-controls-outside">
     <div class="cz-carousel-inner" data-carousel-options='{"items": 3, "nav": false, "responsive": {"0":{"items":1},"500":{"items":2, "gutter": 18},"768":{"items":3, "gutter": 20}, "1100":{"gutter": 24}}}'>
-     
+
+      
         {%  for image in images %}
         <!-- <img src="/media/{{image.uploaded_image}}" > -->
-        <img src="/media/static/images/download_1.jpg" >
+        <img src="/media/{{image.image}}" >
 
         {% endfor %}
      

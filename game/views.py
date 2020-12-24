@@ -7,6 +7,8 @@ import pusher
 import uuid
 import json
 from home.helpers import *
+from django.contrib import messages
+
 # Create your views here.
 
 
@@ -21,34 +23,47 @@ def waiting_room(request , room_id):
     user = request.user
     if game is None:
         return redirect('/error')
-    
+     
 
-    print(f'{request.user.id} - {game.player_one}')
-    print(f'{request.user.id} - {game.player_two}')
-    
-    
     
     if request.method == 'POST':
         result = request.POST.get('result')
         images = request.FILES.getlist('upload_file')
         reason_of_cancel = request.POST.get('reason_of_cancel')
         
-        game_result = GameResult.objects.filter(game = game , user = user , result='PENDING').first()
+        
+        
+        if game.room_code is None :
+            messages.success(request, 'Something went wrong You must enter room code 😒')
+            return redirect('/game/room/' + str(game.room_id) )
+            
+        
+        game_result,_ = GameResult.objects.get_or_create(game = game , user = user , result='PENDING')
         game_result.result = result
+        
+        if result == 'WON' and not len(images):
+            messages.success(request, 'If you have won you must upload game winning images 😒')
+            return redirect('/game/room/' + str(game.room_id) )
+        
+        if result == 'CANCEL' and len(reason_of_cancel):
+            messages.success(request, 'If your game got CANCEL enter reason 😒')
+            return redirect('/game/room/' + str(game.room_id) )
+            
+        
         if reason_of_cancel:
             game_result.reason_of_cancel = reason_of_cancel
         game_result.save()
         
         for image in images:
-            image_obj = Image(user = user,game_result =game_result,uploaded_image=image)
+            image_obj = Image(user = user,game =game,game_result =game_result,uploaded_image=image)
             image_obj.save()
         
         game.is_over = True
-        if game.player_one is not None and int(request.user.id) == int(game.player_one):
+        if game.player_one is not None and request.user.id == game.player_one:
             game.result_by_player_one = request.user
             game.state +=1 
             game.save()
-        if game.player_one is not None and int(request.user.id) == int(game.player_two):
+        if game.player_one is not None and request.user.id  == game.player_two:
             game.result_by_player_two = request.user
         game.state +=1 
         game.save()
@@ -56,7 +71,15 @@ def waiting_room(request , room_id):
         
         return redirect('/')
     
-    context = {'room_id': room_id , 'game' : game}
+    
+    
+    user_one = User.objects.get(id = game.player_one)
+    user_two = User.objects.get(id = game.player_two)
+    
+    
+    context = {'room_id': room_id , 'game' : game , 'user_one' : user_one , 'user_two' : user_two}
+    
+    
     return render(request, 'game/waiting_room.html' , context)
 
 
@@ -66,12 +89,13 @@ def delete_game(request , id):
     try:
         game = Game.objects.get(id=id)
         if game.game_creater.id != user.id:
-            return redirect('/')
+            return redirect('/user/'+user.username +'/')
         else:
             game.delete()
             return redirect('/user/'+user.username +'/')
     except Game.DoesNotExist:
-        return redirect('/')
+        return redirect('/user/'+user.username +'/')
+
 
 
 

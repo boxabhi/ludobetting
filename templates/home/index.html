@@ -12,13 +12,9 @@
     </div>
 
     <div class="text-center">
-      <div class="input-group">
-        <div class="input-group-prepend ">
-          <span class="input-group-text bg-accent text-white">
-            <i class="czi-dollar"></i>
-          </span>
-        </div>
-        <input type="text" id="coins" class="form-control" placeholder="Enter Coins">
+      <div class="input-group border-0 rounded-0">
+       
+        <input type="text" id="coins" class="form-control rounded-0" placeholder="Enter Coins">
         <div class="input-group-append">
           <button type="button" class="btn btn-danger" v-on:click="create_game()">Set</button>
         </div>
@@ -31,24 +27,22 @@
       <div class="alert-icon-box">
         <i class="alert-icon czi-security-check"></i>
       </div>
-      You have a pending game <a href="/game/room/{{game.room_id}}" class="btn btn-success">Update result</a>
+      You have a pending game <a href="/game/room/{{game.game.room_id}}" class="btn btn-success">Update result</a>
     </div>
     {% endfor %}
     {% endif %}
 
 
     <li v-if="Object.keys(user_game).length &&  'id' in user_game"
-      class="shadow list-group-item d-flex justify-content-between align-items-center">
+      class="shadow rounded-0 list-group-item d-flex justify-content-between align-items-center">
       <span>
-        [[user_game.game_creater]]
-        <i class="czi-play-circle text-muted mr-2"></i>
-        <b id="game_here"> You created a game worth [[user_game.coins]]</b>
+        <b id="game_here"> {{request.user.username}} vs [[requesting_user]] [[user_game.coins]]</b>
       </span>
 
       <div v-if="requesting_user">
-        <button class="btn btn-success" id="request_user" v-on:click="accept(requesting_user)">[[requesting_user]]
-          requested Accept</button>
-        <button class="btn btn-danger" v-on:click="decline(requesting_user)">Decline</button>
+        <button class="btn btn-success btn-sm" id="request_user" v-on:click="accept(requesting_user)">
+         Play</button>
+        <button class="btn btn-danger btn-sm" v-on:click="decline(requesting_user)">Decline</button>
 
       </div>
       <a :href="'/game/delete_game/'+user_game.id" class="btn btn-warning"><i class="czi-pot"></i></a>
@@ -57,18 +51,62 @@
 
     <ul class="list-group mt-5 mb-5 pb-5" id="live_games">
       <li v-for="game in games" :key="game.id"
-        class="list-group-item d-flex justify-content-between align-items-center"><span><i
-            class="czi-play-circle text-muted mr-2"></i>
-          [[game.game_creater]] Create a game worth [[game.coins]]
+        class="list-group-item d-flex rounded-0 justify-content-between align-items-center"><span>
+          <i class="czi-play-circle text-muted mr-2"></i>
+          <b>[[game.game_creater]]</b> Created a game worth <span class="badge badge-success p-2"><b>₹ [[game.coins]]</b></span>
         </span>
-        <button class="btn btn-primary" :id="game.room_id"
+        <button class="btn btn-primary btn-sm" :id="game.room_id"
           v-on:click="requestGame(game.game_creater,game.coins,game.room_id)">Play</button>
       </li>
+
+      <li v-for="game in comming_games" :key="game.id"
+      class="list-group-item d-flex rounded-0 justify-content-between align-items-center"><span><i
+          class="czi-play-circle text-muted mr-2"></i>
+        <b>[[game.game_creater]]</b> Created a game worth <span class="badge badge-success p-2"><b>₹ [[game.coins]]</b></span>
+
+
+      </span>
+      <button class="btn btn-primary btn-sm" :id="game.room_id"
+        v-on:click="requestGame(game.game_creater,game.coins,game.room_id,2)">Play</button>
+    </li>
+
+    {% for game in running_games %}
+    <li 
+    class="list-group-item d-flex rounded-0 pt-3  pb-3 justify-content-between align-items-center"><span><i
+        class="czi-play-circle text-muted mr-2"></i>
+     {{game.message |safe}}
+    </span>
+   
+  
+  </li>
+  {% endfor %}
+
+
     </ul>
+
+
+  
+
+
   </div>
 
 </div>
 
+
+<audio id="game_request" src="/media/audio/request.mpeg" >
+
+</audio>
+
+
+
+<audio id="game_accept" src="/media/audio/accept.mpeg" >
+
+</audio>
+
+
+<audio id="error" src="/media/audio/error.mp3" >
+
+</audio>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"
   integrity="sha512-DZqqY3PiOvTP9HkjIWgjO6ouCbq+dxqWoJZ/Q+zPYNHmlnI2dQnbJ5bxAHpAMw+LXRm4D72EIRXzvcHQtE8/VQ=="
   crossorigin="anonymous"></script>
@@ -82,23 +120,35 @@
       message: 'Hello Vue!',
       games: [],
       running_games: [],
-      //url: 'wss://ludomission.com:8001', 
-      url: 'ws://127.0.0.1:8000',
+      comming_games : [],
+
+      url: 'wss://ludomission.com:8001', 
+      //url: 'ws://127.0.0.1:8000',
       username: '{{request.user.username}}',
       user_game: {},
       requesting_user: null,
       alert: null,
-      coins: '{{request.session.coins}}'
+      coins: '{{request.session.coins}}',
+      requested_games : [],
     },
     methods: {
+      error(){
+        var e = document.getElementById('error')
+        e.play()
+      },
+      playRequestedAudio(){
+        var e = document.getElementById('game_request')
+        e.play()
+      },
+      playAcceptAudio(){
+        var e = document.getElementById('game_accept')
+        e.play()
+      },
       create_game() {
         var coins = document.getElementById('coins')
         var message = document.getElementById('message')
         var alert = document.getElementById('alert')
         var url = '/game/api/create_game'
-
-
-
         if (coins.value.length == 0) {
           this.alert = 'Enter a game amount 🤑'
           setTimeout(() => {
@@ -109,7 +159,6 @@
         }
 
         if (coins.value.length && parseInt(coins.value) < 50) {
-          console.log(coins.value.length)
           this.alert = 'Game amount must be greater than 50 💵'
           setTimeout(() => {
             this.alert = null
@@ -161,11 +210,40 @@
             })
         }
       },
+      addData(){
+        var _this = this
+          axios.get('/api/get_games')
+          .then(result =>{
+            _this.comming_games = result.data
+          })
+      },
 
-      requestGame(user, coins, id) {
+      requestGame(user, coins, id, flag=1) {
         let socket = new WebSocket(`${this.url}/ws/tableData/` + user);
         var button = document.getElementById(id)
         var _this = this;
+
+
+
+
+        var count = 0
+        _this.requested_games.map((game)=>{
+          if(game == id) count++;
+        })
+        _this.requested_games.push(id)
+        
+        if(count >= 2){
+          button.disabled = true
+          _this.alert = "Can't request more than 2 time in a row"
+                setTimeout(() => {
+                  this.alert = null
+                }, 2000)
+                _this.error()
+                return;
+               
+        }
+        
+
 
         if (parseInt(this.coins) < coins) {
           button.innerHTML = "Not enough coins"
@@ -175,30 +253,58 @@
             button.innerHTML = "Play"
             button.classList.remove('btn-dark')
           }, 1000)
+          _this.error()
+          return;
+        }
 
+       
+
+
+        if(parseInt(flag) == 2){
+          button.innerHTML = "Someone joined"
+          button.classList.add('btn-dark')
+
+          setTimeout(() => {
+            button.innerHTML = "Play"
+            button.classList.remove('btn-dark')
+          }, 1000)
+          _this.error()
           return;
         }
 
 
+
         socket.onopen = function (e) {
-          console.log(e)
+         
           socket.send(JSON.stringify({
             'type': 'request_game',
             'requested_user': user,
             'requesting_user': _this.username
           }))
+
+          button.innerHTML = "Requested"
+          button.classList.add('btn-dark')
+          _this.playRequestedAudio()
+          setTimeout(() => {
+            button.innerHTML = "Play"
+            button.classList.remove('btn-dark')
+          }, 5000)
         }
       },
       accept(user) {
         let socket = new WebSocket(`${this.url}/ws/tableData/` + this.username);
         var _this = this;
+        _this.playAcceptAudio()
         socket.onopen = function (e) {
           socket.send(JSON.stringify({
             'type': 'accept',
             'requested_user': user,
             'requesting_user': _this.username
           }))
+         
           window.location.href = '/game/room/' + _this.user_game.room_id
+            
+          
         }
       },
       decline(user) {
@@ -216,12 +322,14 @@
       }
     },
     mounted() {
-      var _this = this;
+      
+     
 
+      var _this = this;
+    
       let socket = new WebSocket(`${this.url}/ws/tableData/` + _this.username);
       let allGames = new WebSocket(`${this.url}/ws/allgames/?user=1`)
-
-
+      let fgames = new WebSocket(`${this.url}/ws/running`);
 
       socket.onopen = function (e) {
         var id = '{{request.user.id}}'
@@ -236,7 +344,7 @@
         if (data.payload.type == 'request') {
           _this.requesting_user = data.payload.requesting_user
         } else if (data.payload.type == 'user_game') {
-          console.log(data.payload)
+         
           _this.requesting_user = data.payload.requesting_user
         } else if (data.payload.type == 'request_declined') {
           _this.alert = data.payload.message
@@ -245,6 +353,7 @@
           }, 3000)
         } else if (data.payload.type == 'request_accepted') {
           _this.alert = 'Your request has been Accepted'
+          _this.playAcceptAudio()
           setTimeout(() => {
             _this.alert = null
           }, 3000)
@@ -274,12 +383,13 @@
         }))
       }
       allGames.onmessage = function (e) {
-        var games = JSON.parse(e.data).payload
-        console.log(games)
-        if (games.type == "games") {
-          console.log('Errror 1')
-          _this.games = games.data;
+        var games = JSON.parse(e.data)
+       console.log(games)
+        if (games.payload.type == "games") {
+          console.log(games.payload.data)
+          _this.games = games.payload.data;
         } else if (games.type == 'game') {
+         
           _this.games = (games)
         } 
         else {
@@ -287,24 +397,40 @@
            var g = games[0]
            
            for(var i =0;i<_this.games.length;i++){
-             console.log(_this.games[i].id , g.id)
+          
              if(_this.games[i].id == g.id){
               _this.games.splice(i,1)
               _this.games.push(g)
               break;
-              console.log('Its a match')
+             
              }
            }
 
           //_this.games = games
         }
-
       }
+
+      fgames.onopen = function (e) {
+       console.log("Connected")
+      }
+
+      fgames.onmessage = function (e) {
+        // var data = JSON.parse(e.data)
+        // _this.comming_games = data.data
+      }
+
 
       allGames.onclose = function (e) {
         console.log('Allgames closed')
       }
 
+
+
+     setInterval(()=>{
+      _this.addData()
+     },4000)
+
+     
 
     }
   });
