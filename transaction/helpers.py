@@ -6,6 +6,7 @@ import hashlib
 import hmac
 import base64
 import string
+from django.conf import settings
 
 MID= 'iopJfM06937972893222'
 KEY = '#F9e%toAivZgqt1d'
@@ -34,14 +35,14 @@ def random_string_generator(size=10, chars=string.ascii_lowercase + string.digit
 
 def make_payment(orderId , orderAmount, customerName ,customerPhone , returnUrl):
     postData = {
-        "appId" : '45107556fc3225a133718229d70154',
+        "appId" : settings.APP_ID,
         "orderId" : orderId,
         "orderAmount" : orderAmount,
         "orderCurrency" : 'INR',
         "customerName" : 'Ludo betting',
         "customerPhone" : customerPhone,
         "customerEmail" : "abhijeetg40@gmail.com",
-        "returnUrl" : 'https://www.ludomission.com/payment_success'
+        "returnUrl" : settings.RETURN_URL
     }
     sortedKeys = sorted(postData)
     signatureData = ""
@@ -49,6 +50,6 @@ def make_payment(orderId , orderAmount, customerName ,customerPhone , returnUrl)
         signatureData += key+postData[key]
     print(signatureData)
     message = bytes(signatureData , 'utf-8')
-    secret = bytes('a06a7684bc8aa6316763adad5ca60476160d48f7' , 'utf-8')
+    secret = bytes(settings.APP_SECRET , 'utf-8')
     signature = base64.b64encode(hmac.new(secret,message,digestmod=hashlib.sha256).digest()).decode("utf-8")
     return signature

@@ -27,7 +27,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR,"templates")
 SECRET_KEY = '*y=q&kd88-$zjb97)!eyy*5sy0dl$awx@(sxk$!@df^dbj*j(_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -81,26 +81,42 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ludomission.wsgi.application'
 ASGI_APPLICATION = 'ludomission.asgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
+# CASH FREE 
+if DEBUG:
+    CASH_FREE_URL = 'https://test.cashfree.com/billpay/checkout/post/submit'
+    APP_ID = '45275af7021c739883e8f716a57254'
+    APP_SECRET = '9b7ccf976688fa665c66bc45bd521429a70043f2'
+    RETURN_URL = 'http://127.0.0.1:8000/payment_success'
+else:
+    CASH_FREE_URL = 'https://www.cashfree.com/checkout/post/submit'
+    APP_ID = '904909a56be43a93dc873af6e09409'
+    APP_SECRET = '26bae5d96a388c54436966a4ed5ee72f4c684d76'
+    RETURN_URL = 'https://www.ludomission.com/payment_success'
+    
+    
+
+
+if DEBUG:
+    DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'ludomissiondb',
         'USER': 'ludomissionadmin',
         'PASSWORD': 'ludobet@456',
         'HOST': 'localhost',
         'PORT': '',
+        }
     }
-}
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+
 
 
 # Password validation
@@ -137,15 +153,7 @@ USE_TZ = True
 
 ASGI_APPLICATION = "ludomission.asgi.application"
 
-# CACHES = {
-#     "default": {
-#         "BACKEND": "django_redis.cache.RedisCache",
-#         "LOCATION": "redis://127.0.0.1:6379/1",
-#         "OPTIONS": {
-#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-#         }
-#     }
-# }
+
 
 CHANNEL_LAYERS = {
     "default": {
@@ -156,14 +164,7 @@ CHANNEL_LAYERS = {
     },
 }
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-# STATIC_URL = '/static/'
-# MEDIA_URL = '/media/'
-# STATICFILES_DIRS = [
-#     BASE_DIR / "static",
-# ]
 STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 

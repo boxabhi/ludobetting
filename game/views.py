@@ -73,8 +73,7 @@ def waiting_room(request , room_id):
     
     
     
-    if request.user == game.game_creater:
-        time.sleep(3)
+    
     
     if game.player_one is None or game.player_two is None:
         messages.success(request, "Second player did'nt joins")

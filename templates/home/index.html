@@ -149,7 +149,7 @@
       comming_games : [],
 
      url: 'wss://ludomission.com:8001', 
-     // url: 'ws://127.0.0.1:8000',
+     //url: 'ws://127.0.0.1:8000',
       username: '{{request.user.username}}',
       user_game: {},
       requesting_user: null,
@@ -321,12 +321,13 @@
             'type': 'accept',
             'requested_user': user,
             'requesting_user': _this.username
-          }))
-         
-          window.location.href = '/game/room/' + _this.user_game.room_id
-            
-          
+          }))  
         }
+
+        setTimeout(()=>{
+          window.location.href = '/game/room/' + _this.user_game.room_id
+        },2000)
+
       },
       decline(user) {
         let socket = new WebSocket(`${this.url}/ws/tableData/` + this.username);
@@ -350,7 +351,7 @@
     
       let socket = new WebSocket(`${this.url}/ws/tableData/` + _this.username);
       let allGames = new WebSocket(`${this.url}/ws/allgames`)
-     let fgames = new WebSocket(`${this.url}/ws/running`);
+  //   let fgames = new WebSocket(`${this.url}/ws/running`);
 
       socket.onopen = function (e) {
         console.log("Socket Connected!");
@@ -410,7 +411,7 @@
       }
       allGames.onmessage = function (e) {
         var games = JSON.parse(e.data)
-       console.log(games)
+       
         if (games.payload.type == "games") {
           var username = '{{request.user}}'
           var g = games.payload.data.filter(game=> game.game_creater != username)
@@ -434,15 +435,15 @@
         }
       }
 
-      fgames.onopen = function (e) {
-       console.log("Connected")
-      }
+      // fgames.onopen = function (e) {
+      //  console.log("Connected")
+      // }
 
-      fgames.onmessage = function (e) {
+      // fgames.onmessage = function (e) {
        
-        var data = JSON.parse(e.data)
-        _this.comming_games = data.data
-      }
+      //   var data = JSON.parse(e.data)
+      //   _this.comming_games = data.data
+      // }
 
 
       allGames.onclose = function (e) {
@@ -452,9 +453,9 @@
 
 
 
-    //  setInterval(()=>{
-    //   _this.addData()
-    //  },4000)
+     setInterval(()=>{
+      _this.addData()
+     },4000)
 
      
 

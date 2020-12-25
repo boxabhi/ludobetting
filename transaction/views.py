@@ -7,7 +7,7 @@ from django.contrib import messages
 from datetime import datetime, timedelta
 from home.helpers import set_coins
 from django.views.decorators.csrf import csrf_exempt
-# Create your views here.
+from django.conf import settings
 
 
 @login_required(login_url='/accounts/login/')
@@ -25,7 +25,8 @@ def buy_coins(request):
         profile = Profile.objects.filter(user= request.user).first()
         result = make_payment(order_id , amount , request.user.username  , str(profile.whatsapp) ,   "s")
         checkout = {'signature': result , 'orderAmount' : amount , 'orderId' : order_id ,'customerName' :request.user.username , 'customerPhone' :str(profile.whatsapp) }
-        context = {'checkout': checkout}
+        
+        context = {'checkout': checkout , 'return_url' : settings.RETURN_URL , 'app_id' : settings.APP_ID , 'cash_free_url' : settings.CASH_FREE_URL}
         
         order_coins = OrderCoins(order_id= order_id , user = request.user , amount=amount)
         order_coins.save()

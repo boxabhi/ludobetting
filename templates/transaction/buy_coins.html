@@ -20,15 +20,15 @@
 
         {% if checkout %}
 
-        <form id="redirectForm" method="post" action="https://test.cashfree.com/billpay/checkout/post/submit">
-            <input type="hidden" name="appId" value="45107556fc3225a133718229d70154"/>
+        <form id="redirectForm" method="post" action="{{cash_free_url}}">
+            <input type="hidden" name="appId" value="{{app_id}}"/>
             <input type="hidden" name="orderId" value="{{checkout.orderId}}"/>
             <input type="hidden" name="orderAmount" value="{{checkout.orderAmount}}"/>
             <input type="hidden" name="orderCurrency" value="INR"/>
             <input type="hidden" name="customerName" value="Ludo betting"/>
             <input type="hidden" name="customerEmail" value="abhijeetg40@gmail.com"/>
             <input type="hidden" name="customerPhone" value="{{checkout.customerPhone}}"/>
-            <input type="hidden" name="returnUrl" value="https://www.ludomission.com/payment_success">
+            <input type="hidden" name="returnUrl" value="{{return_url}}">
             <input type="hidden" name="signature" value="{{checkout.signature}}"/>
             <div class="text-center">
                 

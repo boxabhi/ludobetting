@@ -72,6 +72,17 @@ def register_attempt(request):
 
 
 def otp_attempt(request , user_id):
+    send_again = request.GET.get('send_again', None)
+    if send_again:
+        user = User.objects.get(id = user_id)
+        profile = Profile.objects.filter(user=user).first()
+        otp = send_otp(profile.whatsapp)
+        profile.otp = otp
+        profile.save()
+        messages.success(request, 'OTP sent 😎' + profile.whatsapp)
+        return redirect('/accounts/verify_otp/'+ str(user_id))            
+
+    
     if request.method == 'POST':
         try:
             user = User.objects.get(id = user_id)
@@ -140,6 +151,8 @@ def change_password(request):
 
 
 def forget_password_attempt(request):
+   
+    
     if request.method == 'POST':
         whatsapp = request.POST.get("whatsapp")
         profile = Profile.objects.filter(whatsapp=whatsapp).first()
@@ -155,6 +168,16 @@ def forget_password_attempt(request):
     return render(request, 'accounts/forget_password.html')
 
 def forget_password_otp(request , id):
+    send_again = request.GET.get('send_again', None)
+    if send_again:
+        profile = Profile.objects.get(id=id)
+        otp = send_otp(profile.whatsapp)
+        profile.otp = otp
+        profile.save()
+        messages.success(request, 'OTP sent 😎' + profile.whatsapp)
+        return redirect('/accounts/forget_password_otp/'+str(profile.id))
+        
+        
     try:
         profile = Profile.objects.get(id = id)
     except Profile.DoesNotExist:
