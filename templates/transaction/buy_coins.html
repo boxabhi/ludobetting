@@ -9,12 +9,12 @@
             {% csrf_token %}
             <div class="form-group">
                 <label for="recover-email">Enter amount</label>
-                <input class="form-control" type="text" name="amount" placeholder="Enter amount" id="recover-email"
+                <input class="form-control" type="number" name="amount" placeholder="Enter amount" id="recover-email"
                     required="">
                 <div class="invalid-feedback">Please enter amount.</div>
             </div>
 
-            <button type="submit" class="btn btn-accent">Load Coins</button>
+            <button type="submit" class="btn btn-accent btn-sm">Load Coins</button>
 
         </form>
 
