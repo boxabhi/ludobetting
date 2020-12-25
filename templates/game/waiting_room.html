@@ -39,7 +39,7 @@
     </div>
     {% else %}
 
-    <div class="form-group">
+    <div class="form-group mt-4 mb-4">
         <label for="pass-visibility">Enter Room Code</label>
         <div class="password-toggle">
             {% if game.room_code %}
@@ -48,8 +48,8 @@
             <input type="text" id="room_code" value="" class="form-control" placeholder="Enter room code">
             {% endif %}
         </div>
-        <button class="btn btn-accent mt-2" onclick="sendRoomCode()">Send room code</button>
-        <button class="btn btn-danger mt-2" onclick="changeRoomCode()">Change Room code</button>
+        <button class="btn btn-accent mt-2 btn-sm" onclick="sendRoomCode()">Send room code</button>
+        <button class="btn btn-danger mt-2 btn-sm" onclick="changeRoomCode()">Change Room code</button>
 
     </div>
     {% endif %}
