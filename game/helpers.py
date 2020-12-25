@@ -38,7 +38,7 @@ def game_cron_job():
             if game_result_obj_one.result != 'PENDING' and game_result_obj_two.result != 'PENDING':
                 if game_result_obj_one.result == 'WON' and game_result_obj_two.result == 'LOST':
                     winner = Profile.objects.filter(user = game_result_obj_one.user).first()
-                    winner.coins +=  (.95 * game.coins) + game.coins
+                    winner.coins +=  winning_amount
                     game_result_obj_one.winning_amount =  winning_amount
                     game_result_obj_one.result  = 'WON'
                     game_result_obj_one.save()
@@ -46,7 +46,7 @@ def game_cron_job():
                     
                 elif game_result_obj_one.result == 'LOST' and game_result_obj_two.result == 'WON':
                     winner = Profile.objects.filter(user = game_result_obj_two.user).first()
-                    winner.coins +=  (.95 * game.coins) + game.coins
+                    winner.coins += winning_amount
                     game_result_obj_two.winning_amount =  winning_amount
                     game_result_obj_two.result  = 'WON'
                     game_result_obj_two.save()
