@@ -8,7 +8,7 @@ import uuid
 import json
 from home.helpers import *
 from django.contrib import messages
-
+import time
 # Create your views here.
 
 
@@ -45,7 +45,7 @@ def waiting_room(request , room_id):
             messages.success(request, 'If you have won you must upload game winning images 😒')
             return redirect('/game/room/' + str(game.room_id) )
         
-        if result == 'CANCEL' and len(reason_of_cancel):
+        if result == 'CANCEL' and not len(reason_of_cancel):
             messages.success(request, 'If your game got CANCEL enter reason 😒')
             return redirect('/game/room/' + str(game.room_id) )
             
@@ -69,12 +69,16 @@ def waiting_room(request , room_id):
         game.save()
         
         messages.success(request, 'Result Updated')
-        return redirect('/user/' + request.user)
+        return redirect('/user/' + request.user.username)
     
+    
+    
+    if request.user == game.game_creater:
+        time.sleep(3)
     
     if game.player_one is None or game.player_two is None:
         messages.success(request, "Second player did'nt joins")
-        return redirect('/user/' + request.user)
+        return redirect('/user/' + request.user.username)
     
     user_one = User.objects.get(id = game.player_one)
     user_two = User.objects.get(id = game.player_two)

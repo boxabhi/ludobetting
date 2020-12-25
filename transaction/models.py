@@ -22,14 +22,22 @@ class SellCoins(models.Model):
     is_paid = models.BooleanField(default=False)
     trasaction_id = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now=True)
-    
 
+    def __str__(self):
+        if self.is_paid :
+            text = ' Paid'
+        else:
+            text = ' Not paid'
+            
+        return self.user.username + ' requested ' + str(self.amount) + text
+    
 
 class Penalty(models.Model):
     user = models.ForeignKey(User , on_delete=models.CASCADE)
     amount = models.IntegerField(default=0)
     reason = models.CharField(max_length=1000 , blank=True , null=True)
     created_at = models.DateTimeField(auto_now=True)
+    
     
     def __str__(self):
         return self.user.username
@@ -47,3 +55,11 @@ def penalty_handler(sender , instance,created,**kwargs):
     profile.coins -= instance.amount
     profile.save()
     
+# @receiver(post_save, sender=Penalty)
+# def sell_coin_handler(sender, instance, created , **kwargs):
+#     if instance.is_paid:
+#         profile = Profile.objects.filter(user = instance.user)
+#         profile.coins += instance.amount
+#         profile.save()
+        
+        

@@ -24,8 +24,11 @@ class AllGames(WebsocketConsumer):
         
         self.user = self.scope["user"]
         self.accept()
+        print('###########')
+        print(self.user)
+        print('###########')
+        
         if self.user.is_authenticated:
-            
             data = {'type' : 'games'  , 'data' : Game.get_games(self.user) , 'running_games' : Game.get_running_games(self.user)}
             self.send(text_data=json.dumps({
                 'payload': data
@@ -62,22 +65,22 @@ class AllGames(WebsocketConsumer):
         pass
 
 
-# import time
-# class FakeGames(AsyncConsumer):
-#     async def websocket_connect(self,event):
-#         self.room_name = 'fake_games'
-#         self.group_name=  'fake_games'
-#         await self.send({
-#             "type": "websocket.accept"
-#         })
+import time
+class FakeGames(AsyncConsumer):
+    async def websocket_connect(self,event):
+        self.room_name = 'fake_games'
+        self.group_name=  'fake_games'
+        await self.send({
+            "type": "websocket.accept"
+        })
 
-#         while True:
-#             await asyncio.sleep(3)
-#             data = {'type' : 'fgames'  , 'data' : fake_data() }
-#             await self.send({
-#                 'type': 'websocket.send',
-#                 'text':  "Hello from backend!!!"
-#             })
+        while True:
+            await asyncio.sleep(4)
+            data = {'type' : 'fgames'  , 'data' : fake_data() }
+            await self.send({
+                'type': 'websocket.send',
+                'text':  json.dumps(data)
+            })
         
             
 

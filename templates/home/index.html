@@ -54,7 +54,7 @@
         <button class="btn btn-danger btn-sm" v-on:click="decline(requesting_user)">Decline</button>
 
       </div>
-      <a :href="'/game/delete_game/'+user_game.id" class="btn btn-warning"><i class="czi-pot"></i></a>
+      <a :href="'/game/delete_game/'+user_game.id" class="btn btn-warning btn-sm"><i class="czi-pot"></i></a>
     </li>
 
 
@@ -64,8 +64,14 @@
           <i class="czi-play-circle text-muted mr-2"></i>
           <b>[[game.game_creater]]</b> Created a game worth <span class="badge badge-success p-2"><b>₹ [[game.coins]]</b></span>
         </span>
+    {% if pending_games %}
         <button class="btn btn-primary btn-sm" :id="game.room_id"
-          v-on:click="requestGame(game.game_creater,game.coins,game.room_id)" >Play</button>
+          v-on:click="requestGame(game.game_creater,game.coins,game.room_id)" disabled >Play</button>
+        {% else %}
+        <button class="btn btn-primary btn-sm" :id="game.room_id"
+        v-on:click="requestGame(game.game_creater,game.coins,game.room_id)" >Play</button>
+        {% endif %}
+
       </li>
 
       <li v-for="game in comming_games" :key="game.id"
@@ -75,8 +81,14 @@
 
 
       </span>
+      {% if pending_games %}
       <button class="btn btn-primary btn-sm" :id="game.room_id"
+        v-on:click="requestGame(game.game_creater,game.coins,game.room_id,2)" disabled>Play</button>
+        {% else %}
+        <button class="btn btn-primary btn-sm" :id="game.room_id"
         v-on:click="requestGame(game.game_creater,game.coins,game.room_id,2)" >Play</button>
+        {% endif %}
+
     </li>
 
     {% for game in running_games %}
@@ -136,8 +148,8 @@
       running_games: [],
       comming_games : [],
 
-     url: 'wss://ludomission.com:8001', 
-     // url: 'ws://127.0.0.1:8000',
+     //url: 'wss://ludomission.com:8001', 
+      url: 'ws://127.0.0.1:8000',
       username: '{{request.user.username}}',
       user_game: {},
       requesting_user: null,
@@ -338,7 +350,7 @@
     
       let socket = new WebSocket(`${this.url}/ws/tableData/` + _this.username);
       let allGames = new WebSocket(`${this.url}/ws/allgames`)
-     // let fgames = new WebSocket(`${this.url}/ws/running`);
+     let fgames = new WebSocket(`${this.url}/ws/running`);
 
       socket.onopen = function (e) {
         console.log("Socket Connected!");
@@ -376,7 +388,8 @@
       };
       socket.onclose = function (e) {
         console.log("Socket closed!");
-
+        location.reload()
+       // console.log('Allgames closed')
         setTimeout(() => {
           socket.onopen = function (e) {
             var id = '{{request.user.id}}'
@@ -400,26 +413,16 @@
        console.log(games)
         if (games.payload.type == "games") {
           var username = '{{request.user}}'
-          var g = games.payload.data.map((game)=>{
-            if(game.game_created != username)
-            return game
-          })
-
+          var g = games.payload.data.filter(game=> game.game_creater != username)
           _this.games = g;
         } else if (games.type == 'game') {
           var username = '{{request.user}}'
-          var g = games.map((game)=>{
-            if(game.game_created != username)
-            return game
-          })
+          var g = games.filter(game=>game.game_creater != username)
           _this.games = (g)
         } 
         else {
-          
            var g = games[0]
-           
            for(var i =0;i<_this.games.length;i++){
-          
              if(_this.games[i].id == g.id){
               _this.games.splice(i,1)
               _this.games.push(g)
@@ -431,25 +434,27 @@
         }
       }
 
-      // fgames.onopen = function (e) {
-      //  console.log("Connected")
-      // }
+      fgames.onopen = function (e) {
+       console.log("Connected")
+      }
 
-      // fgames.onmessage = function (e) {
-      //   // var data = JSON.parse(e.data)
-      //   // _this.comming_games = data.data
-      // }
+      fgames.onmessage = function (e) {
+       
+        var data = JSON.parse(e.data)
+        _this.comming_games = data.data
+      }
 
 
       allGames.onclose = function (e) {
+        location.reload()
         console.log('Allgames closed')
       }
 
 
 
-     setInterval(()=>{
-      _this.addData()
-     },4000)
+    //  setInterval(()=>{
+    //   _this.addData()
+    //  },4000)
 
      
 

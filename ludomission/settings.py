@@ -84,23 +84,23 @@ ASGI_APPLICATION = 'ludomission.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'ludomissiondb',
-        'USER': 'ludomissionadmin',
-        'PASSWORD': 'ludobet@456',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'ludomissiondb',
+#         'USER': 'ludomissionadmin',
+#         'PASSWORD': 'ludobet@456',
+#         'HOST': 'localhost',
+#         'PORT': '',
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 
 # Password validation
@@ -184,13 +184,13 @@ MEDIA_URL = '/media/'
 # MEDIA_ROOT =  os.path.join(BASE_DIR,"media")
 
 
-sentry_sdk.init(
-    dsn="https://8a7da5684fe04948889247c0c3deaaba@o493789.ingest.sentry.io/5563733",
-    integrations=[DjangoIntegration()],
-    traces_sample_rate=1.0,
+# sentry_sdk.init(
+#     dsn="https://8a7da5684fe04948889247c0c3deaaba@o493789.ingest.sentry.io/5563733",
+#     integrations=[DjangoIntegration()],
+#     traces_sample_rate=1.0,
 
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True
-)
+#     # If you wish to associate users to errors (assuming you are using
+#     # django.contrib.auth) you may enable sending PII data.
+#     send_default_pii=True
+# )
 

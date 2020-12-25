@@ -62,7 +62,7 @@
 
 
     <div class="solid mt-3">
-        <p class="text-center text-warning p-4 h4">For cancelling game, video proof in necessary otherwise game will not be cancelled</p>
+        <p class="text-center text-warning p-4 h4">For cancelling game, valid reason in necessary otherwise game will not be cancelled</p>
     </div>
 
 
@@ -123,8 +123,8 @@
     //var url ='ws://127.0.0.1:8000'  + window.location.pathname
     var url = 'wss://ludomission.com:8001' + window.location.pathname
     var room_id = '{{room_id}}'
-    let socket = new WebSocket('wss://ludomission.com:8001/ws/game/room/' + room_id);
-    //let socket = new WebSocket('ws://127.0.0.1:8000/ws/game/room/' + room_id);
+    //let socket = new WebSocket('wss://ludomission.com:8001/ws/game/room/' + room_id);
+    let socket = new WebSocket('ws://127.0.0.1:8000/ws/game/room/' + room_id);
 
     socket.onopen = function (e) {
         console.log('Connection established');
@@ -143,6 +143,7 @@
         }
     };
     socket.onclose = function (e) {
+        location.reload();
         console.log('Connection closed');
     };
 

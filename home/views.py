@@ -68,6 +68,7 @@ def history(request):
     
     for p in penalty:
         result = {}
+        result['quote'] = 'Penalty'
         result['amount'] = p.amount
         result['status'] = 'Deducted'
         result['message'] = p.reason
@@ -77,6 +78,8 @@ def history(request):
     
     for order_coins in order_coins:
         result = {}
+        result['quote'] = 'Coins Buyed'
+        
         result['amount'] = order_coins.amount
         if order_coins.status:
             result['status'] = 'Paid'
@@ -88,6 +91,7 @@ def history(request):
         
     for sell_coin in sell_coins:
         result = {}
+        result['quote'] = 'Sell Coins'
         result['amount'] = sell_coin.amount
         if sell_coin.is_paid:
             result['status'] = 'Paid'
@@ -102,13 +106,19 @@ def history(request):
     for game_result in game_results:
         count+=1
         result = {}
-        result['amount'] = game_result.winning_amount
+        result['quote'] = 'Match'
+        if game_result.result == 'CANCEL' or game_result.result == 'LOST':
+            result['amount'] = game_result.game.coins
+        elif game_result.result == 'WON':
+            result['amount'] = game_result.winning_amount
+      
+            
         if game_result.result == 'WON':
             result['status'] = 'Won'
         elif game_result.result == 'LOST':
             result['status'] = 'Lost'
         else:
-            result['status'] = 'Cancel' 
+            result['status'] = 'Refunded' 
         
         vs = 'Match between '
         try:
