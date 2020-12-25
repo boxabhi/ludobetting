@@ -27,7 +27,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR,"templates")
 SECRET_KEY = '*y=q&kd88-$zjb97)!eyy*5sy0dl$awx@(sxk$!@df^dbj*j(_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -98,10 +98,20 @@ else:
 
 
 if DEBUG:
+    # DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    #     }
+    # }
     DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'ludomissiondb',
+        'USER': 'ludomissionadmin',
+        'PASSWORD': 'ludobet@456',
+        'HOST': 'localhost',
+        'PORT': '',
         }
     }
 else:
