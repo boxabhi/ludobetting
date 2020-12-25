@@ -87,7 +87,9 @@ if DEBUG:
     CASH_FREE_URL = 'https://test.cashfree.com/billpay/checkout/post/submit'
     APP_ID = '45275af7021c739883e8f716a57254'
     APP_SECRET = '9b7ccf976688fa665c66bc45bd521429a70043f2'
-    RETURN_URL = 'http://127.0.0.1:8000/payment_success'
+    #RETURN_URL = 'http://127.0.0.1:8000/payment_success'
+    RETURN_URL = 'https://www.ludomission.com/payment_success'
+    
 else:
     CASH_FREE_URL = 'https://www.cashfree.com/checkout/post/submit'
     APP_ID = '904909a56be43a93dc873af6e09409'
