@@ -37,8 +37,9 @@ def waiting_room(request , room_id):
             messages.success(request, 'Something went wrong You must enter room code 😒')
             return redirect('/game/room/' + str(game.room_id) )
             
-        
-        game_result,_ = GameResult.objects.get_or_create(game = game , user = user , result='PENDING')
+        game_result = GameResult.objects.filter(game=game , user=user , result="PENDING").first()
+        if game_result is None :
+            game_result,_ = GameResult.objects.get_or_create(game = game , user = user , result='PENDING')
         game_result.result = result
         
         if result == 'WON' and not len(images):
@@ -127,7 +128,9 @@ def create_game(request):
             return JsonResponse({'message' : "You don't have sufficient coins! 😧" ,'status':False})
         
         room_id = uuid.uuid4()
-        game, _ = Game.objects.get_or_create(game_creater = user , is_over=False)
+        game = Game.objects.filter(game_creater = user , is_over=False).first()
+        if game is None:
+            game, _ = Game.objects.get_or_create(game_creater = user , is_over=False)
         game.coins = coins
         game.player_one = user.id
         game.room_id = room_id

@@ -32,6 +32,9 @@
             <input class="form-control" value="" readonly id="show_room_code">
             <button class="btn btn-info mt-2 btn-sm" onclick="myFunction()"><i class="czi-add-document"></i> Copy Code
             </button>
+
+            <button class="btn btn-accent mt-2 btn-sm" onclick="requestChangeRoomCode()">Request change Room Code
+            </button>
         </div>
 
        
@@ -39,6 +42,7 @@
     </div>
     {% else %}
 
+   
     <div class="form-group mt-4 mb-4">
         <label for="pass-visibility">Enter Room Code</label>
         <div class="password-toggle">
@@ -124,7 +128,7 @@
     var url = 'wss://ludomission.com:8001' + window.location.pathname
     var room_id = '{{room_id}}'
     let socket = new WebSocket('wss://ludomission.com:8001/ws/game/room/' + room_id);
-    //let socket = new WebSocket('ws://127.0.0.1:8000/ws/game/room/' + room_id);
+   // let socket = new WebSocket('ws://127.0.0.1:8000/ws/game/room/' + room_id);
 
     socket.onopen = function (e) {
         console.log('Connection established');
@@ -136,6 +140,15 @@
         var spinner = document.getElementById('spinner')
         var show_room_code = document.getElementById('show_room_code')
         var room_code_div = document.getElementById('room_code_div')
+
+        if('request' in data.message){
+            if(data.message.user != '{{request.user}}'){
+                alert('Player two requested for room code change')
+            }
+            return;
+        }
+
+
         if ('room_code' in data.message) {
             spinner.style.display = 'none'
             room_code_div.style.display = 'block'
@@ -157,6 +170,17 @@
             room_code.disabled = true
         }
     }
+
+    function requestChangeRoomCode(){
+        var room_code = document.getElementById('show_room_code')
+        socket.send(JSON.stringify({
+                'room_code': room_code.value,
+                'request' : 'change room code',
+                'user' : '{{request.user}}'
+        }))
+    }
+
+
 
     function changeRoomCode(){
         var room_code = document.getElementById('room_code')

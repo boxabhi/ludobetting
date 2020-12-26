@@ -8,7 +8,7 @@
       <thead>
         <tr>
           <th>Message #</th>
-          <th>Quote</th>
+          <!-- <th>Quote</th> -->
           <th>Date </th>
           <th>Status</th>
           <th>Amount</th>
@@ -20,13 +20,13 @@
           <td class=""><a class="nav-link-style font-weight-medium font-size-sm" href="#order-details" data-toggle="modal">{{h.message}}
           
           </a></td>
-          <td>
+          <!-- <td>
             <span class="badge badge-info m-0">
            {{h.quote}}
 
           </span>
 
-        </td>
+        </td> -->
           <td class="py-3">{{h.created_at}}</td>
           <td class="py-3">
             {% if h.status == 'Won' %}
@@ -57,19 +57,17 @@
             <a class="nav-link-style font-weight-medium font-size-sm" href="#order-details" data-toggle="modal">Initial Credit
           
           </a></td>
-          <td>
-            <span class="badge badge-info m-0">
-           Joining Bonous
-
-          </span>
-
-        </td>
+       
+     
           <td class="py-3"> <span class="badge badge-dark m-0">
             Date of Joining
  
            </span></td>
-          <td class="py-3">
-            <span class="badge badge-success m-0">Added</span>
+           <td class="py-3">
+            <span class="badge badge-info m-0">
+              Joining Bonous
+    
+             </span>
           </td>
           <td class="py-3"><b>₹</b>50</td>
         </tr>
