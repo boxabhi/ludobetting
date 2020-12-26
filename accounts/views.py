@@ -46,16 +46,18 @@ def register_attempt(request):
         whatsapp = request.POST.get("whatsapp")
         password = request.POST.get("password")
         
+        username = username.replace(" ", "")
+          
         user_by__username = User.objects.filter(username=username).first()
         user_by__whatsapp = Profile.objects.filter(whatsapp = whatsapp).first()
         
         if user_by__username:
             messages.success(request, 'Username is taken')
-            return redirect('/accounts/login/')
+            return redirect('/accounts/register/')
             
         if user_by__whatsapp:
             messages.success(request, 'Whatsapp number is taken')
-            return redirect('/accounts/login/')
+            return redirect('/accounts/register/')
         
         
         user = User(username = username)
