@@ -42,7 +42,12 @@
     </div>
     {% else %}
 
-   
+    
+    <div class="alert alert-success" id="alert" display="style:none">
+        <p id="alert_message"></p>
+    </div>
+
+
     <div class="form-group mt-4 mb-4">
         <label for="pass-visibility">Enter Room Code</label>
         <div class="password-toggle">
@@ -173,11 +178,24 @@
 
     function requestChangeRoomCode(){
         var room_code = document.getElementById('show_room_code')
+        var alert = document.getElementById('alert')
+        var alert_message = document.getElementById('alert_message')
         socket.send(JSON.stringify({
                 'room_code': room_code.value,
                 'request' : 'change room code',
                 'user' : '{{request.user}}'
         }))
+
+        alert.style.display = 'block'
+        alert_message.innerHTML = 'Request sended'
+
+        setTimeout(()=>{
+            alert.style.display = 'none'
+            alert_message.innerHTML = ''
+
+        },2000)
+
+
     }
 
 
