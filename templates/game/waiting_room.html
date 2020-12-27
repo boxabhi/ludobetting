@@ -65,7 +65,7 @@
 
 
     <div class="show_border">
-        <p class="text-center p-3">₹50 penalty for wrong update., ₹25 panelty if you dont update after losing .</p>
+        <p class="text-center p-3">₹50 penalty for wrong update., ₹25 penalty if you dont update after loosing .</p>
     </div>
 
 
@@ -186,14 +186,7 @@
                 'user' : '{{request.user}}'
         }))
 
-        alert.style.display = 'block'
-        alert_message.innerHTML = 'Request sended'
-
-        setTimeout(()=>{
-            alert.style.display = 'none'
-            alert_message.innerHTML = ''
-
-        },2000)
+        alert('Your request has been sent')
 
 
     }
