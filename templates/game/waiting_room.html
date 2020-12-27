@@ -178,8 +178,8 @@
 
     function requestChangeRoomCode(){
         var room_code = document.getElementById('show_room_code')
-        var alert = document.getElementById('alert')
-        var alert_message = document.getElementById('alert_message')
+       
+    
         alert('Your request has been sent')
         socket.send(JSON.stringify({
                 'room_code': room_code.value,
