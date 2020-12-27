@@ -72,7 +72,7 @@ def history(request):
         result['amount'] = p.amount
         result['status'] = 'Deducted'
         result['message'] = p.reason
-        result['created_at'] = str(p.created_at)[0:10]       
+        result['created_at'] = str(p.created_at.strftime("%d-%m-%Y %H:%M"))      
         results.append(result)
         
     
@@ -86,7 +86,8 @@ def history(request):
         else:
             result['status'] = 'Cancelled'
         result['message'] = 'You ordered coins'
-        result['created_at'] = str(order_coins.created_at)[0:10]       
+        print(order_coins.created_at)
+        result['created_at'] = str(order_coins.created_at.strftime("%d-%m-%Y %H:%M") )       
         results.append(result)
         
     for sell_coin in sell_coins:
@@ -99,7 +100,7 @@ def history(request):
             result['status'] = 'Pending'
         result['message'] = 'You Sell coins'
         
-        result['created_at'] = str(sell_coin.created_at)[0:11]
+        result['created_at'] = str(sell_coin.created_at.strftime("%d-%m-%Y %H:%M"))
         results.append(result)
     count = 0
     print(game_results)
@@ -139,7 +140,7 @@ def history(request):
         except User.DoesNotExist:
             pass
         result['message'] =  vs
-        result['created_at'] = str(game_result.created_at)[0:11]
+        result['created_at'] = str(game_result.created_at.strftime("%d-%m-%Y %H:%M"))
         results.append(result)
         
     game_cron_job()
