@@ -200,6 +200,13 @@ def terms(request):
     return render(request ,'home/termscondition.html')
 
 
+@login_required(login_url='/accounts/login/')
+def refer(request):
+    profile = Profile.objects.filter(user = request.user).first()
+    context = {'profile': profile}
+    return render(request ,'home/refer.html' , context)
+
+
 def help(request):
     if request.method == 'POST':
         print("Ssss")
