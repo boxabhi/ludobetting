@@ -65,9 +65,9 @@ def register_attempt(request):
             if reffral_user_obj is None:
                 messages.success(request, 'Incorrect Reffral number')
                 return redirect('/accounts/register/')
+
             reffral_user_obj = reffral_user_obj.user
-            refer_table = ReffralTable(user = reffral_user_obj , refer = user)
-            refer_table.save()
+            
             
         
         
@@ -79,6 +79,9 @@ def register_attempt(request):
         profile.save()
         
         user_id = user.id
+        if reffral_user_obj:
+            refer_table = ReffralTable(user = reffral_user_obj , refer = user)
+            refer_table.save()
         
         return redirect('/accounts/verify_otp/'+ str(user_id))
         
