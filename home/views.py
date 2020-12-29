@@ -64,8 +64,33 @@ def history(request):
     sell_coins = SellCoins.objects.filter(user = request.user)
     game_results = GameResult.objects.filter(user = request.user , game__is_over=True , game__status='OVER').exclude(result='PENDING')
     penalty = Penalty.objects.filter(user = request.user)
+    
+    refers = ReffralTable.objects.filter(user=request.user)
+    refer_bonous = ReffralBonous.objects.filter(user=request.user)
+    
     results = []
     
+    
+        
+    
+    for r in refers:
+        result = {}
+        result['amount'] = '0'
+        result['status'] = 'Referral'
+        result['message'] = (r.refer.username).upper() + ' joined via your code'
+        result['created_at'] = str(r.created_at.strftime("%d-%m-%Y %H:%M"))
+        results.append(result)
+    
+    for r in refer_bonous:
+        result = {}
+        result['amount'] = r.amount
+        result['status'] = 'Bonous'
+        result['message'] = 'You got bonous. Your refrral player won'
+        result['created_at'] = str(r.created_at.strftime("%d-%m-%Y %H:%M"))
+        results.append(result)
+        
+         
+        
     for p in penalty:
         result = {}
         result['quote'] = 'Penalty'
@@ -103,7 +128,7 @@ def history(request):
         result['created_at'] = str(sell_coin.created_at.strftime("%d-%m-%Y %H:%M"))
         results.append(result)
     count = 0
-    print(game_results)
+    
     for game_result in game_results:
         count+=1
         result = {}
@@ -143,6 +168,7 @@ def history(request):
         result['created_at'] = str(game_result.created_at.strftime("%d-%m-%Y %H:%M"))
         results.append(result)
         
+    
     game_cron_job()
     history = sorted(results , key=lambda i:i ['created_at'])
     history.reverse()

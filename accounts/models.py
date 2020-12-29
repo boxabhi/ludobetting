@@ -12,7 +12,7 @@ from django.utils import timezone
 class Profile(models.Model):
     user = models.ForeignKey(User , related_name="Profile", on_delete=models.CASCADE)
     whatsapp = models.CharField(max_length=15)
-    coins = models.IntegerField(default=50)
+    coins = models.FloatField(default=50)
     otp = models.CharField(max_length=10 , blank=True , null=True)
     is_verified = models.BooleanField(default=False)
     referral_by = models.ForeignKey(User, null=True, blank=True ,on_delete=models.RESTRICT)
@@ -22,4 +22,10 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
-    
+
+class ReffralTable(models.Model):
+    user = models.ForeignKey(User ,related_name="user", on_delete=models.CASCADE)
+    refer = models.ForeignKey(User , related_name="refer" ,on_delete=models.PROTECT , default=None)
+    created_at = models.DateTimeField(auto_now=True)
+    def __str__(self):
+        return self.user.username

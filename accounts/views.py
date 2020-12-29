@@ -45,7 +45,7 @@ def register_attempt(request):
         username = request.POST.get("username")
         whatsapp = request.POST.get("whatsapp")
         password = request.POST.get("password")
-        
+        reffral_user = request.POST.get("reffral_user")
         username = username.replace(" ", "")
           
         user_by__username = User.objects.filter(username=username).first()
@@ -59,15 +59,26 @@ def register_attempt(request):
             messages.success(request, 'Whatsapp number is taken')
             return redirect('/accounts/register/')
         
+        reffral_user_obj = None
+        if reffral_user:
+            reffral_user_obj = Profile.objects.filter(whatsapp=reffral_user).first()
+            if reffral_user_obj is None:
+                messages.success(request, 'Incorrect Reffral number')
+                return redirect('/accounts/register/')
+            reffral_user_obj = reffral_user_obj.user
+            
+        
         
         user = User(username = username)
         user.set_password(password)
         user.save()
         otp = send_otp(whatsapp)
-        profile = Profile(whatsapp = whatsapp , user = user , otp=otp)
+        profile = Profile(whatsapp = whatsapp , user = user , otp=otp , referral_by=reffral_user_obj)
         profile.save()
         
         user_id = user.id
+        refer_table = ReffralTable(user = reffral_user_obj , refer = user)
+        refer_table.save()
         return redirect('/accounts/verify_otp/'+ str(user_id))
         
     return render(request , 'accounts/register.html')
