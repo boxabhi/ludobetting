@@ -40,9 +40,9 @@ def game_cron_job():
                     winner = Profile.objects.filter(user = game_result_obj_one.user).first()
                     if winner.referral_by:
                         refer = Profile.objects.filter(user = winner.referral_by).first()
-                        refer.coins =  .01 * game.coins
+                        refer.coins += .01 * game.coins
                         refer.save()
-                        bonous = ReffralBonous(user = refer.user, amount = .1 * game.coins ,reason=f"{winner.user.username} won. You got refrral bonous")                        
+                        bonous = ReffralBonous(user = refer.user, amount = .01 * game.coins ,reason=f"{winner.user.username} won. You got refrral bonous")                        
                         bonous.save()
                         
                     winner.coins +=  winning_amount + game.coins
@@ -56,11 +56,12 @@ def game_cron_job():
                     winner.coins += winning_amount  + game.coins
                     if winner.referral_by:
                         refer = Profile.objects.filter(user = winner.referral_by).first()
-                        refer.coins =  .01 * game.coins
+                        refer.coins +=  .01 * game.coins
                         refer.save()
-                        bonous = ReffralBonous(user = refer.user, amount = .1 * game.coins ,reason=f"{winner.user.username} won. You got refrral bonous")                        
+                        bonous = ReffralBonous(user = refer.user, amount = .01 * game.coins ,reason=f"{winner.user.username} won. You got refrral bonous")                        
                         bonous.save()
-                        
+                    
+                    winner.coins +=  winning_amount + game.coins    
                     game_result_obj_two.winning_amount =  winning_amount
                     game_result_obj_two.result  = 'WON'
                     game_result_obj_two.save()
@@ -78,6 +79,14 @@ def game_cron_job():
                     game_result_obj_two.save()
                     game_result_obj_one.save()
                 elif game_result_obj_one.result == 'WON' and game_result_obj_two.result == 'WON':
+                    disputed = DisputedGame(game = game)
+                    disputed.save()
+                    
+                elif game_result_obj_one.result == 'WON' and game_result_obj_two.result == 'CANCEL':
+                    disputed = DisputedGame(game = game)
+                    disputed.save()
+                
+                elif game_result_obj_one.result == 'CANCEL' and game_result_obj_two.result == 'WON':
                     disputed = DisputedGame(game = game)
                     disputed.save()
                 
