@@ -15,7 +15,8 @@ RESULT = (
     ('PENDING', 'PENDING'),
     ('WON', 'WON'),
     ('LOST' , 'LOST'),
-    ('CANCEL' , 'CANCEL')
+    ('CANCEL' , 'CANCEL'),
+    ('DISPUTED' , 'DISPUTED'),
 )
 
 STATUS = (

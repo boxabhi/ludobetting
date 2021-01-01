@@ -79,14 +79,26 @@ def game_cron_job():
                     game_result_obj_two.save()
                     game_result_obj_one.save()
                 elif game_result_obj_one.result == 'WON' and game_result_obj_two.result == 'WON':
+                    game_result_obj_two.result  = 'DISPUTED'
+                    game_result_obj_one.result  = 'DISPUTED'
+                    game_result_obj_two.save()
+                    game_result_obj_one.save()
                     disputed = DisputedGame(game = game)
                     disputed.save()
                     
                 elif game_result_obj_one.result == 'WON' and game_result_obj_two.result == 'CANCEL':
+                    game_result_obj_two.result  = 'DISPUTED'
+                    game_result_obj_one.result  = 'DISPUTED'
+                    game_result_obj_two.save()
+                    game_result_obj_one.save()
                     disputed = DisputedGame(game = game)
                     disputed.save()
                 
                 elif game_result_obj_one.result == 'CANCEL' and game_result_obj_two.result == 'WON':
+                    game_result_obj_two.result  = 'DISPUTED'
+                    game_result_obj_one.result  = 'DISPUTED'
+                    game_result_obj_two.save()
+                    game_result_obj_one.save()
                     disputed = DisputedGame(game = game)
                     disputed.save()
                 
