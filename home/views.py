@@ -137,12 +137,16 @@ def history(request):
             result['amount'] = game_result.game.coins
         elif game_result.result == 'WON':
             result['amount'] = game_result.winning_amount
+        else:
+            result['amount'] = game_result.game.coins
       
             
         if game_result.result == 'WON':
             result['status'] = 'Won'
         elif game_result.result == 'LOST':
             result['status'] = 'Lost'
+        elif game_result['status'] == 'DISPUTED':
+            result['status'] = 'Disputed'
         else:
             result['status'] = 'Refunded' 
         
