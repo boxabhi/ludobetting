@@ -53,7 +53,6 @@ def game_cron_job():
                     
                 elif game_result_obj_one.result == 'LOST' and game_result_obj_two.result == 'WON':
                     winner = Profile.objects.filter(user = game_result_obj_two.user).first()
-                    winner.coins += winning_amount  + game.coins
                     if winner.referral_by:
                         refer = Profile.objects.filter(user = winner.referral_by).first()
                         refer.coins +=  .01 * game.coins
