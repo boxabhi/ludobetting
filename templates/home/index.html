@@ -148,8 +148,8 @@
       running_games: [],
       comming_games : [],
 
-    url: 'wss://ludomission.com:8001', 
-    //url: 'ws://127.0.0.1:8000',
+   // url: 'wss://ludomission.com:8001', 
+    url: 'ws://127.0.0.1:8000',
       username: '{{request.user.username}}',
       user_game: {},
       requesting_user: null,
@@ -261,7 +261,18 @@
                 }, 2000)
                 _this.error()
                 return;
-               
+        }
+
+        if('game_creater' in _this.user_game){
+          button.innerHTML = "Delete Game to join Game"
+          button.classList.add('btn-dark')
+
+          setTimeout(() => {
+            button.innerHTML = "Play"
+            button.classList.remove('btn-dark')
+          }, 1000)
+          _this.error()
+          return; 
         }
         
 
