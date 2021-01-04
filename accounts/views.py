@@ -22,7 +22,7 @@ def login_attempt(request):
             return redirect('/accounts/login/')
         
         if user_by__whatsapp.is_verified == False:
-            print(user_by__whatsapp.id)
+            
             messages.success(request, "Your account is not verified")
             user_id = user_by__whatsapp.user.id
             return redirect('/accounts/verify_otp/'+ str(user_id))
@@ -105,7 +105,7 @@ def otp_attempt(request , user_id):
             user = User.objects.get(id = user_id)
             otp = request.POST.get('otp')
             profile = Profile.objects.filter(user=user).first()
-            print(profile)
+            
             if profile.otp == otp:
                 profile.is_verified = True
                 profile.save()
@@ -217,8 +217,7 @@ def forget_password_change(request , id):
     if request.method == 'POST':
         password = request.POST.get('password')
         confirm_passsword = request.POST.get('confirm_password')
-        print(password)
-        print(confirm_passsword)
+       
         if password != confirm_passsword:
             messages.success(request, 'New and Confirm password must be same. 😡')
             return redirect('/accounts/forget_password_change/'+id)

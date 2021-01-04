@@ -72,11 +72,10 @@ def viewuser(request , profile_id):
             except User.DoesNotExist:
                 pass
             vs += ' V/S '
-            print(game_result.game.player_two)
+           
             try:
                 player_two = User.objects.get(id = game_result.game.player_two)
                 vs += player_two.username
-                print(player_two)
                 
             except User.DoesNotExist:
                 pass
@@ -84,7 +83,7 @@ def viewuser(request , profile_id):
             result['created_at'] = str(game_result.created_at)[0:11]
             results.append(result)
             
-        print(count)
+    
         history = sorted(results , key=lambda i:i ['created_at'])
         context = {'profile': profile ,'history' : history}
     except Profile.DoesNotExist:
@@ -117,7 +116,7 @@ def viewdisputes(request , disputed_id):
         context = {'diputed_game' : diputed_game , 'game_result' : game_result , 'images' : images}
     except DisputedGame.DoesNotExist:
         return redirect('/error')
-    print(context)
+   
     return render(request, 'admin_panel/viewdisputes.html' , context)
 
 
@@ -134,7 +133,7 @@ def total_purchase(request):
     except EmptyPage:
         page_obj= paginator.page(paginator.num_pages)
     context = {'order_coins'  : objects , 'page_obj': page_obj}
-    print(page_obj)
+    
     return render(request, 'admin_panel/total_purchase.html' , context)
 
 
@@ -153,8 +152,7 @@ def sellcoinsrequest(request):
         page_obj= paginator.page(paginator.num_pages)
         
     context = {'page_obj': page_obj}
-    for p in page_obj:
-        print(p)
+
     return render(request, 'admin_panel/sellcoinsrequests.html' , context)
 
 def paycoins(request):

@@ -50,7 +50,6 @@ def home(request , username=None):
     
     games = Game.objects.filter(status = 'CREATED')
     
-    print(games)
     
     context = {'pending_games' : pending_game_result  , 'running_games' : data}  
     return render(request , 'home/index.html' , context)
@@ -67,10 +66,18 @@ def history(request):
     
     refers = ReffralTable.objects.filter(user=request.user)
     refer_bonous = ReffralBonous.objects.filter(user=request.user)
-    
+    history = History.objects.filter(user=request.user)
     results = []
     
     
+    
+    for h in  history:
+        result = {}
+        result['amount'] = h.amount
+        result['message'] = h.message
+        result['status'] = 'Refunded'
+        result['created_at'] = h.created_at
+        results.append(result)
         
     
     for r in refers:
@@ -111,7 +118,7 @@ def history(request):
         else:
             result['status'] = 'Cancelled'
         result['message'] = 'You ordered coins'
-        print(order_coins.created_at)
+    
         result['created_at'] = str(order_coins.created_at.strftime("%d-%m-%Y %H:%M") )       
         results.append(result)
         
@@ -133,7 +140,8 @@ def history(request):
         count+=1
         result = {}
         result['quote'] = 'Match'
-        if game_result.result == 'CANCEL' or game_result.result == 'LOST':
+    
+        if game_result.result == 'CANCEL' or game_result.result == 'LOST' or game_result.result == 'QUIT':
             result['amount'] = game_result.game.coins
         elif game_result.result == 'WON':
             result['amount'] = game_result.winning_amount
@@ -160,11 +168,11 @@ def history(request):
         except User.DoesNotExist:
             pass
         vs += ' V/S '
-        print(game_result.game.player_two)
+       
         try:
             player_two = User.objects.get(id = game_result.game.player_two)
             vs += player_two.username
-            print(player_two)
+            
             
         except User.DoesNotExist:
             pass
@@ -213,7 +221,7 @@ def refer(request):
 
 def help(request):
     if request.method == 'POST':
-        print("Ssss")
+      
         name = request.POST.get('name')
         mobile = request.POST.get('mobile')
         email = request.POST.get('email')
@@ -229,3 +237,33 @@ def help(request):
 def howtoplay(request):
     return render(request ,'home/howtoplay.html')
 
+
+
+
+def quit(request):
+    game_result = GameResult.objects.filter(user = request.user , result = 'PENDING').first()
+    
+    if game_result:
+        profile = Profile.objects.filter(user = request.user).first()
+        profile.coins += game_result.game.coins 
+        profile.save()
+        game_result.game.coins 
+        game_result.result = "QUIT"
+        game_result.save()
+        
+        history = History(user = request.user , amount = game_result.game.coins , message = 'You quited the game')
+        history.save()
+        
+        game = Game.objects.get(id=game_result.game.id)
+    
+        if str(game.player_two) == str(request.user.id):
+            game.player_two = None
+            game.status = 'CREATED'
+            game.save()
+        if str(game.player_one) == str(request.user.id):
+            game.player_one = None
+            game.status = 'OVER' 
+            game.save()
+        
+        
+    return redirect('/user/' + request.user.username)

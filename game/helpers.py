@@ -17,9 +17,7 @@ def game_cron_job():
             
             game_result_obj_one = game_result_obj[0]
             game_result_obj_two = game_result_obj[1]
-            
-            print(game_result_obj_one.result)
-            print(game_result_obj_two.result)
+        
             
             winning_amount = 0
             

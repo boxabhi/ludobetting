@@ -17,5 +17,6 @@ urlpatterns = [
     path('api/get_games' , fake_api , name="fake_api"),
     
     path('refer/' ,  refer , name="refer"),
+    path('quit' , quit , name="quit"),
     
 ]

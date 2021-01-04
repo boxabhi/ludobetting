@@ -24,9 +24,7 @@ class AllGames(WebsocketConsumer):
         
         self.user = self.scope["user"]
         self.accept()
-        print('###########')
-        print(self.user)
-        print('###########')
+       
         
         if self.user.is_authenticated:
             data = {'type' : 'games'  , 'data' : Game.get_games(self.user) , 'running_games' : Game.get_running_games(self.user)}
@@ -125,7 +123,7 @@ class TableData(WebsocketConsumer):
                 )
         elif data.get('type') == 'declined':
             data = json.loads(text_data)
-            print(data)
+          
             async_to_sync(self.channel_layer.group_send)(
                 'user_%s' % data.get('requested_user'),{
                     'type':'decline_request',
@@ -273,7 +271,7 @@ class ChatConsumer(WebsocketConsumer):
         )
         self.accept()
         game = Game.objects.filter(room_id = self.room_name).first()
-        print(game.room_code)
+    
         if game.room_code and len(game.room_code):
             self.send(text_data=json.dumps({
                 'message': {'room_code': game.room_code}

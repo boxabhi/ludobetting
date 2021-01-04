@@ -77,7 +77,7 @@ def waiting_room(request , room_id):
     
     
     if game.player_one is None or game.player_two is None:
-        messages.success(request, "Second player did'nt joins")
+        messages.success(request, "Second player did'nt joins or left the game")
         return redirect('/user/' + request.user.username)
     
     user_one = User.objects.get(id = game.player_one)

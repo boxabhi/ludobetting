@@ -17,6 +17,7 @@ RESULT = (
     ('LOST' , 'LOST'),
     ('CANCEL' , 'CANCEL'),
     ('DISPUTED' , 'DISPUTED'),
+    ('QUIT' , 'QUIT')
 )
 
 STATUS = (

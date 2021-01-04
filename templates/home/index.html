@@ -36,7 +36,10 @@
       <div class="alert-icon-box">
         <i class="alert-icon czi-security-check"></i>
       </div>
-      You have a pending game update result to create or play new game <a href="/game/room/{{game.game.room_id}}" class="btn btn-success btn-sm">Update result</a>
+      You have a pending game update result to create or play new game <a href="/game/room/{{game.game.room_id}}" class="btn btn-success btn-sm">View</a>
+
+      <a href="{% url 'quit'%}" class="btn btn-accent btn-sm">Quit</a>
+
     </div>
     {% endfor %}
     {% endif %}
