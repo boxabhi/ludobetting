@@ -1,85 +1,64 @@
 {% extends "admin_panel/base.html" %}
 {% block start %}
- <section class="col-lg-8" style="margin-bottom:50px;">
-          
-          <!-- Profile edit-->
-          <form>
-           
-            <div class="row">
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="account-fn">user id</label>
-                  <input class="form-control" type="text" id="account-fn" value="123" disabled>
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="account-ln">User name</label>
-                  <input class="form-control" type="text" id="account-ln" value="username">
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="account-ln">User mobile Number</label>
-                  <input class="form-control" type="text" id="account-ln" value="7786853588">
-                </div>
-              </div>
-              
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="account-email">selected payment method </label>
-                  <input class="form-control" type="email" id="account-email" value="google pay" disabled>
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="account-email">given number </label>
-                  <input class="form-control" type="email" id="account-email" value="7786853588" disabled>
-                </div>
-              </div>
-              
+<section class="col-lg-8 mt-5" style="margin-bottom:50px;">
 
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="account-phone">Requseted  Coins</label>
-                  <input class="form-control" type="text" id="account-phone" value="555" disabled>
-                </div>
-              </div>
-             
-              
-              <div class="col-sm-6">
-                <div class="form-group">
-                   <label  for="order-sort"> if you have paid Change status :</label>
-              <select class="form-control custom-select" name="changestatus" >
-                <option active value="oending">pending</option>
-                <option value="paid">paid</option>
-                <option value="rejected">rejected </option>
-                
-              </select>
-              
-                  </div>
-                </div>
-                <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="account-phone">Rejection Reason</label>
-                  <input class="form-control" type="text" id="reject reason" name="rejectreason" >
-                </div>
-              </div>
-              </div>
-              
-              <div class="col-mb-12">
-                <hr class="mt-2 mb-3">
-                <div class="d-flex flex-wrap justify-content-between align-items-center">
-                  
-                  <a href="">
+  <!-- Profile edit-->
+  <form class="container" method="get">
 
-                  <button class="btn btn-primary mt-3 mt-sm-0" type="button">paid</button>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </form>
-        </section>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="account-fn">Username</label>
+          <input class="form-control" type="text" id="account-fn" value="{{sell_coins.user.username}}" disabled>
+        </div>
+      </div>
+
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="account-email">selected payment method </label>
+          <input class="form-control" type="text" id="account-email" value="{{sell_coins.payment_mode}}" disabled>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="account-email">Given number </label>
+          <input class="form-control" type="text" id="account-email" value="{{sell_coins.number}}" disabled>
+        </div>
+      </div>
+
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="account-phone">Requseted Coins</label>
+          <input class="form-control" type="text" id="account-phone" value="{{sell_coins.amount}}" disabled>
+        </div>
+      </div>
+
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="order-sort"> If you have paid Change status :</label>
+          <select class="form-control custom-select" name="changestatus">
+            <option active value="pending">pending</option>
+            <option value="paid">paid</option>
+            <option value="rejected">rejected </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-mb-12">
+      <hr class="mt-2 mb-3">
+      <div class="d-flex flex-wrap justify-content-between align-items-center">
+
+          <button class="btn btn-primary mt-3 mt-sm-0" type="submit">Paid</button>
+        
+      </div>
+    </div>
+    </div>
+  </form>
+</section>
 
 
 

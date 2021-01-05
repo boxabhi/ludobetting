@@ -1,7 +1,7 @@
 {% extends "admin_panel/base.html" %}
 {% block start %}
 
-<section class="col-lg-8 pt-lg-4 pb-4 mb-3">
+<section class="col-lg-8 pt-lg-4 pb-4 mb-3 mt-5">
 
 
 
@@ -10,7 +10,7 @@
 
 
 
-  <div class="pt-2 px-4 pl-lg-0 pr-xl-5">
+  <div class="pt-5 px-4 pl-lg-0 pr-xl-5">
     <h2 class="h3 py-2 text-center text-sm-left">Payment Requests</h2>
 
 
@@ -49,7 +49,7 @@
               <td>{{sell_coin.created_at}}</td>
 
             <td class="py-3 align-middle">
-              <a class="nav-link-style mr-2" href="{%url 'paycoins'%}" data-toggle="tooltip"
+              <a class="nav-link-style mr-2" href="{%url 'paycoins' sell_coin.id %}" data-toggle="tooltip"
                 title="Paynow"><i class="btn btn-primary btn-sm">Pay Now</i></td>
           </tr>
 

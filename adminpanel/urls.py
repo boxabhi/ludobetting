@@ -12,7 +12,7 @@ urlpatterns = [
         path('disputes/' , disputesgame , name="disputegame"),
         path('view/<disputed_id>/disputed/' , viewdisputes , name="view_disputes"),
         path('sellcoinsrequest/' , sellcoinsrequest , name="sellcoinsrequest"),
-        path('paycoins/' , paycoins , name="paycoins"),
+        path('paycoins/<id>/' , paycoins , name="paycoins"),
         path('penalty/' , penalty , name="penalty"),
         path('show_penalty/' , show_penalty,name='show_penalty'),
         

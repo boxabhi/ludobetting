@@ -103,6 +103,7 @@ def disputesgame(request):
         page_obj= paginator.page(paginator.num_pages)
     context = {'page_obj': page_obj}
 
+    print(context)
     return render(request, 'admin_panel/disputeslist.html'  , context)
 
 
@@ -110,13 +111,31 @@ def viewdisputes(request , disputed_id):
     context = {}
     try:
         diputed_game = DisputedGame.objects.get(id = disputed_id)
-        game_result = GameResult.objects.filter(game = diputed_game.game).first()
+        game_result = GameResult.objects.filter(game = diputed_game.game)
         images = Image.objects.filter(game = diputed_game.game)
-    
-        context = {'diputed_game' : diputed_game , 'game_result' : game_result , 'images' : images}
+        game = Game.objects.get(id = game_result[0].game.id)
+        
+        
+        context = {'diputed_game' : diputed_game,'game':game , 'game_result' : game_result, 'player_one':game_result[0] , 'player_two':game_result[1] , 'images' : images}
     except DisputedGame.DoesNotExist:
         return redirect('/error')
-   
+    
+    
+    if request.method == 'POST':
+        winner = User.objects.get(id  = request.POST.get('winner'))
+        looser = User.objects.get(id  = request.POST.get('looser'))
+    
+        diputed_game = DisputedGame.objects.get(id = disputed_id)
+        diputed_game.winner = winner
+        diputed_game.is_reviewed= True
+        diputed_game.save()
+        
+        penalty = Penalty(user = looser , amount = 50 ,reason="Update wrong result for game " + winner.username + " vs " + looser.username)
+        penalty.save()
+        
+        
+        return redirect(f'/paneladmin/view/{disputed_id}/disputed/')
+    
     return render(request, 'admin_panel/viewdisputes.html' , context)
 
 
@@ -155,8 +174,17 @@ def sellcoinsrequest(request):
 
     return render(request, 'admin_panel/sellcoinsrequests.html' , context)
 
-def paycoins(request):
-    return render(request, 'admin_panel/paycoins.html')
+def paycoins(request,id):
+    sell_coins = SellCoins.objects.get(id=id)
+    context = {'sell_coins': sell_coins}
+    
+    changestatus = request.GET.get('changestatus')
+    
+    if changestatus:
+        sell_coins.is_paid = True
+        sell_coins.save()
+    
+    return render(request, 'admin_panel/paycoins.html' , context)
 
 def penalty(request):
     if request.method == 'POST':

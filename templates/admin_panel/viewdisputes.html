@@ -5,21 +5,88 @@
 
 
 
-<div class="cz-carousel cz-controls-static cz-controls-outside">
-    <div class="cz-carousel-inner" data-carousel-options='{"items": 3, "nav": false, "responsive": {"0":{"items":1},"500":{"items":2, "gutter": 18},"768":{"items":3, "gutter": 20}, "1100":{"gutter": 24}}}'>
+  <div class="cz-carousel cz-controls-static cz-controls-outside mt-5 ">
+    <h3>Disputed game - {% for g in game_result %} {{g.user.username}} vs {% endfor %} </h3>
 
-      
+
+    <div class="table-responsive">
+      <table class="table table-fixed font-size-sm mb-0">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Room Code</th>
+            <th>Amount</th>
+            <th>Creator</th>
+            <th>Player One</th>
+            <th>Player Two</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#</td>
+            <td>{{game.room_code}}</td>
+            <td>{{game.coins}}</td>
+            <td><span class="badge badge-success">{{game.game_creater.username}}</span></td>
+            <td>{{player_one.user.username}}</td>
+            <td>{{player_two.user.username}}</td>
+            <td>{{game.created_at}}</td>
+          </tr>
+
+
+        </tbody>
+      </table>
+
+      <h5>Uploaded Images</h5> 
+           <div class="row">
+        
         {%  for image in images %}
-        <!-- <img src="/media/{{image.uploaded_image}}" > -->
-        <img src="/media/{{image.image}}" >
-
+        <div class="col-lg-6">
+          <img src="/media/{{image.uploaded_image}}" data-toggle="tooltip" data-placement="top" title="Uploaded by {{image.user.username}}" class="img-thumbnail">
+        </div>
         {% endfor %}
+      </div>
+
+
      
+    
+
     </div>
-  </div>
+
+    <h5 class="mt-4">Update Game Winner</h5>
+
+    <form class="mt-3 mb-5" method="post">
+      {% csrf_token %}
+      <div class="row">
+      <div class="form-group col-md-6">
+        <label>Select Winner</label>
+      <select class="form-control" name="winner">
+        <option >Choose</option>
+        {% for g in game_result %}
+        <option value="{{g.user.id}}">{{g.user.username}}</option>
+        {% endfor %}
+      </select>
+    </div>
+      <div class="form-group col-md-6">
+        <label>Select looser</label>
+       
+
+      <select class="form-control" name="looser">
+        <option >Choose</option>
+        {% for g in game_result %}
+        <option value="{{g.user.id}}">{{g.user.username}}</option>
+        {% endfor %}
+      </select>
+      </div>
+    </div>
+   
 
 
-  </section>
+      <button class="btn btn-primary btn-sm">Update</button>
+
+    </form>
+
+</section>
 
 
 {%endblock%}
