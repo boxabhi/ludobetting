@@ -2,7 +2,35 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
 from accounts.models import *
+from django.utils.html import format_html
 # Create your models here.
+
+
+
+
+class OrderCoinRequest(models.Model):
+    amount = models.IntegerField()
+    order_id = models.CharField(max_length=255)
+    is_approved = models.BooleanField(default=False)
+    user = models.ForeignKey(User , on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+
+@receiver(post_save, sender=OrderCoinRequest)
+def order_handler(sender , instance,created,**kwargs):
+    if instance.is_approved: 
+        profile = Profile.objects.filter(user = instance.user).first()
+        profile.coins += instance.amount
+        profile.save()    
+    
+
+class PaytmOrderId(models.Model):
+    amount = models.IntegerField()
+    order_id = models.CharField(max_length=255 , unique=True)
+    is_used = models.BooleanField(default=False)
+    used_by = models.ForeignKey(User , on_delete=models.CASCADE , blank=True , null=True)
+    created = models.DateTimeField(auto_now_add=True)
+
 
 
 class OrderCoins(models.Model):
@@ -22,6 +50,19 @@ class SellCoins(models.Model):
     is_paid = models.BooleanField(default=False)
     trasaction_id = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now=True)
+    
+    
+    def pre_payment_mode(self):
+        return format_html(
+            '<span style="background-color:green,padding:3px">'+ self.payment_mode +'</span>',
+           
+        )
+        #return self.payment_mode
+
+    def user_register_number(self):
+        number = Profile.objects.filter(user = self.user).first()
+        return self.number
+
 
     def __str__(self):
         if self.is_paid :

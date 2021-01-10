@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from home.helpers import set_coins
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
+from django.contrib import messages
 
 
 @login_required(login_url='/accounts/login/')
@@ -17,22 +18,39 @@ def buy_coins(request):
         
     if request.method == "POST":
         amount = request.POST.get("amount")
-        if amount is None:
-            messages.success(request, 'Amount is required 😒')
+        order_id = request.POST.get("order_id")
+        
+        check_order_id_exists = PaytmOrderId.objects.filter(order_id=order_id).first()
+        if check_order_id_exists:
+            if check_order_id_exists.is_used:
+                messages.success(request, "This order order id is already used")
+                return redirect('/transaction/buy-coins/')
+            else:
+                if check_order_id_exists.order_id == order_id and check_order_id_exists.amount == int(amount):
+                    check_order_id_exists.is_used = True
+                    check_order_id_exists.used_by= request.user
+                    check_order_id_exists.save()
+                    profile = Profile.objects.filter(user = request.user).first()
+                    profile.coins += check_order_id_exists.amount
+                    profile.save()
+                    order_coins = OrderCoins(user=request.user , amount=amount , order_id=order_id , status=True)
+                    order_coins.save()
+                    messages.success(request, "Congratulations coins added")
+                    return redirect('/transaction/buy-coins/')
+                else:
+                    messages.success(request, "Incorrect details")
+                    return redirect('/transaction/buy-coins/')
+        else:
+            if True:
+                order_coin_request = OrderCoinRequest(amount = amount , user=request.user , order_id=order_id)            
+                order_coin_request.save()
+                messages.success(request, "Request has been received try in 2 mins")
+                return redirect('/transaction/buy-coins/')
             
-        checkout = {}
-        order_id = random_string_generator()
-        profile = Profile.objects.filter(user= request.user).first()
-        result = make_payment(order_id , amount , request.user.username  , str(profile.whatsapp) ,   "s")
-        checkout = {'signature': result , 'orderAmount' : amount , 'orderId' : order_id ,'customerName' :request.user.username , 'customerPhone' :str(profile.whatsapp) }
-        
-        context = {'checkout': checkout , 'return_url' : settings.RETURN_URL , 'app_id' : settings.APP_ID , 'cash_free_url' : settings.CASH_FREE_URL}
-        
-        order_coins = OrderCoins(order_id= order_id , user = request.user , amount=amount)
-        order_coins.save()
-        return render(request,'transaction/buy_coins.html' , context)
-        
-    return render(request,'transaction/buy_coins.html')
+                
+    pending_requests = OrderCoinRequest.objects.filter(user = request.user , is_approved =False)
+    context = {'pending_requests':pending_requests}    
+    return render(request,'transaction/buy_coins.html', context)
 
 @login_required(login_url='/accounts/login/')
 def sell_coins(request):
@@ -98,3 +116,28 @@ def payment_success(request):
         order_coins.save()
         return redirect('/success')
     return redirect('/error')
+
+
+
+
+
+
+
+
+
+
+
+
+ # if amount is None:
+        #     messages.success(request, 'Amount is required 😒')
+            
+        # checkout = {}
+        # order_id = random_string_generator()
+        # profile = Profile.objects.filter(user= request.user).first()
+        # result = make_payment(order_id , amount , request.user.username  , str(profile.whatsapp) ,   "s")
+        # checkout = {'signature': result , 'orderAmount' : amount , 'orderId' : order_id ,'customerName' :request.user.username , 'customerPhone' :str(profile.whatsapp) }
+        
+        # context = {'checkout': checkout , 'return_url' : settings.RETURN_URL , 'app_id' : settings.APP_ID , 'cash_free_url' : settings.CASH_FREE_URL}
+        
+        # order_coins = OrderCoins(order_id= order_id , user = request.user , amount=amount)
+        # order_coins.save()

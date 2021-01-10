@@ -7,6 +7,14 @@
     <div class="card py-2 mt-4">
         <form class="card-body needs-validation" novalidate="" method="post">
             {% csrf_token %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-danger">
+              {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+
             <div class="form-group">
                 <label for="recover-email">Enter amount</label>
                 <input class="form-control" type="number" name="amount" placeholder="Enter amount" id="recover-email"
@@ -14,7 +22,23 @@
                 <div class="invalid-feedback">Please enter amount.</div>
             </div>
 
+            <div class="form-group">
+                <label for="recover-email">Enter Order Id</label>
+                <input class="form-control" type="text" name="order_id" placeholder="Enter order id" id="recover-email"
+                    required="">
+                <div class="invalid-feedback">Please enter order id.</div>
+            </div>
+
             <button type="submit" class="btn btn-accent btn-sm">Load Coins</button>
+
+            <!-- <div class="form-group">
+                <label for="recover-email">Enter amount</label>
+                <input class="form-control" type="number" name="amount" placeholder="Enter amount" id="recover-email"
+                    required="">
+                <div class="invalid-feedback">Please enter amount.</div>
+            </div>
+
+            <button type="submit" class="btn btn-accent btn-sm">Load Coins</button> -->
 
         </form>
 
@@ -38,6 +62,40 @@
             </div>
 
             </form>
+
+        {% endif %}
+
+        {% if pending_requests %}
+        <h3 class="text-center h4 mt-4">Your pending request</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Payment Mode</th>
+                    <th scope="col">Order Id</th>
+                    <th scope="col">Requested Date</th>
+                    <th scope="col">Status</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for pending_request in pending_requests %}
+                <tr>
+                    <th scope="row"> {{ forloop.counter }}</th>
+                    <td>{{pending_request.amount}}</td>
+                    <td>PayTm</td>
+                    <td>{{pending_request.order_id}}</td>
+                    <td>{{pending_request.created_at |date:'d-m-Y'}}</td>
+                    <td><span class="badge badge-pill badge-danger badge-shadow">Pending</span></td>
+
+                </tr>
+                {% endfor %}
+               
+            </tbody>
+
+        </table>
+
         {% endif %}
 
         

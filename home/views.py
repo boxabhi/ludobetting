@@ -76,7 +76,7 @@ def history(request):
         result['amount'] = h.amount
         result['message'] = h.message
         result['status'] = 'Refunded'
-        result['created_at'] = h.created_at
+        result['created_at'] = str(h.created_at.strftime("%d-%m-%Y %H:%M"))
         results.append(result)
         
     
@@ -153,7 +153,7 @@ def history(request):
             result['status'] = 'Won'
         elif game_result.result == 'LOST':
             result['status'] = 'Lost'
-        elif game_result['status'] == 'DISPUTED':
+        elif game_result.result == 'DISPUTED':
             result['status'] = 'Disputed'
         else:
             result['status'] = 'Refunded' 
