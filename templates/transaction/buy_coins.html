@@ -4,13 +4,21 @@
 
 <div class="container mb-5 pb-5 mt-5">
     <h3 class="text-center">Buy coins to battle on Ludomission</h3>
+    <div class="show_border">
+        <p class="text-center p-3">
+            Please pay at this Number only <b>7706838026</b> and enter wallet Transaction ID
+            <br>( 1 coins=1 rupee)
+            <br>
+            Pay via Paytm wallet only
+        </p>
+    </div>
     <div class="card py-2 mt-4">
         <form class="card-body needs-validation" novalidate="" method="post">
             {% csrf_token %}
             {% if messages %}
             {% for message in messages %}
             <div class="alert alert-danger">
-              {{ message }}
+                {{ message }}
             </div>
             {% endfor %}
             {% endif %}
@@ -45,25 +53,33 @@
         {% if checkout %}
 
         <form id="redirectForm" method="post" action="{{cash_free_url}}">
-            <input type="hidden" name="appId" value="{{app_id}}"/>
-            <input type="hidden" name="orderId" value="{{checkout.orderId}}"/>
-            <input type="hidden" name="orderAmount" value="{{checkout.orderAmount}}"/>
-            <input type="hidden" name="orderCurrency" value="INR"/>
-            <input type="hidden" name="customerName" value="Ludo betting"/>
-            <input type="hidden" name="customerEmail" value="abhijeetg40@gmail.com"/>
-            <input type="hidden" name="customerPhone" value="{{checkout.customerPhone}}"/>
+            <input type="hidden" name="appId" value="{{app_id}}" />
+            <input type="hidden" name="orderId" value="{{checkout.orderId}}" />
+            <input type="hidden" name="orderAmount" value="{{checkout.orderAmount}}" />
+            <input type="hidden" name="orderCurrency" value="INR" />
+            <input type="hidden" name="customerName" value="Ludo betting" />
+            <input type="hidden" name="customerEmail" value="abhijeetg40@gmail.com" />
+            <input type="hidden" name="customerPhone" value="{{checkout.customerPhone}}" />
             <input type="hidden" name="returnUrl" value="{{return_url}}">
-            <input type="hidden" name="signature" value="{{checkout.signature}}"/>
+            <input type="hidden" name="signature" value="{{checkout.signature}}" />
             <div class="text-center">
-                
-                    <button type="submit" class="btn btn-danger">Pay {{checkout.orderAmount}} <i class="czi-wallet"></i></button>
-                
+
+                <button type="submit" class="btn btn-danger">Pay {{checkout.orderAmount}} <i
+                        class="czi-wallet"></i></button>
+
 
             </div>
 
-            </form>
+        </form>
 
         {% endif %}
+        <div class="show_border">
+            <p class="text-center p-3">
+                If your Transaction ID is not matching Don't worry, please click <a href="{% url 'help' %}">Help</a> to contact admin or whatsapp your complaint at  +917706838026.Your query will be solved in 12 hours</p>
+
+            </p>
+        </div>
+
 
         {% if pending_requests %}
         <h3 class="text-center h4 mt-4">Your pending request</h3>
@@ -91,18 +107,28 @@
 
                 </tr>
                 {% endfor %}
-               
+
             </tbody>
 
         </table>
 
         {% endif %}
 
-        
+
 
     </div>
 </div>
 
+
+<style>
+    .show_border {
+        border-style: dotted;
+    }
+
+    .solid {
+        border-style: solid;
+    }
+</style>
 
 
 
