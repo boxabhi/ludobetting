@@ -1936,7 +1936,7 @@ def fake():
     while len(fake_amount) < 20:
         num = int(random.random() * random.choice(div) % 1000)
         if num > 50 and num % 50 == 0:
-            fake_amount.append(int(num) * 2)
+            fake_amount.append(int(num) * 5)
     return fake_amount
 
 

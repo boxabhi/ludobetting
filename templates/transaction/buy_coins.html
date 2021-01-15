@@ -23,6 +23,14 @@
             {% endfor %}
             {% endif %}
 
+            <div class="input-group mb-3">
+                <input type="text" readonly class="form-control" value="7706838026" id="show_room_code">
+                <div class="input-group-append">
+                  <span class="input-group-text"  onclick="myFunction()">COPY</span>
+                </div>
+              </div>
+         
+
             <div class="form-group">
                 <label for="recover-email">Enter amount</label>
                 <input class="form-control" type="number" name="amount" placeholder="Enter amount" id="recover-email"
@@ -31,8 +39,8 @@
             </div>
 
             <div class="form-group">
-                <label for="recover-email">Enter Order Id</label>
-                <input class="form-control" type="text" name="order_id" placeholder="Enter order id" id="recover-email"
+                <label for="recover-email">Enter Transaction Id</label>
+                <input class="form-control" type="text" name="order_id" placeholder="Enter Transaction id" id="recover-email"
                     required="">
                 <div class="invalid-feedback">Please enter order id.</div>
             </div>
@@ -129,6 +137,17 @@
         border-style: solid;
     }
 </style>
+
+<script>
+function myFunction() {
+    var copyText = document.getElementById("show_room_code");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    alert("Number copied: " + copyText.value);
+}
+
+</script>
 
 
 
