@@ -182,7 +182,8 @@ class GameResult(models.Model):
            
         
              
-    
+from django.utils.safestring import mark_safe
+
 
 class Image(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE , null=True , blank=True)
@@ -192,6 +193,10 @@ class Image(models.Model):
     
     def __str__(self):
         return self.user.username + ' ' + self.game_result.game.room_id
+    
+    def photo_tag(self):
+        return mark_safe('<a href="/media/{0}"><img src="/media/{0}" style="height:300px; width:300px></a>'.format(self.uploaded_image))
+   
 
 
     

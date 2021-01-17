@@ -22,8 +22,8 @@ def game_cron_job():
             winning_amount = 0
             
             if game.coins < 250:
-                winning_amount = .90 * game.coins 
-            elif game.coins >= 250 and game.coins <500:
+                winning_amount = .85 * game.coins 
+            elif game.coins >= 250 and game.coins < 500:
                 winning_amount =  game.coins - 50 
             else:
                 winning_amount = .90 * game.coins
