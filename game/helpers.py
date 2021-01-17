@@ -41,11 +41,12 @@ def game_cron_job():
                             refer = Profile.objects.filter(user = winner.referral_by).first()
                             refer.coins += .01 * game.coins
                             refer.save()
+                            bonous = ReffralBonous(user = refer.user, amount = .01 * game.coins ,reason=f"{winner.user.username} won. You got refrral bonous")                        
+                            bonous.save()
+                        
                         except Exception as e:
                             pass
-                        bonous = ReffralBonous(user = refer.user, amount = .01 * game.coins ,reason=f"{winner.user.username} won. You got refrral bonous")                        
-                        bonous.save()
-                        
+                       
                     winner.coins +=  winning_amount + game.coins
                     game_result_obj_one.winning_amount =  winning_amount
                     game_result_obj_one.result  = 'WON'
@@ -59,10 +60,11 @@ def game_cron_job():
                             refer = Profile.objects.filter(user = winner.referral_by).first()
                             refer.coins +=  .01 * game.coins
                             refer.save()
+                            bonous = ReffralBonous(user = refer.user, amount = .01 * game.coins ,reason=f"{winner.user.username} won. You got refrral bonous")                        
+                            bonous.save()
                         except Exception as e:
                             pass
-                        bonous = ReffralBonous(user = refer.user, amount = .01 * game.coins ,reason=f"{winner.user.username} won. You got refrral bonous")                        
-                        bonous.save()
+                       
                     
                     winner.coins +=  winning_amount + game.coins    
                     game_result_obj_two.winning_amount =  winning_amount
