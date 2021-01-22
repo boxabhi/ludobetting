@@ -207,6 +207,7 @@ class DisputedGame(models.Model):
     game = models.ForeignKey(Game  , on_delete=models.CASCADE)
     winner = models.ForeignKey(User , on_delete=models.CASCADE , blank=True , null=True)
     is_reviewed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True , blank=True , null=True)
     
     def __str__(self):
         return  str(self.is_reviewed)
