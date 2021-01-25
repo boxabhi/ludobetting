@@ -308,6 +308,11 @@ class ChatConsumer(WebsocketConsumer):
         game.room_code =   message.get('room_code')
         game.save()
         
+        game_result_obj = GameResult.objects.filter(game = game)
+        for obj in game_result_obj:
+            obj.room_code = message.get('room_code')
+            obj.save()
+        
         # Send message to WebSocket
         self.send(text_data=json.dumps({
             'message': message

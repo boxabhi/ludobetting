@@ -2,7 +2,8 @@ from django.contrib import admin
 from .models import *
 # Register your models here.
 from django.template.response import TemplateResponse
-
+from django import forms
+from django.db.models import Q
 
 admin.site.register(Game)
 admin.site.register(GameResult)
@@ -23,6 +24,9 @@ admin.site.register(Image , ImagesAdmin)
 from django.utils.safestring import mark_safe
 
 
+class CategoryChoiceField(forms.ModelChoiceField):
+     def label_from_instance(self, obj):
+         return "{}".format((obj.username).upper())
 
 
 
@@ -31,11 +35,41 @@ class DisputedGameAdmin(admin.ModelAdmin):
     readonly_fields = ('game_played_between','images')
     list_filter =( 'is_reviewed' , 'created_at')
     
+    # def render_change_form(self, request, context, *args, **kwargs):
+    #      context['adminform'].form.fields['winner'].queryset = User.objects.all()
+    #      return super(DisputedGame, self).render_change_form(request, context, *args, **kwargs)
+    
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        
+        if db_field.name == 'winner':
+            disputed_game_obj = DisputedGame.objects.get(id = int(request.META['PATH_INFO'].rstrip('/').split('/')[4]))
+            game_obj = Game.objects.get(id = disputed_game_obj.game.id)
+            player_one = User.objects.get(id = game_obj.player_one)
+            player_two = User.objects.get(id = game_obj.player_two)
+            
+            return CategoryChoiceField(queryset=User.objects.filter(Q(id =game_obj.player_one) | Q(id = game_obj.player_two)))
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    
     def game_amount(self, obj):
         return obj.game.coins
     
     def game_creater_by(self, obj):
         return obj.game.game_creater
+    
+    def get_users(self):
+        print(self)
+        try:
+            player_one = User.objects.get(id = game_obj.player_one)
+            player_two = User.objects.get(id = game_obj.player_two)
+            user_list = []
+            user_list.append(player_one)
+            user_list.append(player_two)
+            print(user_list)
+            return user_list
+        except Exception as e:
+            print(e)
+            
+        
     
     def game_played_between(self, obj):
         game_obj = obj.game

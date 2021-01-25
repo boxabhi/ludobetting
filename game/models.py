@@ -117,7 +117,7 @@ class GameResult(models.Model):
     reason_of_cancel = models.TextField(blank=True , null=True)
     winning_amount = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now=True)
-
+    room_code = models.CharField(max_length=100 , null=True , blank=True) 
     
     @staticmethod
     def create_game_result(game_id , user_id):
@@ -211,6 +211,8 @@ class DisputedGame(models.Model):
     
     def __str__(self):
         return  str(self.is_reviewed)
+    
+    
 
 
 @receiver(post_save, sender=DisputedGame)
