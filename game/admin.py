@@ -34,13 +34,8 @@ class DisputedGameAdmin(admin.ModelAdmin):
     list_display = ('game' , 'is_reviewed', 'game_played_between' , 'game_creater_by' , 'created_at')
     readonly_fields = ('game_played_between','images')
     list_filter =( 'is_reviewed' , 'created_at')
-    
-    # def render_change_form(self, request, context, *args, **kwargs):
-    #      context['adminform'].form.fields['winner'].queryset = User.objects.all()
-    #      return super(DisputedGame, self).render_change_form(request, context, *args, **kwargs)
-    
+
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        
         if db_field.name == 'winner':
             disputed_game_obj = DisputedGame.objects.get(id = int(request.META['PATH_INFO'].rstrip('/').split('/')[4]))
             game_obj = Game.objects.get(id = disputed_game_obj.game.id)
