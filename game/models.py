@@ -8,6 +8,7 @@ import json
 from django.core import serializers
 from channels.layers import get_channel_layer
 from accounts.models import *
+from django.db.models.signals import post_save
 # Create your models here.
 
 
@@ -117,6 +118,7 @@ class GameResult(models.Model):
     reason_of_cancel = models.TextField(blank=True , null=True)
     winning_amount = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now=True)
+    result_updated = models.CharField(max_length=25 , choices = RESULT ,blank=True,null=True , default='PENDING')
     room_code = models.CharField(max_length=100 , null=True , blank=True) 
     
     @staticmethod
@@ -129,6 +131,13 @@ class GameResult(models.Model):
     
     def __str__(self):
         return 'Game result by  - ' + self.user.username + ' (' + self.game.room_id + ')'
+    
+    
+@receiver(post_save, sender=GameResult)
+def order_status_handler(sender, instance,created , **kwargs):
+    if created:
+        instance.result_updated = instance.result
+        instance.save()
  
 # @receiver(post_save, sender=GameResult)
 # def game_result_handler(sender , instance,created,**kwargs):

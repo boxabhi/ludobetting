@@ -32,7 +32,7 @@ class CategoryChoiceField(forms.ModelChoiceField):
 
 class DisputedGameAdmin(admin.ModelAdmin):
     list_display = ('game' , 'is_reviewed', 'game_played_between' , 'game_creater_by' , 'created_at')
-    readonly_fields = ('game_played_between','images')
+    readonly_fields = ('result_updated','game_played_between','images' )
     list_filter =( 'is_reviewed' , 'created_at')
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
@@ -64,7 +64,14 @@ class DisputedGameAdmin(admin.ModelAdmin):
         except Exception as e:
             print(e)
             
-        
+    
+    def result_updated(self , obj):
+        game_results = GameResult.objects.filter(game = obj.game)
+        html = ''
+        for g in game_results:
+            html += f'<p> <b>{(g.user.username).upper()}</b> updated - {g.result_updated}</p>'
+        return mark_safe(html)
+            
     
     def game_played_between(self, obj):
         game_obj = obj.game
