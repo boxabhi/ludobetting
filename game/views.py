@@ -53,6 +53,7 @@ def waiting_room(request , room_id):
         
         if reason_of_cancel:
             game_result.reason_of_cancel = reason_of_cancel
+        game_result.result_updated = result
         game_result.save()
         
         for image in images:

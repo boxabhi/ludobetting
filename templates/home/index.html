@@ -30,6 +30,7 @@
     </div>
     {% endif %}
 
+  
     {% if pending_games %}
     {% for game in pending_games %}
     <div class="alert alert-danger alert-with-icon mt-3" role="alert">
@@ -39,12 +40,29 @@
       You have a pending game update result to create or play new game <a href="/game/room/{{game.game.room_id}}" class="btn btn-success btn-sm">View</a>
 
     
-      {%  if game.room_code is None %}
-      <a href="{% url 'quit'%}" class="btn btn-accent btn-sm">Quit</a>
+      {%  if game.room_code is None and request.user != game.game.game_creater  %}
+      <a href="{% url 'quit'%}?game_id={{game.game.id}}" class="btn btn-accent btn-sm">Quit</a>
       {% endif %}
+
+      
+
+      {% if request.user == game.game.game_creater %}
+      <a href="/game/delete_game/{{game.game.id}}" class="btn btn-warning btn-sm"><i class="czi-pot"></i></a>
+
+
+      {% endif %}
+
+  
+
+
+      
+
+
+
     </div>
     {% endfor %}
     {% endif %}
+  
 
 
     <li v-if="Object.keys(user_game).length &&  'id' in user_game"
@@ -153,8 +171,8 @@
       running_games: [],
       comming_games : [],
 
-   url: 'wss://ludomission.com:8001', 
-//     url: 'ws://127.0.0.1:8000',
+   //url: 'wss://ludomission.com:8001', 
+    url: 'ws://127.0.0.1:8000',
       username: '{{request.user.username}}',
       user_game: {},
       requesting_user: null,

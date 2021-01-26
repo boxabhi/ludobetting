@@ -48,7 +48,17 @@ def home(request , username=None):
     game_cron_job()
     pending_game_result  =  GameResult.objects.filter(user = request.user , result = 'PENDING') 
     
-    games = Game.objects.filter(status = 'CREATED')
+    games = Game.objects.filter(status = 'RUNNING')
+    try:
+        for g in games:
+            result = {}
+            player_one = User.objects.get(id = g.player_one)
+            player_two = User.objects.get(id = g.player_two)
+            result['message'] =   f'<b>{player_one.username} vs {player_two.username}'  
+            result['coins'] = g.coins
+            data.append(result)    
+    except Exception as e:
+        print(e)
     
     
     context = {'pending_games' : pending_game_result  , 'running_games' : data}  
@@ -241,7 +251,24 @@ def howtoplay(request):
 
 
 def quit(request):
+    game_id = request.GET.get('game_id')
     game_result = GameResult.objects.filter(user = request.user , result = 'PENDING').first()
+    
+    
+    try:
+        game_obj = Game.objects.get(id = id)
+        game_obj.status = 'CREATED'
+        game_obj.state = 0
+        
+        if game_obj.player_one == str(request.user.id):
+            game_obj.player_one = None
+        
+        if game_obj.player_two == str(request.user.id):
+            game_obj.player_two = None
+        game_obj.save()
+        pass
+    except Exception as e:
+        pass
     
     if game_result:
         profile = Profile.objects.filter(user = request.user).first()

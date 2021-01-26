@@ -9,6 +9,7 @@ from transaction.models import *
 
 
 def game_cron_job():
+    print("CRON CALLED")
     games_obj = Game.objects.filter(status='RUNNING')
     for game in games_obj:
         game_result_obj = GameResult.objects.filter(game = game)
@@ -32,8 +33,14 @@ def game_cron_job():
                 
                 
             
+            print('FALL in this 20 ')
             
             if game_result_obj_one.result != 'PENDING' and game_result_obj_two.result != 'PENDING':
+                print('FALL in this 3 ')
+
+                print(game_result_obj_one.result)
+                print(game_result_obj_two.result)
+
                 if game_result_obj_one.result == 'WON' and game_result_obj_two.result == 'LOST':
                     winner = Profile.objects.filter(user = game_result_obj_one.user).first()
                     if winner.referral_by:
@@ -52,6 +59,8 @@ def game_cron_job():
                     game_result_obj_one.result  = 'WON'
                     game_result_obj_one.save()
                     winner.save()
+                    game.status = 'OVER'
+                    game.save() 
                     
                 elif game_result_obj_one.result == 'LOST' and game_result_obj_two.result == 'WON':
                     winner = Profile.objects.filter(user = game_result_obj_two.user).first()
@@ -71,6 +80,8 @@ def game_cron_job():
                     game_result_obj_two.result  = 'WON'
                     game_result_obj_two.save()
                     winner.save()
+                    game.status = 'OVER'
+                    game.save() 
                 elif game_result_obj_one.result == 'CANCEL' and game_result_obj_one.result == 'CANCEL':
                     user_obj_one = Profile.objects.filter(user = game_result_obj_one.user).first()
                     user_obj_two = Profile.objects.filter(user = game_result_obj_two.user).first()
@@ -83,6 +94,8 @@ def game_cron_job():
                     game_result_obj_one.result  = 'CANCEL'
                     game_result_obj_two.save()
                     game_result_obj_one.save()
+                    game.status = 'OVER'
+                    game.save() 
                 elif game_result_obj_one.result == 'WON' and game_result_obj_two.result == 'WON':
                     game_result_obj_two.result  = 'DISPUTED'
                     game_result_obj_one.result  = 'DISPUTED'
@@ -90,22 +103,54 @@ def game_cron_job():
                     game_result_obj_one.save()
                     disputed = DisputedGame(game = game)
                     disputed.save()
+                    game.status = 'OVER'
+                    game.save() 
                     
                 elif game_result_obj_one.result == 'WON' and game_result_obj_two.result == 'CANCEL':
+                    print('FALL in this 1 ')
                     game_result_obj_two.result  = 'DISPUTED'
                     game_result_obj_one.result  = 'DISPUTED'
                     game_result_obj_two.save()
                     game_result_obj_one.save()
                     disputed = DisputedGame(game = game)
                     disputed.save()
+                    game.status = 'OVER'
+                    game.save() 
                 
                 elif game_result_obj_one.result == 'CANCEL' and game_result_obj_two.result == 'WON':
+                    print('FALL in this 2 ')
+                    
                     game_result_obj_two.result  = 'DISPUTED'
                     game_result_obj_one.result  = 'DISPUTED'
                     game_result_obj_two.save()
                     game_result_obj_one.save()
                     disputed = DisputedGame(game = game)
                     disputed.save()
+                    game.status = 'OVER'
+                    game.save() 
+                    
+                elif game_result_obj_two.result == 'WON' and game_result_obj_one.result == 'CANCEL':
+                    print('FALL in this 1 ')
+                    game_result_obj_two.result  = 'DISPUTED'
+                    game_result_obj_one.result  = 'DISPUTED'
+                    game_result_obj_two.save()
+                    game_result_obj_one.save()
+                    disputed = DisputedGame(game = game)
+                    disputed.save()
+                    game.status = 'OVER'
+                    game.save() 
+                
+                elif game_result_obj_two.result == 'CANCEL' and game_result_obj_one.result == 'WON':
+                    print('FALL in this 2 ')
+                    
+                    game_result_obj_two.result  = 'DISPUTED'
+                    game_result_obj_one.result  = 'DISPUTED'
+                    game_result_obj_two.save()
+                    game_result_obj_one.save()
+                    disputed = DisputedGame(game = game)
+                    disputed.save()
+                    game.status = 'OVER'
+                    game.save() 
                 
                 elif game_result_obj_one.result == 'LOST' and game_result_obj_one.result == 'LOST':
                     user_obj_one = Profile.objects.filter(user = game_result_obj_one.user).first()
@@ -125,8 +170,9 @@ def game_cron_job():
                     penalty_obj_one.save()
                     penalty_obj_two.save() 
                      
-                game.status = 'OVER'
-                game.save()    
+                    game.status = 'OVER'
+                    game.save() 
+                   
                     
                 
                 

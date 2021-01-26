@@ -133,11 +133,11 @@ class GameResult(models.Model):
         return 'Game result by  - ' + self.user.username + ' (' + self.game.room_id + ')'
     
     
-@receiver(post_save, sender=GameResult)
-def order_status_handler(sender, instance,created , **kwargs):
-    if created:
-        instance.result_updated = instance.result
-        instance.save()
+# @receiver(post_save, sender=GameResult)
+# def order_status_handler(sender, instance,created , **kwargs):
+#     if created:
+#         instance.result_updated = instance.result
+#         instance.save()
  
 # @receiver(post_save, sender=GameResult)
 # def game_result_handler(sender , instance,created,**kwargs):
