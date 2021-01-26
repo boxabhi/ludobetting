@@ -54,10 +54,12 @@ def waiting_room(request , room_id):
         if reason_of_cancel:
             game_result.reason_of_cancel = reason_of_cancel
         game_result.save()
+
         
         for image in images:
             image_obj = Image(user = user,game =game,game_result =game_result,uploaded_image=image)
             image_obj.save()
+            
         
         game.is_over = True
         if game.player_one is not None and request.user.id == game.player_one:

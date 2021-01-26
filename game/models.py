@@ -8,7 +8,7 @@ import json
 from django.core import serializers
 from channels.layers import get_channel_layer
 from accounts.models import *
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save,pre_save
 # Create your models here.
 
 
@@ -133,11 +133,19 @@ class GameResult(models.Model):
         return 'Game result by  - ' + self.user.username + ' (' + self.game.room_id + ')'
     
     
+    def save(self , *args, **kwargs):
+        if  self.result == 'LOST' or self.result == 'CANCEL':
+            self.result_updated = self.result
+            super(GameResult, self).save(*args, **kwargs) 
+            
+            
+        
+    
 @receiver(post_save, sender=GameResult)
 def order_status_handler(sender, instance,created , **kwargs):
-    if created:
+    if instance.result == 'WIN' or instance.result == 'LOST' or instance.result == 'CANCEL':
         instance.result_updated = instance.result
-        instance.save()
+        #instance.save()
  
 # @receiver(post_save, sender=GameResult)
 # def game_result_handler(sender , instance,created,**kwargs):
