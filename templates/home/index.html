@@ -46,7 +46,7 @@
 
       
 
-      {% if   if game.game.room_code is None and request.user == game.game.game_creater %}
+      {%    if game.game.room_code is None and request.user == game.game.game_creater %}
       <a href="/game/delete_game/{{game.game.id}}" data-room="{{game.game.room_code}}" class="btn btn-warning btn-sm"><i class="czi-pot"></i></a>
 
 
