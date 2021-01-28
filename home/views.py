@@ -47,7 +47,7 @@ def home(request , username=None):
         return redirect('/error')
     
     game_cron_job()
-    pending_game_result  =  GameResult.objects.filter(user = request.user , result = 'PENDING')[:1] 
+    pending_game_result  =  GameResult.objects.filter(user = request.user , result = 'PENDING')
     
     games = Game.objects.filter(status = 'RUNNING')
     try:
