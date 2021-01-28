@@ -32,7 +32,7 @@ class CategoryChoiceField(forms.ModelChoiceField):
 
 class DisputedGameAdmin(admin.ModelAdmin):
     list_display = ('game' , 'is_reviewed', 'game_played_between' , 'game_creater_by' , 'created_at')
-    readonly_fields = ('result_updated','game_played_between','images' )
+    readonly_fields = ('result_updated','room_code','game_played_between','images'  )
     list_filter =( 'is_reviewed' , 'created_at')
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
@@ -47,6 +47,11 @@ class DisputedGameAdmin(admin.ModelAdmin):
     
     def game_amount(self, obj):
         return obj.game.coins
+    
+    def room_code(self, obj):
+        return mark_safe(f'<h2>{obj.game.room_code}</h2>')
+        
+    
     
     def game_creater_by(self, obj):
         return obj.game.game_creater
