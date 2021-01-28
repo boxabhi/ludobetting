@@ -268,6 +268,9 @@ def quit(request):
         print(user_profile_obj)
         user_profile_obj.coins += game_obj.coins
         user_profile_obj.save()
+        History.objects.create(user = game_obj.game_creater,message='Amount refunded second player quit the game' , amount=game_obj.coins )
+        
+        
 
         if game_obj.player_one == str(request.user.id):
             game_obj.player_one = None
