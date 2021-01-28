@@ -82,7 +82,7 @@ def game_cron_job():
                     winner.save()
                     game.status = 'OVER'
                     game.save() 
-                elif game_result_obj_one.result == 'CANCEL' and game_result_obj_one.result == 'CANCEL':
+                elif game_result_obj_one.result == 'CANCEL' and game_result_obj_two.result == 'CANCEL':    #made changes by rakesh obj_two
                     user_obj_one = Profile.objects.filter(user = game_result_obj_one.user).first()
                     user_obj_two = Profile.objects.filter(user = game_result_obj_two.user).first()
                     user_obj_one.coins += game.coins
