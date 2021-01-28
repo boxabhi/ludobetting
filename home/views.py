@@ -254,15 +254,18 @@ def howtoplay(request):
 
 def quit(request):
     game_id = request.GET.get('game_id')
+    print(game_id)
     game_result = GameResult.objects.filter(user = request.user , result = 'PENDING').first()
     
     
     try:
-        game_obj = Game.objects.get(id = id)
+        game_obj = Game.objects.get(id = game_id)
         game_obj.status = 'CREATED'
         game_obj.state = 0
+        print(game_obj)
         
         user_profile_obj = Profile.objects.filter(user=game_obj.game_creater).first()
+        print(user_profile_obj)
         user_profile_obj.coins += game_obj.coins
         user_profile_obj.save()
 
@@ -272,9 +275,9 @@ def quit(request):
         if game_obj.player_two == str(request.user.id):
             game_obj.player_two = None
         game_obj.save()
-        pass
+        
     except Exception as e:
-        pass
+        print(e)
     
     if game_result:
         profile = Profile.objects.filter(user = request.user).first()
