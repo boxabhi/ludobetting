@@ -9,6 +9,7 @@ from itertools import chain
 from django.http import JsonResponse
 from game.helpers import game_cron_job
 from django.contrib import messages
+from account.models import *
 
 from .models import *
 # Create your views here.
@@ -261,6 +262,9 @@ def quit(request):
         game_obj.status = 'CREATED'
         game_obj.state = 0
         
+        user_profile_obj = UserProfile.objects.filter(user=game_obj.game_creater).first()
+        user_profile_obj.coins += game_obj.coins
+
         if game_obj.player_one == str(request.user.id):
             game_obj.player_one = None
         
