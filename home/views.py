@@ -262,7 +262,7 @@ def quit(request):
         game_obj.status = 'CREATED'
         game_obj.state = 0
         
-        user_profile_obj = UserProfile.objects.filter(user=game_obj.game_creater).first()
+        user_profile_obj = Profile.objects.filter(user=game_obj.game_creater).first()
         user_profile_obj.coins += game_obj.coins
         user_profile_obj.save()
 
