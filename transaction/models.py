@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
 from accounts.models import *
 from django.utils.html import format_html
+from home.models import History
 # Create your models here.
 
 
@@ -22,6 +23,9 @@ def order_handler(sender , instance,created,**kwargs):
         profile = Profile.objects.filter(user = instance.user).first()
         profile.coins += instance.amount
         profile.save()    
+        History.objects.create(user = instance.user,message='You purchased coins' , amount=instance.amount )
+        
+        
     
 
 class PaytmOrderId(models.Model):

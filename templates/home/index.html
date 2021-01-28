@@ -41,7 +41,7 @@
 
     
       {%  if game.room_code is None and request.user != game.game.game_creater  %}
-      <a href="{% url 'quit'%}?game_id={{game.game.id}}" class="btn btn-accent btn-sm">Quit</a>
+      <a href="{% url 'quit'%}?game_id={{game.game.id}}"  class="btn btn-accent btn-sm">Quit</a>
       {% endif %}
 
       
@@ -172,7 +172,7 @@
       comming_games : [],
 
    url: 'wss://ludomission.com:8001', 
-    //url: 'ws://127.0.0.1:8000',
+   // url: 'ws://127.0.0.1:8000',
       username: '{{request.user.username}}',
       user_game: {},
       requesting_user: null,
