@@ -264,6 +264,7 @@ def quit(request):
         
         user_profile_obj = UserProfile.objects.filter(user=game_obj.game_creater).first()
         user_profile_obj.coins += game_obj.coins
+        user_profile_obj.save()
 
         if game_obj.player_one == str(request.user.id):
             game_obj.player_one = None
