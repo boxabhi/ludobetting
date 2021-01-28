@@ -16,6 +16,8 @@ def game_playing(request):
     return render(request, 'game/game_playing.html')
 
 def waiting_room(request , room_id):
+    local = False
+    
     if request.user.is_authenticated:
         set_coins(request)
         
@@ -85,7 +87,7 @@ def waiting_room(request , room_id):
     user_two = User.objects.get(id = game.player_two)
     
     
-    context = {'room_id': room_id , 'game' : game , 'user_one' : user_one , 'user_two' : user_two}
+    context = {'room_id': room_id , 'game' : game , 'user_one' : user_one , 'user_two' : user_two ,'local' :local}
     
     
     return render(request, 'game/waiting_room.html' , context)

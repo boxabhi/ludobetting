@@ -39,6 +39,7 @@ def error(request):
 
 @login_required(login_url='/accounts/login/')
 def home(request , username=None):
+    local = False
     if request.user.is_authenticated:
         set_coins(request)
     data = fake_running_games()    
@@ -46,7 +47,7 @@ def home(request , username=None):
         return redirect('/error')
     
     game_cron_job()
-    pending_game_result  =  GameResult.objects.filter(user = request.user , result = 'PENDING') 
+    pending_game_result  =  GameResult.objects.filter(user = request.user , result = 'PENDING')[:1] 
     
     games = Game.objects.filter(status = 'RUNNING')
     try:
@@ -61,7 +62,7 @@ def home(request , username=None):
         print(e)
     
     
-    context = {'pending_games' : pending_game_result  , 'running_games' : data}  
+    context = {'pending_games' : pending_game_result  , 'running_games' : data , 'local' : local}  
     return render(request , 'home/index.html' , context)
 
 @login_required(login_url='/accounts/login/')
