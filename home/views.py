@@ -87,7 +87,7 @@ def history(request):
         result = {}
         result['amount'] = h.amount
         result['message'] = h.message
-        result['status'] = 'Refunded'
+        result['status'] = 'Added'
         result['created_at'] = str(h.created_at.strftime("%d-%m-%Y %H:%M"))
         results.append(result)
         

@@ -9,6 +9,7 @@ import json
 from home.helpers import *
 from django.contrib import messages
 import time
+from home.models import *
 # Create your views here.
 
 
@@ -96,15 +97,39 @@ def waiting_room(request , room_id):
 
 def delete_game(request , id):
     user = request.user
-    try:
-        game = Game.objects.get(id=id)
-        if game.game_creater.id != user.id:
+    if request.GET.get('delete'):
+        try:
+            game = Game.objects.get(id=id)
+            user_one_obj = User.objects.filter(id = game.player_one).first()
+            user_two_obj = User.objects.get(id = game.player_two).first()
+            if user_one_obj:
+                profile_one_obj = Profile.objects.filter(user = user_one_obj ).first()
+                profile_one_obj.coins += game.coins
+                History.objects.create(user = user_one_obj,message='Coins refunded ' , amount=game.amount )
+                
+                profile_one_obj.save()
+            
+            if user_two_obj:
+                profile_two_obj = Profile.objects.filter(user = user_two_obj ).first()
+                profile_two_obj.coins += game.coins
+                History.objects.create(user = user_two_obj,message='Coins refunded ' , amount=game.amount )
+                
+                profile_two_obj.save()        
+        except Exception as e:
+            pass
+    else: 
+        try:
+            game = Game.objects.get(id=id)
+            if game.game_creater.id != user.id:
+                return redirect('/user/'+user.username +'/')
+            else:
+                game.delete()
+                return redirect('/user/'+user.username +'/')
+        except Game.DoesNotExist:
             return redirect('/user/'+user.username +'/')
-        else:
-            game.delete()
-            return redirect('/user/'+user.username +'/')
-    except Game.DoesNotExist:
-        return redirect('/user/'+user.username +'/')
+    
+    return redirect('/user/'+user.username +'/')
+    
 
 
 
